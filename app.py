@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from bit import PrivateKeyTestnet
+from bit import Key, PrivateKeyTestnet
 
 app = Flask(__name__)
 
@@ -13,7 +13,10 @@ def index():
         # Create a key object from the private key.
         key = PrivateKeyTestnet(private_key)
         # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-        print("Transaction id:", key.send([('mqVyyV3bKQpMT59epHwY7zsMiKtweSyDiw', 0.00000001, 'btc')], message=message))
+        transaction_id = key.send([('mqVyyV3bKQpMT59epHwY7zsMiKtweSyDiw', 0.00000001, 'btc')], message=message)
+        transaction_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
+
+        return render_template('success.html', transactionId=transaction_id, transactionUrl=transaction_url)
 
     return render_template('index.html')
 
