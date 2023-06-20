@@ -9,21 +9,33 @@
 </head>
 <body>
 
-<h1>Inforever</h1>
+    <h1>Inforever</h1>
 
-{% if testnet %}
-    <a href="/">You are on the testnet now. Go to mainnet</a>
-{% else %}
-    <a href="/?testnet=1">You are on the mainnet now. Go to testnet</a>
-{% endif %}
+    {% if testnet %}
+        <p><a href="/">You are on the testnet now. Go to mainnet</a></p>
+        <p>Post a testing message!</p>
+        <form action="/?testnet=1" method="post">
+    {% else %}
+        <p><a href="/?testnet=1">You are on the mainnet now. Go to testnet</a></p>
+        <p>Post a permanent message!</p>
+        <form action="/" method="post">
+    {% endif %}
 
+        <textarea name="message" id="msgInput" cols="30" rows="10" placeholder="Message"></textarea>
+        <p>Limit - 80 characters, used: <span id="charCounter">0</span></p>
+        <input type="text" name="private" placeholder="Private Key">
+        <input type="submit" value="Send">
+    </form>
 
-<p>Post a permanent message!</p>
-<form action="/" method="post">
-    <textarea name="message" id="" cols="30" rows="10" placeholder="Message"></textarea>
-    <input type="text" name="private" placeholder="Private Key">
-    <input type="submit" value="Send">
-</form>
+    <script>
+        var textarea = document.getElementById('msgInput');
+        var charCounter = document.getElementById('charCounter');
 
+        function updateCharCounter() {
+            charCounter.textContent = textarea.value.length;
+        }
+
+        textarea.addEventListener('keyup', updateCharCounter);
+    </script>
 </body>
 </html>
