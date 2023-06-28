@@ -11,18 +11,11 @@ def index():
         message = request.form['message']
         private_key = request.form['private']
 
-        if request.args.get('testnet'):
-            # Create a key object from the private key.
-            key = PrivateKeyTestnet(private_key)
-            # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-            transaction_id = key.send([], message=message)
-            transaction_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
-        else:
-            # Create a key object from the private key.
-            key = Key(private_key)
-            # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-            transaction_id = key.send([], message=message)
-            transaction_url = "https://live.blockcypher.com/btc/tx/" + transaction_id + "/"
+        # Create a key object from the private key.
+        key = PrivateKeyTestnet(private_key)
+        # Send a transaction to the bitcoin network with the message as the data. Using op_return.
+        transaction_id = key.send([], message=message)
+        transaction_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
 
         return render_template('success.html', transactionId=transaction_id, transactionUrl=transaction_url)
 

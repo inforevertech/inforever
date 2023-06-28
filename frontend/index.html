@@ -13,8 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" /> -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body id="page-top">
     <!-- Navigation-->
@@ -75,7 +75,7 @@
                                     <!-- * * This can be a video, image, or just about anything else.-->
                                     <!-- * * Set the max width of your media to 100% and the height to-->
                                     <!-- * * 100% like the demo example below.-->
-                                    <img src="{{ url_for('static', filename='img/chat.png') }}" alt="delusional inforever feed screenshot" class="feed_screenshot">
+                                    <img src="/img/chat.png" alt="delusional inforever feed screenshot" class="feed_screenshot">
                                 </div>
                             </div>
                         </div>
@@ -114,7 +114,7 @@
                             <textarea name="message" id="msgInput" cols="30" rows="10" placeholder=""></textarea>
                         </label>
                         <label for="private_key" class="private_key_label">Testnet Private Key
-                            <input type="text" name="private" id="private_key">
+                            <input type="text" name="private_key" id="private_key">
                         </label>
 
                         <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" id="post_btn" type="submit">
@@ -146,12 +146,12 @@
         </div>
     </section>
 
-
+    
     <!-- App badge section-->
     <section class="bg-gradient-primary-to-secondary" id="download">
         <div class="container px-5">
             <h2 class="text-center text-white font-alt mb-4">Contact us!</h2>
-
+            
             <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center">
                 <a class="email_link" href="mailto:v.kartamyshev@nyu.edu">
                     <span>v.kartamyshev@nyu.edu</span>
