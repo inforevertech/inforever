@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from bit import Key, PrivateKeyTestnet
+import requests
+
 
 app = Flask(__name__)
 
@@ -16,8 +18,9 @@ def index():
         # Send a transaction to the bitcoin network with the message as the data. Using op_return.
         transaction_id = key.send([], message=message)
         transaction_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
+        transaction_data = requests.get("https://blockstream.info/testnet/api/tx/" + transaction_id)
 
-        return render_template('success.html', transactionId=transaction_id, transactionUrl=transaction_url)
+        return render_template('success.html', transactionId=transaction_id, transactionUrl=transaction_url, transactionData=transaction_data)
 
     # on testnet
     if request.args.get('testnet'):
