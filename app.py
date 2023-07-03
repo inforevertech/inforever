@@ -6,6 +6,7 @@ import requests
 app = Flask(__name__)
 
 
+# main page
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -22,11 +23,16 @@ def index():
 
         return render_template('success.html', transactionId=transaction_id, transactionUrl=transaction_url, transactionData=transaction_data)
 
-    # on testnet
-    if request.args.get('testnet'):
-        return render_template('index.html', testnet=True)
-    # on mainnet
-    return render_template('index.html', testnet=False)
+    return render_template('index.html')
+
+
+# transaction explorer page
+@app.route('/tr/<transaction_id>', methods=['GET', 'POST'])
+def transaction(transaction_id):
+    transaction_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
+    transaction_data = requests.get("https://blockstream.info/testnet/api/tx/" + transaction_id).json()
+
+    return render_template('transaction.html', transactionId=transaction_id, transactionUrl=transaction_url, transactionData=transaction_data)
 
 
 if __name__ == '__main__':
