@@ -31,6 +31,12 @@ def index():
 def transaction(transaction_id):
     transaction_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
     transaction_data = requests.get("https://blockstream.info/testnet/api/tx/" + transaction_id).json()
+    
+    outputs = []
+    for line in transaction_data.get('vout'):
+        if line['scriptpubkey_type'] == 'op_return':
+            outputs.append(line['scriptpubkey_asm'])
+    transaction_data = '\n'.join(outputs)
 
     return render_template('transaction.html', transactionId=transaction_id, transactionUrl=transaction_url, transactionData=transaction_data)
 
