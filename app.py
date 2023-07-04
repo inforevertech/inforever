@@ -38,6 +38,9 @@ def transaction(transaction_id):
             outputs.append(line['scriptpubkey_asm'])
     transaction_data = '\n'.join(outputs)
 
+    # TODO: learn do decipher scriptpubkey to extract text data
+    # https://blockstream.info/testnet/api/tx/449f06d324daccfd65711e9856491f17945892491103b497baf4828b388e5c0c
+
     return render_template('transaction.html', transactionId=transaction_id, transactionUrl=transaction_url, transactionData=transaction_data)
 
 
