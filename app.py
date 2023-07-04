@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # If submit button is pressed get the values from the form: messsage and private key.
+        # If submit button is pressed get the values from the form: messsage, private key and transaction fee.
         message = request.form['message']
         private_key = request.form['private']
         fee = int(request.form['fee'])
@@ -52,7 +52,11 @@ def transaction(transaction_id):
         outputs = []
         for line in transaction_data.get('vout'):
             if line['scriptpubkey_type'] == 'op_return':  # only op_return statements
-                outputs.append(line['scriptpubkey_asm'])
+                # decode hex to utf-8
+                hex_value = line['scriptpubkey'][4:]
+                utf8_value = bytes.fromhex(hex_value).decode("utf-8")
+                outputs.append(utf8_value)
+
         transaction_data = '\n'.join(outputs)
 
     elif transaction_data.status_code == 404:
