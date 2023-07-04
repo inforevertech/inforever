@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
+from bit.network import get_fee_cached
 import requests
 
 
@@ -14,16 +15,17 @@ def index():
         # If submit button is pressed get the values from the form: messsage and private key.
         message = request.form['message']
         private_key = request.form['private']
+        fee = int(request.form['fee'])
 
         # Create a key object from the private key.
         key = PrivateKeyTestnet(private_key)
 
         try:
             # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-            transaction_id = key.send([], message=message)
+            transaction_id = key.send([], fee=fee, absolute_fee=True, message=message)
         except bitExceptions.InsufficientFunds as e:
             # form insufficient funds description
-            errorContent = ["InsufficIent Funds.",
+            errorContent = ["Insufficient Funds.",
                             "Error message: " + str(e),
                             "Use the following faucet to get testnet satoshi: https://testnet-faucet.com/btc-testnet/"]
             
@@ -35,7 +37,7 @@ def index():
 
         return redirect("/tr/" + transaction_id)
 
-    return render_template('index.html')
+    return render_template('index.html', recommende_fee=get_fee_cached())
 
 
 # transaction explorer page

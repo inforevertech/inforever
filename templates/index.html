@@ -75,6 +75,10 @@
                             <input type="text" name="private" id="private_key">
                         </label>
 
+                        <label for="fee" class="fee_label">Transaction fee (recommended <span id="fee_calculator">0</span> satoshis):
+                            <input type="number" value="0" name="fee" id="fee">
+                        </label>
+
                         <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" id="post_btn" type="submit">
                             <span class="d-flex align-items-center">
                                 <span class="small">Post message</span>
@@ -117,5 +121,18 @@
             </div>
         </div>
     </section>
+
+    <!-- fee counter script -->
+    <script>
+        let textarea = document.getElementById('msgInput');
+        let feeCalculator = document.getElementById('fee_calculator');
+        let feePerChar = {{ recommende_fee }};
+
+        function updateFee() {
+            feeCalculator.textContent = textarea.value.length * feePerChar;
+        }
+
+        textarea.addEventListener('keyup', updateFee);
+    </script>
 
 {% include "footer.html" %}
