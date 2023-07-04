@@ -1,20 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Transaction Explorer - Inforever</title>
-</head>
-<body>
+{% include "header.html" %}
 
-<h1>Inforever</h1>
+<header class="masthead">
+    <div class="container">
+        <p>Transaction {{ transactionId }}</p>
 
-<p>Transaction {{ transactionId }}</p>
+        <p>Transaction data: {{ transactionData }}</p>
+        <p><a href="{{ transactionUrl }}" target="_blank" rel="noopener noreferrer">See transaction status</a></p>
+    </div>
+</header>
 
-<p>Transaction data: {{ transactionData }}</p>
-<p><a href="{{ transactionUrl }}" target="_blank" rel="noopener noreferrer">See transaction status</a></p>
-
-</body>
-</html>
+{% include "footer.html" %}
