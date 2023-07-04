@@ -1,0 +1,11 @@
+{% include "header.html" %}
+
+<header class="masthead">
+    <div class="container">
+        {% for line in errorContent %}
+            {{ line }}<br>
+        {% endfor %}
+    </div>
+</header>
+
+{% include "footer.html" %}
