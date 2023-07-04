@@ -51,7 +51,7 @@ def transaction(transaction_id):
         transaction_data = transaction_data.json()
         outputs = []
         for line in transaction_data.get('vout'):
-            if line['scriptpubkey_type'] == 'op_return':  # only op_return statements
+            if line['scriptpubkey_type'] == 'op_return':  # process only op_return statements
                 # decode hex to utf-8
                 hex_value = line['scriptpubkey'][4:]
                 utf8_value = bytes.fromhex(hex_value).decode("utf-8")
@@ -66,11 +66,48 @@ def transaction(transaction_id):
         # form generic status code response
         transaction_data = "transaction explorer response code: " + str(transaction_data.status_code)
 
-    # TODO: learn do decipher scriptpubkey to extract text data
-    # https://blockstream.info/testnet/api/tx/449f06d324daccfd65711e9856491f17945892491103b497baf4828b388e5c0c
-
     return render_template('transaction.html', transactionId=transaction_id, transactionUrl=transaction_url, transactionData=transaction_data)
 
+
+# blockchain messages explorer page
+@app.route('/explorer', methods=['GET', 'POST'])
+def explorer():
+    outputs = []
+    messageCounter = 0
+
+    # latest block on the blockchain
+    height_of_latest_block = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text)
+
+    while messageCounter < 10:
+        # find current block hash
+        current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(height_of_latest_block)).text
+
+        # get up to 25 transactions in the current block
+        transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs')
+
+        # find transactions with op_return statements
+        transactions = transactions.json()
+        for tr in transactions:
+            for line in tr.get('vout'):
+                if line['scriptpubkey_type'] == 'op_return':  # process only op_return statements
+                    try:
+                        # decode hex to utf-8
+                        hex_value = line['scriptpubkey'][4:]
+                        utf8_value = bytes.fromhex(hex_value).decode("utf-8")
+                        outputs.append(utf8_value + '<br>' + line['scriptpubkey_asm'])
+                        messageCounter += 1
+                    except:
+                        # just ignore op_returns in alternative formats
+                        continue
+        
+        # decrease height to find previous messages/transactions
+        height_of_latest_block -= 1
+
+    # if nothing found
+    if not outputs:
+        return 'nothing was found'
+    
+    return '<br><br>'.join(outputs)
 
 if __name__ == '__main__':
     app.run()
