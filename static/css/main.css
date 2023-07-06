@@ -1,3 +1,7 @@
+html {
+    background-color: #000;
+}
+
 .title_emphasize {
     color: blueviolet;
 }
@@ -55,4 +59,26 @@
 #fee {
     width: 120px;
     display: block;
+}
+.post_date {
+    /* font-weight: lighter !important; */
+    /* color: #6c757d !important; */
+    /* font-family: var(--bs-body-font-family); */
+}
+#copy_link_btn {
+    margin-top: 30px;
+    transition: background-color 1s;
+}
+.clicked_copy_btn {
+    background-color: green !important;
+}
+.transaction_id_title {
+    color: #fff;
+    opacity: .7;
+    font-size: 0.6em;
+}
+.external_explorer_link {
+    color: #000 !important;
+    font-family: var(--bs-body-font-family);
+    font-size: 1.05em;
 }

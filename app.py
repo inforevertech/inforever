@@ -3,6 +3,7 @@ from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
 import requests
+import datetime
 
 
 app = Flask(__name__)
@@ -37,18 +38,30 @@ def index():
 
         return redirect("/tr/" + transaction_id)
 
-    return render_template('index.html', recommende_fee=get_fee_cached())
+    return render_template('index.html',
+                           recommende_fee=get_fee_cached())
 
 
 # transaction explorer page
 @app.route('/tr/<transaction_id>', methods=['GET', 'POST'])
 def transaction(transaction_id):
-    transaction_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
+    transaction_url = request.base_url  # current page url
+    blockchain_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
     transaction_data = requests.get("https://blockstream.info/testnet/api/tx/" + transaction_id)
+    post_date = ""
+    status_code = transaction_data.status_code
 
-    if transaction_data.status_code == 200:
+    if status_code == 200:
         # form success response with decryped OP_RETURN data
         transaction_data = transaction_data.json()
+
+        # get posted datetime
+        try:
+            post_date = datetime.datetime.fromtimestamp(transaction_data.get('status').get('block_time')).strftime("%-I:%M %p on %A, %B %-d, %Y")
+        except:
+            post_date = ""
+
+        # form output message
         outputs = []
         for line in transaction_data.get('vout'):
             if line['scriptpubkey_type'] == 'op_return':  # process only op_return statements
@@ -59,14 +72,20 @@ def transaction(transaction_id):
 
         transaction_data = '\n'.join(outputs)
 
-    elif transaction_data.status_code == 404:
+    elif status_code == 404:
         # form transaction not ready or not existent response
-        transaction_data = "transaction is still waiting for acceptance in mempool or not existent."
+        transaction_data = "Still waiting for acceptance into mempool or not existent."
     else:
         # form generic status code response
-        transaction_data = "transaction explorer response code: " + str(transaction_data.status_code)
+        transaction_data = "Transaction explorer response code: " + str(transaction_data.status_code)
 
-    return render_template('transaction.html', transactionId=transaction_id, transactionUrl=transaction_url, transactionData=transaction_data)
+    return render_template('transaction.html',
+                           transactionId=transaction_id,
+                           transactionUrl=transaction_url,
+                           transactionData=transaction_data,
+                           postDate=post_date,
+                           blockchainUrl=blockchain_url,
+                           statusCode=status_code)
 
 
 # blockchain messages explorer page
@@ -108,6 +127,7 @@ def explorer():
         return 'nothing was found'
     
     return '<br><br>'.join(outputs)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
