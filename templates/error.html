@@ -1,11 +1,32 @@
 {% include "header.html" %}
 
-<header class="masthead">
-    <div class="container">
-        {% for line in errorContent %}
-            {{ line }}<br>
-        {% endfor %}
+<!-- error information block -->
+<header class="masthead text-center bg-gradient-primary-to-secondary">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-xl-12">
+                <div class="h2 fs-1 text-white">
+                    <p class="mb-2">{{ errorTitle }}</p>
+                    <p class="transaction_id_title mb-lg-0">{{ address }}</p>
+                </div>
+            </div>
+        </div>
     </div>
+    
 </header>
+
+<!-- Basic features section-->
+<section class="bg-light" id="post_msg">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
+            <div class="col-12 col-lg-12">
+                {% for line in errorContent %}
+                    <p class="lead fw-normal text-muted mb-5 mb-lg-0">{{ line }}</p>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
 
 {% include "footer.html" %}

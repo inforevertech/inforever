@@ -26,15 +26,20 @@ def index():
             transaction_id = key.send([], fee=fee, absolute_fee=True, message=message)
         except bitExceptions.InsufficientFunds as e:
             # form insufficient funds description
-            errorContent = ["Insufficient Funds.",
-                            "Error message: " + str(e),
-                            "Use the following faucet to get testnet satoshi: https://testnet-faucet.com/btc-testnet/"]
+            errorContent = ["Error message: " + str(e),
+                            "Use the following faucet to get testnet satoshis: https://testnet-faucet.com/btc-testnet/"]
             
             # return page with insufficient funds information
-            return render_template('error.html', errorContent=errorContent)
+            return render_template('error.html',
+                                   errorTitle="Insufficient Funds",
+                                   address=key.address,
+                                   errorContent=errorContent)
         except:
             # return page with error description
-            return render_template('error.html', errorContent=["Something went wrong.", "Error message: " + str(e)])
+            return render_template('error.html',
+                                   errorTitle="Error occured",
+                                   address=key.address,
+                                   errorContent=["Error message: " + str(e)])
 
         return redirect("/tr/" + transaction_id)
 
@@ -103,6 +108,7 @@ def explorer():
 
         # get up to 25 transactions in the current block
         transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs')
+        # return transactions.json()
 
         # find transactions with op_return statements
         transactions = transactions.json()
