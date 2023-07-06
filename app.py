@@ -110,5 +110,5 @@ def explorer():
     return '<br><br>'.join(outputs)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
 

@@ -2,11 +2,25 @@
 
 <header class="masthead">
     <div class="container">
+        
         <p>Transaction {{ transactionId }}</p>
 
         <p>Transaction data: {{ transactionData }}</p>
         <p><a href="{{ transactionUrl }}" target="_blank" rel="noopener noreferrer">See transaction status</a></p>
     </div>
 </header>
+
+<!-- Quote/testimonial aside-->
+<aside class="text-center bg-gradient-primary-to-secondary">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-xl-8">
+                <div class="h2 fs-1 text-white mb-4">
+                    <p>All information is published on the Bitcoin blockchain, so a private key and some bitcoin balance to pay the fee are required to post a message.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
 
 {% include "footer.html" %}
