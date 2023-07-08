@@ -1,7 +1,7 @@
 // database
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:1@localhost:3306/inforever_db"
+  url      = env("DATABASE_URL")
 }
 
 // generator
@@ -17,8 +17,8 @@ model Post {
   block     String
   text      String
 
-  from      String
-  to        String
+  address_from      String
+  address_to        String
 
   timestamp DateTime
 }
