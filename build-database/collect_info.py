@@ -14,17 +14,20 @@ async def insert_db(tr_hash, block_hash, message, post_date):
     await prisma.connect()
 
     # insert a new transaction
-    user = await prisma.post.create(
+    user = await prisma.post.upsert(
+        where={
+            'hash': tr_hash
+        },
         data={
-            'hash': tr_hash,
-            'block': block_hash,
-            'text': message,
-            'timestamp': post_date
+            'create': {
+                'hash': tr_hash,
+                'block': block_hash,
+                'text': message,
+                'timestamp': post_date
+            },
+            'update': {},
         },
     )
-
-    # posts = await prisma.post.find_many()
-    # print(posts)
 
     await prisma.disconnect()
 
