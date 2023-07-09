@@ -17,8 +17,8 @@ model Post {
   block String
   text  String
 
-  address_from String
-  address_to   String
+  address_from String?
+  address_to   String?
 
   timestamp DateTime
 }

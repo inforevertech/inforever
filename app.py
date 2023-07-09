@@ -108,7 +108,6 @@ def explorer():
 
         # get up to 25 transactions in the current block
         transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs')
-        # return transactions.json()
 
         # find transactions with op_return statements
         transactions = transactions.json()
