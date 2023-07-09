@@ -17,10 +17,14 @@ model Post {
   block String
   text  String
 
+  timestamp DateTime
+}
+
+model AddressTransaction {
+  id           Int     @id @default(autoincrement())
+  post_id      Int
   address_from String?
   address_to   String?
-
-  timestamp DateTime
 }
 
 model User {
@@ -28,5 +32,5 @@ model User {
   address  String
   nickname String? @unique
 
-  signup_date String?
+  signup_date DateTime
 }
