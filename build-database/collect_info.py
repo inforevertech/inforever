@@ -1,35 +1,10 @@
 import requests
-import datetime
 import time
 import asyncio
-from prisma import Prisma
+from ..db import db_insert_transaction
 
 # 1. Go through all blocks in the TESTNET blockchain and find all transactions within it.
 # 2. Put only OP_RETURN statements and related information into the database.
-
-async def insert_db(tr_hash, block_hash, message, post_date):
-    post_date = datetime.datetime.fromtimestamp(int(post_date))
-
-    prisma = Prisma()
-    await prisma.connect()
-
-    # insert a new transaction
-    user = await prisma.post.upsert(
-        where={
-            'hash': tr_hash
-        },
-        data={
-            'create': {
-                'hash': tr_hash,
-                'block': block_hash,
-                'text': message,
-                'timestamp': post_date
-            },
-            'update': {},
-        },
-    )
-
-    await prisma.disconnect()
 
 
 # latest block on the blockchain
@@ -47,7 +22,7 @@ while current_height > 0:
 
     # go through all transactions in the block
     while observed_trans_counter < num_of_transactions:
-        time.sleep(1)  # take a pause to prevent 'too many requests' response
+        time.sleep(0.25)  # take a pause to prevent 'too many requests' response
 
         # get up to 25 transactions in the current block
         transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
@@ -85,7 +60,7 @@ while current_height > 0:
                         continue
             
             if message:  # put data into the database
-                asyncio.run(insert_db(tr_hash, block_hash, message, post_date))
+                asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date))
                 print(post_date, ': ', message, sep='')
                 message_counter += 1
             else:  # no message found, then just go futher

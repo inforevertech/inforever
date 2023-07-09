@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, redirect
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
+from db import db_read_all_transactions
 import requests
 import datetime
+import asyncio
 
 
 app = Flask(__name__)
@@ -96,42 +98,18 @@ def transaction(transaction_id):
 # blockchain messages explorer page
 @app.route('/explorer', methods=['GET', 'POST'])
 def explorer():
-    outputs = []
-    messageCounter = 0
-
-    # latest block on the blockchain
-    height_of_latest_block = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text)
-
-    while messageCounter < 10:
-        # find current block hash
-        current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(height_of_latest_block)).text
-
-        # get up to 25 transactions in the current block
-        transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs')
-
-        # find transactions with op_return statements
-        transactions = transactions.json()
-        for tr in transactions:
-            for line in tr.get('vout'):
-                if line['scriptpubkey_type'] == 'op_return':  # process only op_return statements
-                    try:
-                        # decode hex to utf-8
-                        hex_value = line['scriptpubkey'][4:]
-                        utf8_value = bytes.fromhex(hex_value).decode("utf-8")
-                        outputs.append(utf8_value + '<br>' + line['scriptpubkey_asm'])
-                        messageCounter += 1
-                    except:
-                        # just ignore op_returns in alternative formats
-                        continue
-        
-        # decrease height to find previous messages/transactions
-        height_of_latest_block -= 1
+    transactions = asyncio.run(db_read_all_transactions())
 
     # if nothing found
-    if not outputs:
-        return 'nothing was found'
+    if not transactions:
+        return 'Nothing was found in the database.'
+
+    # format information
+    outputs = []
+    for output in transactions:
+        outputs.append(str(output.timestamp) + ': ' + str(output.text))
     
-    return '<br><br>'.join(outputs)
+    return '<br>'.join(outputs) + '<br><br>' + str(len(outputs)) + ' posts in total.'
 
 
 if __name__ == '__main__':

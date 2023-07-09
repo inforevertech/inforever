@@ -1,5 +1,6 @@
 aiohttp==3.8.4
 aiosignal==1.3.1
+anyio==3.7.1
 apturl==0.5.2
 asn1crypto==1.5.1
 async-timeout==4.0.2
@@ -28,6 +29,7 @@ distlib==0.3.6
 distro==1.7.0
 distro-info===1.1build1
 duplicity==0.8.21
+exceptiongroup==1.1.2
 fasteners==0.14.1
 filelock==3.12.2
 Flask==2.3.2
@@ -38,7 +40,10 @@ google-auth==1.5.1
 google-auth-httplib2==0.1.0
 greenlet==1.1.2
 gyp==0.1
+h11==0.14.0
+httpcore==0.17.3
 httplib2==0.20.2
+httpx==0.24.1
 idna==3.3
 importlib-metadata==4.6.4
 itsdangerous==2.1.2
@@ -49,6 +54,7 @@ language-selector==0.1
 launchpadlib==1.10.16
 lazr.restfulclient==0.14.4
 lazr.uri==1.0.6
+livereload==2.6.3
 lockfile==0.12.2
 louis==3.20.0
 macaroonbakery==1.3.1
@@ -57,7 +63,9 @@ MarkupSafe==2.1.3
 monotonic==1.6
 more-itertools==8.10.0
 multidict==6.0.4
+mysql-connector-python==8.0.33
 netifaces==0.11.0
+nodeenv==1.8.0
 oauth2client==4.1.3
 oauthlib==3.2.0
 olefile==0.46
@@ -66,6 +74,7 @@ paramiko==2.9.3
 pexpect==4.8.0
 Pillow==9.0.1
 platformdirs==3.8.0
+prisma==0.9.1
 progressbar==2.5
 protobuf==3.12.4
 ptyprocess==0.7.0
@@ -74,6 +83,7 @@ pyasn1-modules==0.2.1
 pycairo==1.20.1
 pycparser==2.21
 pycups==2.0.1
+pydantic==1.10.11
 PyDrive==1.3.1
 PyGObject==3.42.1
 PyJWT==2.3.0
@@ -99,11 +109,15 @@ requests==2.25.1
 rsa==4.8
 SecretStorage==3.3.1
 six==1.16.0
+sniffio==1.3.0
 sos==4.4
 soupsieve==2.4.1
 SQLAlchemy==1.4.31
 systemd-python==234
+tomlkit==0.11.8
+tornado==6.3.2
 tqdm==4.65.0
+typing_extensions==4.7.1
 ubuntu-advantage-tools==8001
 ubuntu-drivers-common==0.0.0
 ufw==0.36.1
