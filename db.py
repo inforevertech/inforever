@@ -2,6 +2,7 @@ import datetime
 from prisma import Prisma
 
 
+# TODO: use this method in ./build-database/collect_info.py
 async def db_insert_transaction(tr_hash, block_hash, message, post_date):
     post_date = datetime.datetime.fromtimestamp(int(post_date))
 

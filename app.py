@@ -107,7 +107,10 @@ def explorer():
     # format information
     outputs = []
     for output in transactions:
-        outputs.append(str(output.timestamp) + ': ' + str(output.text))
+        if len(output.text) < 1000:
+            outputs.append(str(output.timestamp) + ': ' + str(output.text))
+        else:
+            outputs.append(str(output.timestamp) + ': Long message omitted...')
     
     return '<br>'.join(outputs) + '<br><br>' + str(len(outputs)) + ' posts in total.'
 
