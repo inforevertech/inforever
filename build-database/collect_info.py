@@ -1,68 +1,46 @@
 import requests
 import time
 import asyncio
-# from ..db import db_insert_transaction
-import datetime
-from prisma import Prisma
+import sys, os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from db import db_insert_transaction
 
 
 # 1. Go through all blocks in the TESTNET blockchain and find all transactions within it.
 # 2. Put only OP_RETURN statements and related information into the database.
 
-
-async def db_insert_transaction(tr_hash, block_hash, message, post_date):
-    post_date = datetime.datetime.fromtimestamp(int(post_date))
-
-    prisma = Prisma()
-    await prisma.connect()
-
-    # insert a new transaction
-    user = await prisma.post.upsert(
-        where={
-            'hash': tr_hash
-        },
-        data={
-            'create': {
-                'hash': tr_hash,
-                'block': block_hash,
-                'text': message,
-                'timestamp': post_date
-            },
-            'update': {},
-        },
-    )
-
-    await prisma.disconnect()
-    
-
 def collect_transactions():
     # hight of latest block on the blockchain
     global current_height
 
-    # current_height = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text)
-    message_counter = 0
-
     # go through all block starting from the highest
     while current_height >= 0:
-        # find current block hash
-        current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(current_height)).text
+        try:
+            # find current block hash
+            current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(current_height)).text
 
-        # find total number of transactions in the block
-        num_of_transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block)).json().get('tx_count')
-        observed_trans_counter = 0
+            # find total number of transactions in the block
+            num_of_transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block)).json().get('tx_count')
+            observed_trans_counter = 0
+        except:
+            print('error.\n')
+            time.sleep(10)
+            collect_transactions()
 
         # go through all transactions in the block
         while observed_trans_counter < num_of_transactions:
             time.sleep(0.1)  # take a pause to prevent 'too many requests' response
 
-            # get up to 25 transactions in the current block
-            transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
-
             try:
+                # get up to 25 transactions in the current block
+                transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
                 transactions = transactions.json()
             except:  # may return 'too many requests' response
+                print('error.\n')
                 print(transactions.text)
-                break
+                time.sleep(10)
+                collect_transactions()
 
             observed_trans_counter += len(transactions)
 
@@ -93,24 +71,13 @@ def collect_transactions():
                 if message:  # put data into the database
                     asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date))
                     print(post_date, ': ', message, sep='')
-                    message_counter += 1
                 else:  # no message found, then just go futher
                     continue
             
         # decrease block height to find previous messages/transactions
         current_height -= 1
 
-    return message_counter
-
 
 # starting point
-current_height = 2426676
-
-# launch
-while True:
-    try:
-        collect_transactions()
-    except:
-        print('error.\n')
-        time.sleep(1)
-        collect_transactions()
+current_height = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text)
+collect_transactions()

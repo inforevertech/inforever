@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
-from db import db_read_all_transactions
+from db import db_read_transactions
 import requests
 import datetime
 import asyncio
@@ -98,21 +98,13 @@ def transaction(transaction_id):
 # blockchain messages explorer page
 @app.route('/explorer', methods=['GET', 'POST'])
 def explorer():
-    transactions = asyncio.run(db_read_all_transactions())
+    transactions = asyncio.run(db_read_transactions())
 
     # if nothing found
     if not transactions:
         return 'Nothing was found in the database.'
-
-    # format information
-    outputs = []
-    for output in transactions:
-        if len(output.text) < 1000:
-            outputs.append(str(output.timestamp) + ': ' + str(output.text))
-        else:
-            outputs.append(str(output.timestamp) + ': Long message omitted...')
     
-    return '<br>'.join(outputs) + '<br><br>' + str(len(outputs)) + ' posts in total.'
+    return render_template('explorer.html', messages=transactions)
 
 
 if __name__ == '__main__':

@@ -2,7 +2,6 @@ import datetime
 from prisma import Prisma
 
 
-# TODO: use this method in ./build-database/collect_info.py
 async def db_insert_transaction(tr_hash, block_hash, message, post_date):
     post_date = datetime.datetime.fromtimestamp(int(post_date))
 
@@ -28,12 +27,14 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date):
     await prisma.disconnect()
 
 
-async def db_read_all_transactions():
+async def db_read_transactions(limit=100):
     prisma = Prisma()
     await prisma.connect()
 
     # read transactions
-    posts = await prisma.post.find_many()
+    posts = await prisma.post.find_many(
+        take=limit
+    )
 
     await prisma.disconnect()
     return posts
