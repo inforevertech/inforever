@@ -115,3 +115,6 @@ html {
 .post_date, .separator {
     font-size: 0.8rem;
 }
+.profile_picture {
+    border-radius: 5px;
+}

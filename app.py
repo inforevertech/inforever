@@ -125,8 +125,8 @@ def address(id):
 @app.context_processor
 def utility_processor():
     # Return only 4 last character of an address
-    def format_address(address):
-        return address[-5:]
+    def format_shorten_address(address):
+        return address[:3] + '...' + address[-5:]
     
     # Return timestamp in user-friendly date format
     def format_date(post_datetime):
@@ -134,10 +134,19 @@ def utility_processor():
             return post_datetime.strftime("%-I:%M %p Today")
         elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).date():  # post_datetime is yesterday
             return post_datetime.strftime("%-I:%M %p Yesterday")
-        
-        return post_datetime.strftime("%-I:%M %p on %A, %B %-d, %Y")  # post_datetime is any other day
+        else:  # post_datetime is any other day
+            return post_datetime.strftime("%-I:%M %p on %A, %B %-d, %Y")
     
-    return dict(format_address=format_address, format_date=format_date)
+    # Return url for transaction avatar
+    def find_address_avatar(address):
+        # if avatar was NOT generated
+        if not os.path.isfile('./static/avatars/' + address + '.png'):
+            return 'img/profile.png'
+        return 'avatars/' + address + '.png'  # otherwise
+    
+    return dict(format_shorten_address=format_shorten_address,
+                format_date=format_date,
+                find_address_avatar=find_address_avatar)
 
 
 if __name__ == '__main__':

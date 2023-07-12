@@ -5,6 +5,7 @@ import sys, os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from db import *
+from avatar_generator import generate_avatar_by_address
 
 
 # 1. Go through all blocks in the TESTNET blockchain and find all transactions within it.
@@ -70,6 +71,7 @@ def collect_transactions():
                 
                 if message:  # put data into the database
                     asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date))
+                    generate_avatar_by_address(tr_hash)  # generate address avatar
                     print(post_date, ': ', message, sep='')
                 else:  # no message found, then just go futher
                     continue

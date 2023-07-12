@@ -28,12 +28,12 @@
                             <div class="post">
                                 <div class="post_profile_image">
                                     <a href="/{{ message.hash }}">
-                                        <img src="{{ url_for('static', filename='img/profile.png') }}" alt="profile picture">
+                                        <img src="{{ url_for('static', filename=find_address_avatar(message.hash)) }}" alt="profile picture" class="profile_picture">
                                     </a>
                                 </div>
                                 <div class="post_content">
                                     <div class="post_relevant_information">
-                                        <a href="/{{ message.hash }}" class="profile_name_link">Address ...{{ format_address(message.hash) }}</a>
+                                        <a href="/{{ message.hash }}" class="profile_name_link">Address {{ format_shorten_address(message.hash) }}</a>
                                         <span class="separator">&#9900;</span>
                                         <span class="post_date">{{ format_date(message.timestamp) }}</span>
                                     </div>
