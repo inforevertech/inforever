@@ -4,7 +4,7 @@ import asyncio
 import sys, os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from db import db_insert_transaction
+from db import *
 
 
 # 1. Go through all blocks in the TESTNET blockchain and find all transactions within it.
@@ -63,7 +63,7 @@ def collect_transactions():
                             hex_value = line['scriptpubkey'][4:]
                             utf8_value = bytes.fromhex(hex_value).decode("utf-8")
                             
-                            message += utf8_value
+                            message += utf8_value.strip()
                         except:
                             # just ignore op_returns in alternative formats
                             continue

@@ -18,6 +18,7 @@ model Post {
   text  String @db.LongText
 
   timestamp DateTime
+  nonsense  Boolean  @default(false)
 }
 
 model AddressTransaction {
