@@ -6,8 +6,8 @@
         <div class="row gx-5 justify-content-center">
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
-                    <p class="mb-2">Bitcoin Testnet Messages</p>
-                    <p class="transaction_id_title mb-lg-0">Explorer</p>
+                    <p class="mb-2">Bitcoin Testnet Explorer</p>
+                    <p class="transaction_id_title mb-lg-0">{{ totalNmberOfPosts }} posts in total.</p>
                 </div>
             </div>
         </div>
@@ -20,16 +20,27 @@
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-12">
-                <h2 class="display-4 lh-1 mb-4">100 most recent messages</h2>
+                <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most recent posts</h2>
 
-                <ul>
+                <div class="post_container">
                     {% for message in messages %}
-                        <li>
-                            {{ message.timestamp }}: 
-                            {{ message.text }}
-                        </li>
+                        <div class="post_wrapper">
+                            <div class="post">
+                                <div class="post_profile_image">
+                                    <a href="/{{ message.hash }}">
+                                        <img src="{{ url_for('static', filename='img/profile.png') }}" alt="profile picture">
+                                    </a>
+                                </div>
+                                <div class="post_content">
+                                    <div class="name">
+                                        <a href="/{{ message.hash }}" class="profile_name_link">Address ...{{ format_address(message.hash) }}</a>
+                                    </div>
+                                    <div class="post_text">{{ message.text }}</div>
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
-from db import db_read_transactions
+from db import db_read_transactions, db_transactions_count
 import requests
 import datetime
 import asyncio
@@ -104,7 +104,17 @@ def explorer():
     if not transactions:
         return 'Nothing was found in the database.'
     
-    return render_template('explorer.html', messages=transactions)
+    return render_template('explorer.html',
+                           totalNmberOfPosts=f'{asyncio.run(db_transactions_count()):,}',
+                           messages=transactions)
+
+
+# Return only 4 last character of a string
+@app.context_processor
+def utility_processor():
+    def format_address(address):
+        return address[-5:]
+    return dict(format_address=format_address)
 
 
 if __name__ == '__main__':

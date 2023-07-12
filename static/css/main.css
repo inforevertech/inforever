@@ -82,3 +82,33 @@ html {
     font-family: var(--bs-body-font-family);
     font-size: 1.05em;
 }
+
+.explorer_list_title {
+    margin-bottom: 2rem !important;
+    text-align: center;
+}
+
+.post_wrapper {
+    padding: 30px;
+    margin-bottom: 40px;
+    
+    border: 1px solid #ccc;
+    border-radius: 20px;
+
+    background-color: #FDFDFC;
+}
+.post {
+    display: flex;
+}
+.post_profile_image {
+    width: 60px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+.post_profile_image img {
+    width: 100%;
+}
+.profile_name_link {
+    text-decoration: none;
+    font-weight: bold;
+}
