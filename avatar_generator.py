@@ -7,10 +7,6 @@ from xml.sax.saxutils import escape as xml_escape
 
 
 COLORS = [
-    ['#DF7FD7', '#DF7FD7', '#591854'],
-    ['#E3CAC8', '#DF8A82', '#5E3A37'],
-    ['#E6845E', '#E05118', '#61230B'],
-    ['#E0B050', '#E6CB97', '#614C23'],
     ['#9878AD', '#492661', '#C59BE0'],
     ['#787BAD', '#141961', '#9B9FE0'],
     ['#78A2AD', '#104F61', '#9BD1E0'],
@@ -23,7 +19,7 @@ INITIALS_SVG_TEMPLATE = """
     width="200" height="200">
   <defs>
     <linearGradient id="grad">
-    <stop offset="0%" stop-color="{color1}" />
+    <stop offset="0%" stop-color="{color2}" />
     <stop offset="100%" stop-color="{color2}" />
     </linearGradient>
   </defs>
@@ -42,18 +38,15 @@ def get_png_avatar(text, output_file):
 
     text = text.strip()
     if text:
-        split_text = text.split(' ')
-        if len(split_text) > 1:
-            initials = split_text[0][0] + split_text[-1][0]
-        else:
-            initials = split_text[0][0]
+        initials = text[-3:]
 
     random_color = random.choice(COLORS)
+    print(random_color)
     svg_avatar = INITIALS_SVG_TEMPLATE.format(**{
         'color1': random_color[0],
         'color2': random_color[1],
         'text_color': random_color[2],
-        'text': xml_escape(initials.upper()),
+        'text': xml_escape(initials),
     }).replace('\n', '')
 
     svg2png(svg_avatar, write_to=output_file)
@@ -67,3 +60,4 @@ def generate_avatar_by_address(address):
     byteImg.save('./static/avatars/' + address + '.png', 'PNG')
 
     return './static/avatars/' + address + '.png'
+

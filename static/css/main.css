@@ -60,11 +60,6 @@ html {
     width: 120px;
     display: block;
 }
-.post_date {
-    /* font-weight: lighter !important; */
-    /* color: #6c757d !important; */
-    /* font-family: var(--bs-body-font-family); */
-}
 #copy_link_btn {
     margin-top: 30px;
     transition: background-color 1s;
