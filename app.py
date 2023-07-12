@@ -6,7 +6,9 @@ from db import *
 import requests
 import datetime
 import asyncio
+import os.path
 
+from avatar_generator import generate_avatar_by_address
 
 app = Flask(__name__)
 
@@ -112,6 +114,10 @@ def explorer():
 # address/user page
 @app.route('/<id>', methods=['GET', 'POST'])
 def address(id):
+    # generate avatar if not present
+    if not os.path.isfile('./static/avatars/' + id + '.png'):
+        generate_avatar_by_address(id)
+
     return id
 
 

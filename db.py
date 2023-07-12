@@ -111,7 +111,7 @@ async def db_validate_transactions_nonsense():
     await prisma.disconnect()
 
 
-# nonsense checker
+# Nonsense checker
 def is_nonsense(text):
     try:
         if len(text) == 0:  # empty, therefore nonsense
