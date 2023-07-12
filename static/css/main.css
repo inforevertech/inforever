@@ -112,3 +112,6 @@ html {
     text-decoration: none;
     font-weight: bold;
 }
+.post_date, .separator {
+    font-size: 0.8rem;
+}

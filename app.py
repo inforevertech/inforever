@@ -64,7 +64,7 @@ def transaction(transaction_id):
 
         # get posted datetime
         try:
-            post_date = datetime.datetime.fromtimestamp(transaction_data.get('status').get('block_time')).strftime("%-I:%M %p on %A, %B %-d, %Y")
+            post_date = datetime.datetime.fromtimestamp(transaction_data.get('status').get('block_time'))
         except:
             post_date = ""
 
@@ -109,12 +109,29 @@ def explorer():
                            messages=transactions)
 
 
-# Return only 4 last character of a string
+# address/user page
+@app.route('/<id>', methods=['GET', 'POST'])
+def address(id):
+    return id
+
+
+# Template fields format functions
 @app.context_processor
 def utility_processor():
+    # Return only 4 last character of an address
     def format_address(address):
         return address[-5:]
-    return dict(format_address=format_address)
+    
+    # Return timestamp in user-friendly date format
+    def format_date(post_datetime):
+        if post_datetime.date() == datetime.datetime.now().date():  # post_datetime is today
+            return post_datetime.strftime("%-I:%M %p Today")
+        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).date():  # post_datetime is yesterday
+            return post_datetime.strftime("%-I:%M %p Yesterday")
+        
+        return post_datetime.strftime("%-I:%M %p on %A, %B %-d, %Y")  # post_datetime is any other day
+    
+    return dict(format_address=format_address, format_date=format_date)
 
 
 if __name__ == '__main__':

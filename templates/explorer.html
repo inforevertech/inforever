@@ -32,8 +32,10 @@
                                     </a>
                                 </div>
                                 <div class="post_content">
-                                    <div class="name">
+                                    <div class="post_relevant_information">
                                         <a href="/{{ message.hash }}" class="profile_name_link">Address ...{{ format_address(message.hash) }}</a>
+                                        <span class="separator">&#9900;</span>
+                                        <span class="post_date">{{ format_date(message.timestamp) }}</span>
                                     </div>
                                     <div class="post_text">{{ message.text }}</div>
                                 </div>
