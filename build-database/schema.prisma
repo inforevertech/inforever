@@ -17,21 +17,15 @@ model Post {
   block String
   text  String @db.LongText
 
+  // address_from AddressTransaction[]
+
   timestamp DateTime
   nonsense  Boolean  @default(false)
 }
 
-model AddressTransaction {
-  id           Int     @id @default(autoincrement())
-  post_id      Int
-  address_from String?
-  address_to   String?
-}
-
-model User {
-  id       Int     @id @default(autoincrement())
-  address  String
-  nickname String? @unique
-
-  signup_date DateTime
+model Sender {
+  id        Int    @id @default(autoincrement())
+  // post      Post   @relation(fields: [post_hash], references: [hash])
+  post_hash String
+  address_from String
 }

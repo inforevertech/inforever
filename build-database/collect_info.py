@@ -39,7 +39,6 @@ def collect_transactions():
                 transactions = transactions.json()
             except:  # may return 'too many requests' response
                 print('error.\n')
-                print(transactions.text)
                 time.sleep(10)
                 collect_transactions()
 
@@ -52,8 +51,12 @@ def collect_transactions():
                 tr_hash = tr.get('txid')
                 # get block hash
                 block_hash = tr.get('status').get('block_hash')
+                
                 # get address sent from
-                # TODO: many-to-many relation between Posts and Users
+                sent_from = []
+                for line in tr.get('vout'):
+                    if 'scriptpubkey_address' in line:
+                        sent_from.append(line['scriptpubkey_address'])
 
                 # process only op_return statements
                 message = ""
@@ -69,9 +72,17 @@ def collect_transactions():
                             # just ignore op_returns in alternative formats
                             continue
                 
-                if message:  # put data into the database
+                if message: 
+                    # put data into the database
                     asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date))
-                    generate_avatar_by_address(tr_hash)  # generate address avatar
+
+                    # generate address avatars
+                    for address in sent_from:
+                        generate_avatar_by_address(address)
+
+                    # add sender addresses information to the db
+                    asyncio.run(db_insert_sent_from(tr_hash, sent_from))
+                    
                     print(post_date, ': ', message, sep='')
                 else:  # no message found, then just go futher
                     continue

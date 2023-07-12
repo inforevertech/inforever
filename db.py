@@ -12,7 +12,7 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date):
     await prisma.connect()
 
     # insert a new transaction
-    user = await prisma.post.upsert(
+    post = await prisma.post.upsert(
         where={
             'hash': tr_hash
         },
@@ -32,12 +32,13 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date):
 
 
 # Receive a list of transactions
-async def db_read_transactions(limit=100):
+async def db_read_transactions(limit=None, where=None):
     prisma = Prisma()
     await prisma.connect()
 
     # read transactions
     posts = await prisma.post.find_many(
+        where=where,
         take=limit,
         order={
             'timestamp': 'desc',
@@ -69,7 +70,7 @@ async def db_read_human_messages(limit=100):
 
 
 # Receive total number of posts in the database
-async def db_transactions_count():
+async def db_transactions_count(where=None):
     prisma = Prisma()
     await prisma.connect()
 
@@ -127,3 +128,35 @@ def is_nonsense(text):
         nonsense_check = True
 
     return nonsense_check
+
+
+# Insert senders addresses for a transaction
+async def db_insert_sent_from(tr_hash, addresses):
+    prisma = Prisma()
+    await prisma.connect()
+
+    # insert sender addresses to the db
+    for address in addresses:
+        result = await prisma.sender.create(
+            data={
+                'post_hash': tr_hash,
+                'address_from': address
+            }
+        )
+
+    await prisma.disconnect()
+
+
+# Receive a list of addresses
+async def db_read_addresses(limit=None, where=None):
+    prisma = Prisma()
+    await prisma.connect()
+
+    # read transactions
+    posts = await prisma.sender.find_many(
+        where=where,
+        take=limit
+    )
+
+    await prisma.disconnect()
+    return posts

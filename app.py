@@ -88,6 +88,8 @@ def transaction(transaction_id):
         # form generic status code response
         transaction_data = "Transaction explorer response code: " + str(transaction_data.status_code)
 
+    # TODO: fix address image generator and explorer links BY ADDRESS not message.hash
+
     return render_template('transaction.html',
                            transactionId=transaction_id,
                            transactionUrl=transaction_url,
@@ -115,10 +117,20 @@ def explorer():
 @app.route('/<id>', methods=['GET', 'POST'])
 def address(id):
     # generate avatar if not present
-    if not os.path.isfile('./static/avatars/' + id + '.png'):
+    if not os.path.isfile(os.path.abspath(__file__) + '/static/avatars/' + id + '.png'):
         generate_avatar_by_address(id)
 
-    return id
+    # get a list of posts
+    # TODO: create actual one-to-many relation between posts and addresses
+    address_transactions = asyncio.run(db_read_addresses(where={ 'address_from': id }))
+    posts = []
+    for address in address_transactions:
+        posts += asyncio.run(db_read_transactions(where={ 'hash': address.post_hash }))
+
+    return render_template('address.html',
+                           address=id,
+                           totalNmberOfPosts=f'{len(posts):,}',
+                           messages=posts)
 
 
 # Template fields format functions
@@ -140,7 +152,7 @@ def utility_processor():
     # Return url for transaction avatar
     def find_address_avatar(address):
         # if avatar was NOT generated
-        if not os.path.isfile('./static/avatars/' + address + '.png'):
+        if not os.path.isfile(os.path.abspath(__file__) + '/static/avatars/' + address + '.png'):
             return 'img/profile.png'
         return 'avatars/' + address + '.png'  # otherwise
     

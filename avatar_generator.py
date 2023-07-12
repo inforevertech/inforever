@@ -1,4 +1,5 @@
 import re
+import os
 import random
 from io import BytesIO
 from PIL import Image
@@ -41,7 +42,6 @@ def get_png_avatar(text, output_file):
         initials = text[-3:]
 
     random_color = random.choice(COLORS)
-    print(random_color)
     svg_avatar = INITIALS_SVG_TEMPLATE.format(**{
         'color1': random_color[0],
         'color2': random_color[1],
@@ -57,7 +57,9 @@ def generate_avatar_by_address(address):
     rawIO = BytesIO()
     get_png_avatar(address, rawIO)
     byteImg = Image.open(rawIO)
-    byteImg.save('./static/avatars/' + address + '.png', 'PNG')
 
-    return './static/avatars/' + address + '.png'
+    path = os.path.dirname(os.path.abspath(__file__)) + '/static/avatars/' + address + '.png'
+    byteImg.save(path, 'PNG')
+
+    return path
 
