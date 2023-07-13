@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+from werkzeug.exceptions import HTTPException
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
@@ -36,13 +37,13 @@ def index():
             # return page with insufficient funds information
             return render_template('error.html',
                                    errorTitle="Insufficient Funds",
-                                   address=key.address,
+                                   additionalInfo=key.address,
                                    errorContent=errorContent)
         except:
             # return page with error description
             return render_template('error.html',
                                    errorTitle="Error occured",
-                                   address=key.address,
+                                   additionalInfo=key.address,
                                    errorContent=["Error message: " + str(e)])
 
         return redirect("/tr/" + transaction_id)
@@ -101,12 +102,6 @@ def transaction(transaction_id):
 @app.route('/explorer', methods=['GET', 'POST'])
 def explorer():
     transactions = asyncio.run(db_read_human_messages(limit=100))
-
-    # if nothing found
-    if not transactions:
-        return 'Nothing was found in the database.'
-    
-    # TODO: fix address explorer links BY ADDRESS not message.hash
     
     return render_template('explorer.html',
                            totalNmberOfPosts=f'{asyncio.run(db_transactions_count()):,}',
@@ -155,6 +150,23 @@ def utility_processor():
     return dict(format_shorten_address=format_shorten_address,
                 format_date=format_date,
                 find_address_avatar=find_address_avatar)
+
+
+# 404 page not found
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error.html',
+                            errorTitle="Sorry, this page was not found.",
+                            additionalInfo="Error 404",
+                            errorContent=[str(e)]), 404
+
+# other HTTP exceptions
+@app.errorhandler(HTTPException)
+def page_error(e):
+    return render_template('error.html',
+                            errorTitle="Sorry, a problem occured.",
+                            additionalInfo="Error " + str(e.code),
+                            errorContent=[str(e)]), e.code
 
 
 if __name__ == '__main__':

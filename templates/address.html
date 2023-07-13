@@ -7,7 +7,12 @@
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
                     <p class="mb-2">Bitcoin Testnet Address</p>
-                    <p class="transaction_id_title mb-lg-0">{{ address }} - {{ totalNmberOfPosts }} posts</p>
+
+                    {% if totalNmberOfPosts != "0" %}
+                        <p class="transaction_id_title mb-lg-0">{{ address }} - {{ totalNmberOfPosts }} posts</p>
+                    {% else %}
+                        <p class="transaction_id_title mb-lg-0">{{ address }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -20,28 +25,31 @@
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-12">
-
-                <div class="post_container">
-                    {% for message in messages %}
-                        <div class="post_wrapper">
-                            <div class="post">
-                                <div class="post_profile_image">
-                                    <a href="/{{ message.hash }}">
-                                        <img src="{{ url_for('static', filename=find_address_avatar(message.hash)) }}" alt="profile picture" class="profile_picture">
-                                    </a>
-                                </div>
-                                <div class="post_content">
-                                    <div class="post_relevant_information">
-                                        <a href="/{{ message.hash }}" class="profile_name_link">Address {{ format_shorten_address(message.hash) }}</a>
-                                        <span class="separator">&#9900;</span>
-                                        <span class="post_date">{{ format_date(message.timestamp) }}</span>
+                {% if totalNmberOfPosts == "0" %}
+                    <h2 class="display-4 lh-1 mb-4">No posts yet...</h2>
+                {% else %}
+                    <div class="post_container">
+                        {% for message in messages %}
+                            <div class="post_wrapper">
+                                <div class="post">
+                                    <div class="post_profile_image">
+                                        <a href="/{{ message.hash }}">
+                                            <img src="{{ url_for('static', filename=find_address_avatar(message.hash)) }}" alt="profile picture" class="profile_picture">
+                                        </a>
                                     </div>
-                                    <div class="post_text">{{ message.text }}</div>
+                                    <div class="post_content">
+                                        <div class="post_relevant_information">
+                                            <a href="/{{ message.hash }}" class="profile_name_link">Address {{ format_shorten_address(message.hash) }}</a>
+                                            <span class="separator">&#9900;</span>
+                                            <span class="post_date">{{ format_date(message.timestamp) }}</span>
+                                        </div>
+                                        <div class="post_text">{{ message.text }}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
