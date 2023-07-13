@@ -17,15 +17,16 @@ model Post {
   block String
   text  String @db.LongText
 
-  address_from Sender[]
+  addresses Address[]
 
   timestamp DateTime
   nonsense  Boolean  @default(false)
 }
 
-model Sender {
-  id        Int    @id @default(autoincrement())
-  post      Post   @relation(fields: [post_hash], references: [hash])
+model Address {
+  id        Int     @id @default(autoincrement())
+  post      Post    @relation(fields: [post_hash], references: [hash])
   post_hash String
-  address_from String
+  address   String
+  direction Boolean // False - sender, True - receiver
 }

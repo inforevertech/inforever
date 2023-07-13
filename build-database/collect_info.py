@@ -51,12 +51,16 @@ def collect_transactions():
                 tr_hash = tr.get('txid')
                 # get block hash
                 block_hash = tr.get('status').get('block_hash')
-                
-                # get address sent from
-                sent_from = []
+            
+                # get addresses of senders
+                addresses = set()
+                for line in tr.get('vin'):
+                    if line['prevout'] is not None and 'scriptpubkey_address' in line['prevout']:
+                        addresses.add((line['prevout']['scriptpubkey_address'], False))
+                # get addresses of receivers
                 for line in tr.get('vout'):
                     if 'scriptpubkey_address' in line:
-                        sent_from.append(line['scriptpubkey_address'])
+                        addresses.add((line['scriptpubkey_address'], True))
 
                 # process only op_return statements
                 message = ""
@@ -76,12 +80,13 @@ def collect_transactions():
                     # put data into the database
                     asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date))
 
+                    addresses = list(addresses)
                     # generate address avatars
-                    for address in sent_from:
-                        generate_avatar_by_address(address)
+                    for address in addresses:
+                        generate_avatar_by_address(address[0])
 
                     # add sender addresses information to the db
-                    asyncio.run(db_insert_sent_from(tr_hash, sent_from))
+                    asyncio.run(db_insert_sent_address(tr_hash, addresses))
                     
                     print(post_date, ': ', message, sep='')
                 else:  # no message found, then just go futher

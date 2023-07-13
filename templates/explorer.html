@@ -23,24 +23,40 @@
                 {% if totalNmberOfPosts == "0" %}
                     <h2 class="display-4 lh-1 mb-4 explorer_list_title">No posts yet..</h2>
                 {% else %}
-                    <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most recent human posts</h2>
+                    <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2>
 
                     <div class="post_container">
                         {% for message in messages %}
                             <div class="post_wrapper">
                                 <div class="post">
                                     <div class="post_profile_image">
-                                        <a href="/{{ message.hash }}">
-                                            <img src="{{ url_for('static', filename=find_address_avatar(message.hash)) }}" alt="profile picture" class="profile_picture">
-                                        </a>
+                                        <!-- Sent from -->
+                                        {% for address in message.addresses %}
+                                            {% if not address.direction %}
+                                                <a href="/{{ address.address }}">
+                                                    <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+                                        
+                                        <span class="from_to_arrow">&#8674;</span>
+
+                                        <!-- Sent to -->
+                                        {% for address in message.addresses %}
+                                            {% if address.direction %}
+                                                <a href="/{{ address.address }}">
+                                                    <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
                                     <div class="post_content">
                                         <div class="post_relevant_information">
-                                            <a href="/{{ message.hash }}" class="profile_name_link">Address {{ format_shorten_address(message.hash) }}</a>
+                                            <a href="/post/{{ message.hash }}" class="profile_name_link">Post #{{ format_shorten_address(message.hash) }}</a>
                                             <span class="separator">&#9900;</span>
                                             <span class="post_date">{{ format_date(message.timestamp) }}</span>
                                         </div>
-                                        <div class="post_text">{{ message.text }}</div>
+                                        <div class="post_text">{{ message.text }}</div>                                        
                                     </div>
                                 </div>
                             </div>

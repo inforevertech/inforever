@@ -32,7 +32,7 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date):
 
 
 # Receive a list of transactions
-async def db_read_transactions(limit=None, where=None):
+async def db_read_transactions(limit=None, where=None, include_addresses=True):
     prisma = Prisma()
     await prisma.connect()
 
@@ -42,6 +42,9 @@ async def db_read_transactions(limit=None, where=None):
         take=limit,
         order={
             'timestamp': 'desc',
+        },
+        include={
+            'addresses': include_addresses
         }
     )
 
@@ -50,7 +53,7 @@ async def db_read_transactions(limit=None, where=None):
 
 
 # Receive a list of human-readable messages
-async def db_read_human_messages(limit=100):
+async def db_read_human_messages(limit=100, include_addresses=True):
     prisma = Prisma()
     await prisma.connect()
 
@@ -62,6 +65,9 @@ async def db_read_human_messages(limit=100):
         },
         order={
             'timestamp': 'desc',
+        },
+        include={
+            'addresses': include_addresses
         }
     )
 
@@ -131,18 +137,30 @@ def is_nonsense(text):
 
 
 # Insert senders addresses for a transaction
-async def db_insert_sent_from(tr_hash, addresses):
+async def db_insert_sent_address(tr_hash, addresses):
     prisma = Prisma()
     await prisma.connect()
 
     # insert sender addresses to the db
+    # TODO: use upsert instead
     for address in addresses:
-        result = await prisma.sender.create(
-            data={
+        # receive total number of transactions made by this address
+        total_trs = await prisma.address.count(
+            where={
                 'post_hash': tr_hash,
-                'address_from': address
+                'address': address[0],
+                'direction': address[1]
             }
         )
+
+        if total_trs == 0:
+            await prisma.address.create(
+                data={
+                    'post_hash': tr_hash,
+                    'address': address[0],
+                    'direction': address[1]
+                }
+            )
 
     await prisma.disconnect()
 
@@ -153,7 +171,7 @@ async def db_read_addresses(limit=None, where=None):
     await prisma.connect()
 
     # read transactions
-    posts = await prisma.sender.find_many(
+    posts = await prisma.address.find_many(
         where=where,
         take=limit
     )
@@ -163,20 +181,26 @@ async def db_read_addresses(limit=None, where=None):
 
 
 # Receive a list of posts made by passed address
-async def db_find_posts_by_addresses(address, limit=None):
+async def db_find_posts_by_addresses(address, direction=False, limit=None):
     prisma = Prisma()
     await prisma.connect()
 
     # read transactions
     posts = await prisma.post.find_many(
         where={
-            'address_from': {
+            'addresses': {
                 'some': {
-                    'address_from': {
+                    'address': {
                         'equals': address
+                    },
+                    'direction': {
+                        'equals': direction
                     }
                 }
-            }
+            },
+        },
+        include={
+            'addresses': True
         },
         take=limit
     )

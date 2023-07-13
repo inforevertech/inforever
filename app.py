@@ -53,7 +53,7 @@ def index():
 
 
 # transaction explorer page
-@app.route('/tr/<transaction_id>', methods=['GET', 'POST'])
+@app.route('/post/<transaction_id>', methods=['GET', 'POST'])
 def transaction(transaction_id):
     transaction_url = request.base_url  # current page url
     blockchain_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
@@ -111,12 +111,13 @@ def explorer():
 # address/user page
 @app.route('/<id>', methods=['GET', 'POST'])
 def address(id):
-    # generate avatar if not present
-    if not os.path.isfile(os.path.abspath(__file__) + '/static/avatars/' + id + '.png'):
-        generate_avatar_by_address(id)
-
     # get a list of posts
     posts = asyncio.run(db_find_posts_by_addresses(id))
+
+    if posts:
+        # generate avatar if not present
+        if not os.path.isfile(os.path.abspath(__file__) + '/static/avatars/' + id + '.png'):
+            generate_avatar_by_address(id)
 
     return render_template('address.html',
                            address=id,
@@ -143,7 +144,7 @@ def utility_processor():
     # Return url for transaction avatar
     def find_address_avatar(address):
         # if avatar was NOT generated
-        if not os.path.isfile(os.path.abspath(__file__) + '/static/avatars/' + address + '.png'):
+        if not os.path.isfile(os.path.dirname(os.path.abspath(__file__)) + '/static/avatars/' + address + '.png'):
             return 'img/profile.png'
         return 'avatars/' + address + '.png'  # otherwise
     
