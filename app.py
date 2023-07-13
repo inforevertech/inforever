@@ -116,7 +116,7 @@ def address(id):
 
     if posts:
         # generate avatar if not present
-        if not os.path.isfile(os.path.abspath(__file__) + '/static/avatars/' + id + '.png'):
+        if not os.path.isfile(os.path.dirname(os.path.abspath(__file__)) + '/static/avatars/' + id + '.png'):
             generate_avatar_by_address(id)
 
     return render_template('address.html',
