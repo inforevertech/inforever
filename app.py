@@ -88,8 +88,6 @@ def transaction(transaction_id):
         # form generic status code response
         transaction_data = "Transaction explorer response code: " + str(transaction_data.status_code)
 
-    # TODO: fix address image generator and explorer links BY ADDRESS not message.hash
-
     return render_template('transaction.html',
                            transactionId=transaction_id,
                            transactionUrl=transaction_url,
@@ -108,6 +106,8 @@ def explorer():
     if not transactions:
         return 'Nothing was found in the database.'
     
+    # TODO: fix address explorer links BY ADDRESS not message.hash
+    
     return render_template('explorer.html',
                            totalNmberOfPosts=f'{asyncio.run(db_transactions_count()):,}',
                            messages=transactions)
@@ -121,11 +121,7 @@ def address(id):
         generate_avatar_by_address(id)
 
     # get a list of posts
-    # TODO: create actual one-to-many relation between posts and addresses
-    address_transactions = asyncio.run(db_read_addresses(where={ 'address_from': id }))
-    posts = []
-    for address in address_transactions:
-        posts += asyncio.run(db_read_transactions(where={ 'hash': address.post_hash }))
+    posts = asyncio.run(db_find_posts_by_addresses(id))
 
     return render_template('address.html',
                            address=id,

@@ -7,7 +7,7 @@
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
                     <p class="mb-2">Bitcoin Testnet Address</p>
-                    <p class="transaction_id_title mb-lg-0">{{ address }}</p>
+                    <p class="transaction_id_title mb-lg-0">{{ address }} - {{ totalNmberOfPosts }} posts</p>
                 </div>
             </div>
         </div>
@@ -20,7 +20,6 @@
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-12">
-                <h2 class="display-4 lh-1 mb-4 explorer_list_title">{{ totalNmberOfPosts }} posts</h2>
 
                 <div class="post_container">
                     {% for message in messages %}

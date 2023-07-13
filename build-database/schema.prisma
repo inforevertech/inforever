@@ -17,7 +17,7 @@ model Post {
   block String
   text  String @db.LongText
 
-  // address_from AddressTransaction[]
+  address_from Sender[]
 
   timestamp DateTime
   nonsense  Boolean  @default(false)
@@ -25,7 +25,7 @@ model Post {
 
 model Sender {
   id        Int    @id @default(autoincrement())
-  // post      Post   @relation(fields: [post_hash], references: [hash])
+  post      Post   @relation(fields: [post_hash], references: [hash])
   post_hash String
   address_from String
 }

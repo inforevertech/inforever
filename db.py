@@ -160,3 +160,26 @@ async def db_read_addresses(limit=None, where=None):
 
     await prisma.disconnect()
     return posts
+
+
+# Receive a list of posts made by passed address
+async def db_find_posts_by_addresses(address, limit=None):
+    prisma = Prisma()
+    await prisma.connect()
+
+    # read transactions
+    posts = await prisma.post.find_many(
+        where={
+            'address_from': {
+                'some': {
+                    'address_from': {
+                        'equals': address
+                    }
+                }
+            }
+        },
+        take=limit
+    )
+
+    await prisma.disconnect()
+    return posts
