@@ -19,13 +19,13 @@ class Collector:
         # go through all block starting from the highest
         while self.height >= 0:
             try:
-                self.collect_block(past_posts=past_posts, wait_time=1)
+                self.collect_block(past_posts=past_posts)
                 self.height += -1 if past_posts else 1
             except Exception as e:
-                print(str(e))
+                print(str(self.height), ': ', str(e), sep='')
             time.sleep(wait_time)
         
-    def collect_block(self, past_posts=True, wait_time=100):
+    def collect_block(self, past_posts=True):
         # find current block hash
         current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(self.height)).text
 
@@ -95,7 +95,7 @@ class Collector:
 # starting point
 if __name__ == '__main__':
     # height of the highest block in the blockchain
-    top_height = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text)
+    top_height = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text) - 2
     
     # launch collector of recent posts
     collector = Collector(top_height)

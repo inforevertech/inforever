@@ -136,6 +136,25 @@ def is_nonsense(text):
     return nonsense_check
 
 
+# Return post content
+async def db_find_post(post_hash):
+    prisma = Prisma()
+    await prisma.connect()
+    
+    # find post by its hash
+    post = await prisma.post.find_unique(
+        where={
+            'hash': post_hash,
+        },
+        include={
+            'addresses': True
+        }
+    )
+    
+    await prisma.disconnect()
+    return post
+
+
 # Insert senders addresses for a transaction
 async def db_insert_sent_address(tr_hash, addresses):
     prisma = Prisma()

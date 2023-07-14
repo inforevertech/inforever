@@ -1,0 +1,94 @@
+{% include "header.html" %}
+
+<!-- transaction id information block -->
+<header class="masthead text-center bg-gradient-primary-to-secondary">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-xl-12">
+                <div class="h2 fs-1 text-white">
+                    <p class="mb-2">Bitcoin Testnet Post</p>
+                    <p class="transaction_id_title mb-lg-0">{{ post_hash }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Basic features section-->
+<section class="bg-light" id="post_msg">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
+            <div class="col-12 col-lg-5">
+                {% if post %}
+                    <div class="post_profile_image">
+                        <!-- Sent from -->
+                        {% for address in post.addresses %}
+                            {% if not address.direction %}
+                                <a href="/{{ address.address }}">
+                                    <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <span class="from_to_arrow">&#8674;</span>
+
+                        <!-- Sent to -->
+                        {% for address in post.addresses %}
+                            {% if address.direction %}
+                                <a href="/{{ address.address }}">
+                                    <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <h5 class="lh-1 mb-2"><span class="post_date">{{ format_date(post.timestamp) }}</span></h5>
+                    <br>
+                    <h5 class="lh-1 mb-2">Post: </span></h5>
+                    <p class="lead fw-normal text-muted mb-5 mb-lg-0">{{ post.text }}</p>
+                {% else %}
+                    <h3 class="lh-1 mb-2">Post is still waiting for acceptance into mempool or not existent.</h3>
+                {% endif %}
+
+                <br>
+                <p><a href="{{ blockchainUrl }}" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+            </div>
+            <div class="col-sm-8 col-md-6">
+                
+                <h5 class="display-6 mb-4">This post is published on the Bitcoin Blockchain.</h5>
+                <p class="lead fw-normal text-muted mb-5 mb-lg-0">It is kept forever.<br>Cannot be censored.<br>Accessible by everyone.</p>
+                <button class="btn btn-primary px-3 mb-2 mb-lg-0" id="copy_link_btn">Copy the link</button>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- copy to link to clipboard script -->
+<script>
+    function copyTextToClipboard(text) {
+        if (!navigator.clipboard) {
+            fallbackCopyTextToClipboard(text);
+            return;
+        }
+
+        navigator.clipboard.writeText(text).then(function() {
+            console.log('Async: Copying to clipboard was successful!');
+        }, function(err) {
+            console.error('Async: Could not copy text: ', err);
+        });
+    }
+
+    // on button click add the link to clipboard
+    const button = document.getElementById("copy_link_btn");
+    button.addEventListener("click", (event) => {
+        copyTextToClipboard("{{ url_for('post', hash=post_hash, _external=True) }}");
+
+        button.classList.add("clicked_copy_btn");
+        setTimeout(() => {
+            button.classList.remove("clicked_copy_btn")
+        }, 3000);
+    });
+</script>
+
+{% include "footer.html" %}

@@ -53,49 +53,21 @@ def index():
 
 
 # transaction explorer page
-@app.route('/post/<transaction_id>', methods=['GET', 'POST'])
-def transaction(transaction_id):
-    transaction_url = request.base_url  # current page url
-    blockchain_url = "https://live.blockcypher.com/btc-testnet/tx/" + transaction_id + "/"
-    transaction_data = requests.get("https://blockstream.info/testnet/api/tx/" + transaction_id)
-    post_date = ""
-    status_code = transaction_data.status_code
-
-    if status_code == 200:
-        # form success response with decryped OP_RETURN data
-        transaction_data = transaction_data.json()
-
-        # get posted datetime
-        try:
-            post_date = datetime.datetime.fromtimestamp(transaction_data.get('status').get('block_time'))
-        except:
-            post_date = ""
-
-        # form output message
-        outputs = []
-        for line in transaction_data.get('vout'):
-            if line['scriptpubkey_type'] == 'op_return':  # process only op_return statements
-                # decode hex to utf-8
-                hex_value = line['scriptpubkey'][4:]
-                utf8_value = bytes.fromhex(hex_value).decode("utf-8")
-                outputs.append(utf8_value)
-
-        transaction_data = '\n'.join(outputs)
-
-    elif status_code == 404:
+@app.route('/post/<hash>', methods=['GET', 'POST'])
+def post(hash):
+    post = asyncio.run(db_find_post(hash))
+    blockchainUrl="https://live.blockcypher.com/btc-testnet/tx/" + hash + "/"
+    
+    if not post:
         # form transaction not ready or not existent response
-        transaction_data = "Still waiting for acceptance into mempool or not existent."
-    else:
-        # form generic status code response
-        transaction_data = "Transaction explorer response code: " + str(transaction_data.status_code)
+        return render_template('post.html',
+                                post_hash=hash,
+                                blockchainUrl=blockchainUrl)
 
-    return render_template('transaction.html',
-                           transactionId=transaction_id,
-                           transactionUrl=transaction_url,
-                           transactionData=transaction_data,
-                           postDate=post_date,
-                           blockchainUrl=blockchain_url,
-                           statusCode=status_code)
+    return render_template('post.html',
+                            post=post,
+                            post_hash=hash,
+                            blockchainUrl=blockchainUrl)
 
 
 # blockchain messages explorer page
