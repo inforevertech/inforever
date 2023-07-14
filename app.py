@@ -145,7 +145,7 @@ def utility_processor():
     def find_address_avatar(address):
         # if avatar was NOT generated
         if not os.path.isfile(os.path.dirname(os.path.abspath(__file__)) + '/static/avatars/' + address + '.png'):
-            return 'img/profile.png'
+            return 'avatars/profile.png'
         return 'avatars/' + address + '.png'  # otherwise
     
     return dict(format_shorten_address=format_shorten_address,

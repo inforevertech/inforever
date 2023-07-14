@@ -10,7 +10,7 @@ Inforever works as a client presenting a user-friendly interface to display and 
 3. When the transaction is sent and the fee is paid, the message is recorded.
 4. Use Inforever Explorer to see and share your messages in a friendly format.
 
-# To launch
+## To launch
 ```shell
 # Launch MySQL server on your local machine and create a database
 

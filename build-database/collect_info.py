@@ -11,23 +11,35 @@ from avatar_generator import generate_avatar_by_address
 # 1. Go through all blocks in the TESTNET blockchain and find all transactions within it.
 # 2. Put only OP_RETURN statements and related information into the database.
 
-def collect_transactions():
-    # hight of latest block on the blockchain
-    global current_height
-
-    # go through all block starting from the highest
-    while current_height >= 0:
+class Collector:
+    def __init__(self, height):
+        self.height = height
+        
+    def collection_service(self, past_posts=True, wait_time=100):
+        # go through all block starting from the highest
+        while self.height >= 0:
+            try:
+                self.collect_block(past_posts=past_posts, wait_time=wait_time)
+                self.height += -1 if past_posts else 1
+            except Exception as e:
+                print('error.\n')
+                print(str(e))
+            time.sleep(wait_time)
+        
+    def collect_block(self, past_posts=True, wait_time=100):
         try:
             # find current block hash
-            current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(current_height)).text
+            current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(self.height)).text
 
             # find total number of transactions in the block
             num_of_transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block)).json().get('tx_count')
             observed_trans_counter = 0
-        except:
+        except Exception as e:
             print('error.\n')
-            time.sleep(10)
-            collect_transactions()
+            print(str(e))
+            time.sleep(wait_time)
+            self.collect_block(past_posts=past_posts, wait_time=wait_time)
+            return
 
         # go through all transactions in the block
         while observed_trans_counter < num_of_transactions:
@@ -37,10 +49,12 @@ def collect_transactions():
                 # get up to 25 transactions in the current block
                 transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
                 transactions = transactions.json()
-            except:  # may return 'too many requests' response
+            except Exception as e:
                 print('error.\n')
-                time.sleep(10)
-                collect_transactions()
+                print(str(e))  # may return 'too many requests' response
+                time.sleep(wait_time)
+                self.collect_block(past_posts=past_posts, wait_time=wait_time)
+                return
 
             observed_trans_counter += len(transactions)
 
@@ -92,10 +106,12 @@ def collect_transactions():
                 else:  # no message found, then just go futher
                     continue
             
-        # decrease block height to find previous messages/transactions
-        current_height -= 1
-
 
 # starting point
-current_height = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text)
-collect_transactions()
+if __name__ == '__main__':
+    # height of the highest block in the blockchain
+    top_height = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text)
+    
+    # launch collector of recent posts
+    collector = Collector(top_height)
+    collector.collection_service(past_posts=False, wait_time=100)
