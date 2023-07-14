@@ -9,3 +9,33 @@ Inforever works as a client presenting a user-friendly interface to display and 
 2. Create a message and use your private key to send it to the blockchain.
 3. When the transaction is sent and the fee is paid, the message is recorded.
 4. Use Inforever Explorer to see and share your messages in a friendly format.
+
+# To launch
+```shell
+# Launch MySQL server on your local machine and create a database
+
+# 1. Install virtualenv
+pip install virtualenv
+
+# 2. Create a virtualenv
+virtualenv -p python3 venv
+
+# 3. To activate virtual environment on Linux or MacOS: 
+source venv/bin/activate
+# Alternatively, to activate virtual environment on Windows:
+# .\venv\Scripts\activate
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# Don't forget to configure ./.env and ./buil-data-base/.env files NOW
+
+# 5. Generate database structure
+prisma generate --schema=./build-database/schema.prisma
+
+# 6. Scrape some data from blockchain for database
+python3 ./build-database/collect_info.py
+
+# 7. Launch the website
+python3 app.py
+```
