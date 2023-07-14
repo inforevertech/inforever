@@ -123,6 +123,13 @@ def address(id):
                            address=id,
                            totalNmberOfPosts=f'{len(posts):,}',
                            messages=posts)
+    
+
+# about us page
+@app.route('/about', methods=['GET'])
+def about():
+    # return static template
+    return render_template('about.html')
 
 
 # Template fields format functions

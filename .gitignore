@@ -145,6 +145,7 @@ cython_debug/
 
 # user avatars
 static/avatars/*
+!static/avatars/profile.png
 
 # custom env
 inforever_env/

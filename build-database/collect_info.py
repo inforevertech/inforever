@@ -19,42 +19,27 @@ class Collector:
         # go through all block starting from the highest
         while self.height >= 0:
             try:
-                self.collect_block(past_posts=past_posts, wait_time=wait_time)
+                self.collect_block(past_posts=past_posts, wait_time=1)
                 self.height += -1 if past_posts else 1
             except Exception as e:
-                print('error.\n')
                 print(str(e))
             time.sleep(wait_time)
         
     def collect_block(self, past_posts=True, wait_time=100):
-        try:
-            # find current block hash
-            current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(self.height)).text
+        # find current block hash
+        current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(self.height)).text
 
-            # find total number of transactions in the block
-            num_of_transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block)).json().get('tx_count')
-            observed_trans_counter = 0
-        except Exception as e:
-            print('error.\n')
-            print(str(e))
-            time.sleep(wait_time)
-            self.collect_block(past_posts=past_posts, wait_time=wait_time)
-            return
+        # find total number of transactions in the block
+        num_of_transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block)).json().get('tx_count')
+        observed_trans_counter = 0
 
         # go through all transactions in the block
         while observed_trans_counter < num_of_transactions:
             time.sleep(0.1)  # take a pause to prevent 'too many requests' response
 
-            try:
-                # get up to 25 transactions in the current block
-                transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
-                transactions = transactions.json()
-            except Exception as e:
-                print('error.\n')
-                print(str(e))  # may return 'too many requests' response
-                time.sleep(wait_time)
-                self.collect_block(past_posts=past_posts, wait_time=wait_time)
-                return
+            # get up to 25 transactions in the current block
+            transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
+            transactions = transactions.json()
 
             observed_trans_counter += len(transactions)
 
