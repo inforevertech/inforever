@@ -169,3 +169,46 @@ html {
     position: relative;
     top: 4px;
 }
+.network_select_wrapper {
+    flex-basis: auto;
+    flex-grow: 15;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+#network_select_label {
+    display: inline-block;
+    /* font-weight: bold; */
+
+    color: #fff;
+    background-color: #333;
+
+    padding: 10px 20px;
+    border-radius: 800px;
+}
+#network_select {
+    margin-left: 15px;
+    padding-left: 10px;
+    padding-right: 20px;
+
+    border: none;
+    border-radius: 20px;
+    background-color: inherit;
+    color: inherit;
+
+    font-weight: bold;
+}
+.btn-primary {
+    background-color: #024cb5;
+    border-color: #024cb5;
+    font-weight: bold;
+
+    padding: 10px 25px !important;
+}
+.navbar-brand {
+    color: #fff;
+    display: inline-block;
+    padding: 0 20px 0 10px;
+    margin: 0;
+}

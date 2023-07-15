@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, make_response, g
 from werkzeug.exceptions import HTTPException
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
@@ -7,8 +7,11 @@ from db import *
 import datetime
 import asyncio
 import os.path
-
 from avatar_generator import generate_avatar_by_address
+
+
+DEFAULT_NET='btc-test'
+
 
 app = Flask(__name__)
 
@@ -34,21 +37,21 @@ def index():
                             "Use the following faucet to get testnet satoshis: https://testnet-faucet.com/btc-testnet/"]
             
             # return page with insufficient funds information
-            return render_template('error.html',
+            return response(render_template('error.html',
                                    errorTitle="Insufficient Funds",
                                    additionalInfo=key.address,
-                                   errorContent=errorContent)
+                                   errorContent=errorContent))
         except:
             # return page with error description
-            return render_template('error.html',
+            return response(render_template('error.html',
                                    errorTitle="Error occured",
                                    additionalInfo=key.address,
-                                   errorContent=["Error message: " + str(e)])
+                                   errorContent=["Error message: " + str(e)]))
 
         return redirect("/tr/" + transaction_id)
 
-    return render_template('index.html',
-                           recommende_fee=get_fee_cached())
+    return response(render_template('index.html',
+                           recommende_fee=get_fee_cached()))
 
 
 # transaction explorer page
@@ -63,10 +66,10 @@ def post(hash):
                                 post_hash=hash,
                                 blockchainUrl=blockchainUrl)
 
-    return render_template('post.html',
+    return response(render_template('post.html',
                             post=post,
                             post_hash=hash,
-                            blockchainUrl=blockchainUrl)
+                            blockchainUrl=blockchainUrl))
 
 
 # blockchain messages explorer page
@@ -79,10 +82,10 @@ def explorer():
     else:
         human, where = False, None
     
-    return render_template('explorer.html',
+    return response(render_template('explorer.html',
                            totalNmberOfPosts=f'{asyncio.run(db_transactions_count(where=where)):,}',
                            messages=asyncio.run(db_read_transactions(where=where, limit=50)),
-                           human=human)
+                           human=human))
 
 
 # address/user page
@@ -96,18 +99,44 @@ def address(id):
         if not os.path.isfile(os.path.dirname(os.path.abspath(__file__)) + '/static/avatars/' + id + '.png'):
             generate_avatar_by_address(id)
 
-    return render_template('address.html',
+    return response(render_template('address.html',
                            address=id,
                            totalNmberOfPosts=f'{len(posts):,}',
-                           messages=posts)
+                           messages=posts))
     
 
 # about us page
 @app.route('/about', methods=['GET'])
 def about():
     # return static template
-    return render_template('about.html')
+    return response(render_template('about.html'))
 
+
+# form http response with optional cookies
+def response(template, cookies=None, **parameters):
+    # create a response
+    resp = make_response(template)
+    
+    # check get parameters and set cookies
+    net = request.args.get('net')
+    if net is not None and net in ['btc-main', 'btc-test']:
+        resp.set_cookie('net', net)
+        print("set cookie!", net)
+        
+    return resp
+
+
+# share some variables with templates through global variables
+@app.before_request
+def set_global_variables():
+    # set default blockchain networl
+    if request.args.get('net') in ['btc-main', 'btc-test']:
+        g.net = request.args.get('net')
+    elif request.cookies.get('net'):
+        g.net = request.cookies.get('net')
+    else:
+        g.net = DEFAULT_NET
+        
 
 # Template fields format functions
 @app.context_processor
@@ -140,18 +169,18 @@ def utility_processor():
 # 404 page not found
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('error.html',
+    return response(render_template('error.html',
                             errorTitle="Sorry, this page was not found.",
                             additionalInfo="Error 404",
-                            errorContent=[str(e)]), 404
+                            errorContent=[str(e)])), 404
 
 # other HTTP exceptions
 @app.errorhandler(HTTPException)
 def page_error(e):
-    return render_template('error.html',
+    return response(render_template('error.html',
                             errorTitle="Sorry, a problem occured.",
                             additionalInfo="Error " + str(e.code),
-                            errorContent=[str(e)]), e.code
+                            errorContent=[str(e)])), e.code
 
 
 if __name__ == '__main__':
