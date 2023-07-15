@@ -52,36 +52,13 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True):
     return posts
 
 
-# Receive a list of human-readable messages
-async def db_read_human_messages(limit=100, include_addresses=True):
-    prisma = Prisma()
-    await prisma.connect()
-
-    # read transactions
-    posts = await prisma.post.find_many(
-        take=limit,
-        where={
-            'nonsense': False,
-        },
-        order={
-            'timestamp': 'desc',
-        },
-        include={
-            'addresses': include_addresses
-        }
-    )
-
-    await prisma.disconnect()
-    return posts
-
-
 # Receive total number of posts in the database
 async def db_transactions_count(where=None):
     prisma = Prisma()
     await prisma.connect()
 
     # receive total number of transactions
-    total_posts = await prisma.post.count()
+    total_posts = await prisma.post.count(where=where)
 
     await prisma.disconnect()
     return total_posts

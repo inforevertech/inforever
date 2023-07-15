@@ -16,7 +16,7 @@
 
 
 <!-- Basic features section-->
-<section class="bg-light" id="post_msg">
+<section class="bg-light posts_section" id="post_msg">
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-12">
@@ -24,6 +24,14 @@
                     <h2 class="display-4 lh-1 mb-4 explorer_list_title">No posts yet..</h2>
                 {% else %}
                     <!-- <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2> -->
+                    <div class="filter">
+                        <!-- Rounded switch Human Readable On/Off -->
+                        <label class="switch" id="hum_read_switch">
+                            <input type="checkbox" {% if human %}checked{% endif %}>
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="hum_read_switch_text">Human Readable Filter</span>
+                    </div>
 
                     <div class="post_container">
                         {% for message in messages %}
@@ -77,8 +85,17 @@
             // Simulate a mouse click:
             window.location.href = block.getElementsByClassName('profile_name_link')[0].href;
         });
-    })
+    });
 
+    let switchHumRead = document.getElementById("hum_read_switch");
+    switchHumRead.addEventListener('click', () => {
+        // Simulate a mouse click:
+        {% if human %}
+            window.location.href = "{{ url_for('explorer') }}?human=0";
+        {% else %}
+            window.location.href = "{{ url_for('explorer') }}?human=1";
+        {% endif %}
+    });
 </script>
 
 {% include "footer.html" %}

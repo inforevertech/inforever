@@ -72,11 +72,17 @@ def post(hash):
 # blockchain messages explorer page
 @app.route('/explorer', methods=['GET', 'POST'])
 def explorer():
-    transactions = asyncio.run(db_read_human_messages(limit=100))
+    # human-readable format filtration
+    human = request.args.get('human')
+    if human is None or human == "1":
+        human, where = True, { 'nonsense': False }
+    else:
+        human, where = False, None
     
     return render_template('explorer.html',
-                           totalNmberOfPosts=f'{asyncio.run(db_transactions_count()):,}',
-                           messages=transactions)
+                           totalNmberOfPosts=f'{asyncio.run(db_transactions_count(where=where)):,}',
+                           messages=asyncio.run(db_read_transactions(where=where, limit=50)),
+                           human=human)
 
 
 # address/user page
