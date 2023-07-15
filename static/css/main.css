@@ -91,10 +91,18 @@ html {
     border-radius: 20px;
 
     background-color: #FDFDFC;
+    display: block;
+    cursor: pointer;
 }
 .post_profile_image a {
     display: inline-block;
     margin-right: 20px;
+}
+.arrow_address {
+    margin-right: 0 !important;
+}
+.post_relevant_information {
+    margin-bottom: 10px;
 }
 .post_profile_image {
     margin-right: 20px;
@@ -104,8 +112,13 @@ html {
 .post_profile_image img {
     height: 40px;
 }
+.separator {
+    margin: 0 3px;
+}
 .profile_name_link {
     text-decoration: none;
+    font-weight: bold;
+    color: #444;
     font-weight: bold;
 }
 .post_date, .separator {
@@ -118,10 +131,26 @@ html {
     padding-top: 3.5rem;
 }
 .from_to_arrow {
-    font-size: 2rem;
+    font-size: 1.9rem;
     font-weight: bold;
-    color: var(--bs-link-hover-color);
+    color: #444;
     display: inline-block;
     transform: translateY(6px);
     margin-right: 20px;
+}
+
+.return_arrow {
+    display: inline-block;
+    font-size: 1.7rem;
+    transform: rotate(180deg);
+    text-decoration: none;
+    transition: transform 0.03s;
+    margin-bottom: 10px;
+}
+.return_arrow a {
+    text-decoration: none;
+    color: #444;
+}
+.return_arrow:hover {
+    transform: rotate(180deg) scale(1.2) !important;
 }

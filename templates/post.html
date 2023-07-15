@@ -19,6 +19,7 @@
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-5">
+                <div class="return_arrow"><a href="/explorer">&#10150;</a></div>
                 {% if post %}
                     <div class="post_profile_image">
                         <!-- Sent from -->
@@ -30,7 +31,7 @@
                             {% endif %}
                         {% endfor %}
                         
-                        <span class="from_to_arrow">&#8674;</span>
+                        <a href="/post/{{ post.hash }}" class="arrow_address"><span class="from_to_arrow">&#10143;</span></a>
 
                         <!-- Sent to -->
                         {% for address in post.addresses %}

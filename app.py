@@ -4,7 +4,6 @@ from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
 from db import *
-import requests
 import datetime
 import asyncio
 import os.path

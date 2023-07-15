@@ -7,7 +7,7 @@
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
                     <p class="mb-2">Bitcoin Testnet Explorer</p>
-                    <p class="transaction_id_title mb-lg-0">{{ totalNmberOfPosts }} posts in total.</p>
+                    <p class="transaction_id_title mb-lg-0">{{ totalNmberOfPosts }} posts</p>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
                 {% if totalNmberOfPosts == "0" %}
                     <h2 class="display-4 lh-1 mb-4 explorer_list_title">No posts yet..</h2>
                 {% else %}
-                    <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2>
+                    <!-- <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2> -->
 
                     <div class="post_container">
                         {% for message in messages %}
@@ -39,7 +39,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         
-                                        <span class="from_to_arrow">&#8674;</span>
+                                        <a href="/post/{{ message.hash }}" class="arrow_address"><span class="from_to_arrow">&#10143;</span></a>
 
                                         <!-- Sent to -->
                                         {% for address in message.addresses %}
@@ -67,5 +67,18 @@
         </div>
     </div>
 </section>
+
+<!-- script for posts refering -->
+<script>
+    let post_blocks = document.getElementsByClassName('post_wrapper');
+
+    Array.prototype.forEach.call(post_blocks, (block) => {
+        block.addEventListener('click', () => {
+            // Simulate a mouse click:
+            window.location.href = block.getElementsByClassName('profile_name_link')[0].href;
+        });
+    })
+
+</script>
 
 {% include "footer.html" %}
