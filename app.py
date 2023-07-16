@@ -146,6 +146,17 @@ def about(net=None):
     return response(render_template('about.html'))
 
 
+# contact us page
+# @app.route('/contact', methods=['GET'])
+@optional.routes('/<net>?/contact')
+def contact(net=None):
+    # switch network
+    network_switch(net)
+    
+    # return static template
+    return response(render_template('contact.html'))
+
+
 # proccess url network switch
 def network_switch(net):
     # switch network

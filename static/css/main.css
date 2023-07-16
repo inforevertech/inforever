@@ -42,7 +42,6 @@ html {
 #private_key {
     display: block;
     width: 100%;
-    padding: 5px 10px;
 }
 .private_key_label, .fee_label {
     margin-top: 20px;
@@ -247,4 +246,37 @@ html {
 #post_msg {
     padding-top: 6rem;
     padding-bottom: 6rem;
+}
+.faucet_link {
+    text-decoration: none;
+}
+.explorer-header-link {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.btn-contact-us {
+    background-color: #fff;
+    color: #2937f0;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 12px 30px !important;
+    display: inline-block;
+}
+.btn-contact-us:hover {
+    background-color: #000 !important;
+}
+.quick_post_input {
+    border: 1px solid #777;
+    border-radius: 10px;
+    margin-top: 5px;
+    padding: 7px 15px;
+    outline: none;
+    display: inline-block;
+}
+.quick_post_input:focus {
+    outline: 1px solid rgb(35, 47, 204);
+    border: 1px solid rgb(35, 47, 204);
+}
+#private_key {
+    font-size: 0.8rem;
 }

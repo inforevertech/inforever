@@ -73,19 +73,23 @@
                 <div class="col-sm-8 col-md-6">
                     <form class="px-5 px-sm-0" action="/"  method="post">
                         <label for="msgInput" class="msgInput_label">Message:
-                            <textarea name="message" id="msgInput" cols="30" rows="10" placeholder=""></textarea>
+                            <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>
                         </label>
-                        <label for="private_key" class="private_key_label">{% if g.net == "btc-test" %}Testnet {% endif %}Private Key
-                            <input type="text" name="private" id="private_key">
-                        </label>
+                        <label for="private_key" class="private_key_label">{% if g.net == "btc-test" %}Testnet {% endif %}Private Key:
+                            {% if g.net == "btc-test" %}
+                                <input type="password" name="private" id="private_key" class="quick_post_input" placeholder="Ex: cVwJHvfczdpMeQf4kBhTYWaVPaZgF8J9LiMWnuUU2VyGgCZtLo8p">
+                            {% elif g.net == "btc" %}
+                                <input type="password" name="private" id="private_key" class="quick_post_input" placeholder="Ex: KwsxZPGPPKY6Qd6h1ebVy5ZZcHy43pAK5qQoVoisAPj9scdZXQY1">
+                            {% endif %}
+                            </label>
 
                         <label for="fee" class="fee_label">Transaction fee (recommended <span id="fee_calculator">0</span> satoshis):
-                            <input type="number" value="0" name="fee" id="fee">
+                            <input type="number" value="0" name="fee" id="fee" class="quick_post_input">
                         </label>
 
                         <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" id="post_btn" type="submit">
                             <span class="d-flex align-items-center">
-                                <span class="small">Post message</span>
+                                Post message
                             </span>
                         </button>
                     </form>
@@ -167,11 +171,11 @@
     <!-- Contact us section-->
     <section class="bg-gradient-primary-to-secondary" id="download">
         <div class="container px-5">
-            <h2 class="text-center text-white font-alt mb-4">Contact us!</h2>
+            <h2 class="text-center text-white font-alt mb-4">Don't hide from asking!</h2>
 
             <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center">
-                <a class="email_link" href="mailto:inforever@kartamyshev.me">
-                    <span>inforever@kartamyshev.me</span>
+                <a href="{{ url_for('contact') }}">
+                    <button class="btn-primary btn btn-contact-us">Talk to us!</button>
                 </a>
             </div>
         </div>
