@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, make_response, abort, g
 from flask_optional_routes import OptionalRoutes
+from flask_mail import Mail, Message
 from werkzeug.exceptions import HTTPException
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
@@ -8,11 +9,13 @@ from db import *
 import datetime
 import asyncio
 import os.path
+import re
 from avatar_generator import generate_avatar_by_address
 
 
 app = Flask(__name__)
 optional = OptionalRoutes(app)
+mail = Mail(app)  # TODO: configure email server
 
 NET_LIST = [
     { 'tag': 'btc', 'name': 'Bitcoin Blockchain' },
@@ -148,13 +151,29 @@ def about(net=None):
 
 # contact us page
 # @app.route('/contact', methods=['GET'])
-@optional.routes('/<net>?/contact')
+@optional.routes('/<net>?/contact', methods=['GET', 'POST'])
 def contact(net=None):
     # switch network
     network_switch(net)
+
+    status = 'none'
+    # check post parameters
+    if request.method == 'POST':
+        name, email, message = request.form['name'], request.form['email'], request.form['message']
+        if name and email and message and re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            # send an email to contact us
+            msg = Message(message + "\nfrom " + request.form['name'] + " " + email,
+                          sender=email,
+                          recipients=[])
+            # mail.send(msg)
+
+            status = 'success'
+        else:
+            status = 'error'
+
     
     # return static template
-    return response(render_template('contact.html'))
+    return response(render_template('contact.html', status=status))
 
 
 # proccess url network switch

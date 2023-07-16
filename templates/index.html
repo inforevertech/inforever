@@ -44,7 +44,7 @@
     </header>
 
     <!-- Quote/testimonial aside-->
-    <aside class="text-center bg-gradient-primary-to-secondary">
+    <aside class="text-center bg-gradient-secondary-to-primary">
         <div class="container px-5">
             <div class="row gx-5 justify-content-center">
                 <div class="col-xl-8">
@@ -75,7 +75,7 @@
                         <label for="msgInput" class="msgInput_label">Message:
                             <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>
                         </label>
-                        <label for="private_key" class="private_key_label">{% if g.net == "btc-test" %}Testnet {% endif %}Private Key:
+                        <label for="private_key" class="private_key_label">Bitcoin {% if g.net == "btc-test" %}Testnet {% endif %}Private Key:
                             {% if g.net == "btc-test" %}
                                 <input type="password" name="private" id="private_key" class="quick_post_input" placeholder="Ex: cVwJHvfczdpMeQf4kBhTYWaVPaZgF8J9LiMWnuUU2VyGgCZtLo8p">
                             {% elif g.net == "btc" %}
@@ -149,7 +149,7 @@
                                 <div class="text-center">
                                     <i class="bi-patch-check icon-feature text-gradient d-block mb-3"></i>
                                     <h3 class="font-alt">Trustworthy</h3>
-                                    <p class="text-muted mb-0">Code is open source, so you know what is going on under the hood.</p>
+                                    <p class="text-muted mb-0">Our code is open source, so you know what is going on under the hood.</p>
                                 </div>
                             </div>
                             <div class="col-md-6 feature_icon_wrapper">

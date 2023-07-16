@@ -16,6 +16,8 @@ cssselect2==0.7.0
 defusedxml==0.7.1
 exceptiongroup==1.1.2
 Flask==2.3.2
+Flask-Mail==0.9.1
+flask-optional-routes==1.4.1
 futures==3.0.5
 goslate==1.5.4
 h11==0.14.0

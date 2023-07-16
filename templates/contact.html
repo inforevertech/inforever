@@ -1,13 +1,12 @@
 {% include "header.html" %}
 
 <!-- title information block -->
-<header class="masthead text-center bg-gradient-primary-to-secondary">
+<header class="masthead masthead-contact text-center bg-gradient-primary-to-secondary">
     <div class="container px-5">
         <div class="row gx-5 justify-content-center">
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
-                    <p class="mb-2">Contact us</p>
-                    <p class="transaction_id_title mb-lg-0">Inforever</p>
+                    <p class="mb-2">Contact Inforever Team</p>
                 </div>
             </div>
         </div>
@@ -17,9 +16,46 @@
 <!-- Text Info section-->
 <section class="bg-light" id="post_msg">
     <div class="container px-5">
-        <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
-            <div class="col-12 col-lg-12">
-                *email form*
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-6">
+                <form action="{{ url_for('contact') }}" method="POST" id="contact_form" class="row">
+                    <div class="col-lg-6 contact_input_wrapper">
+                        <label for="contact_name_input">Name: </label>
+                        <input type="text" name="name" id="contact_name_input" class="quick_post_input" placeholder="Satoshi">
+                    </div>
+                    <div class="col-lg-6 contact_input_wrapper">
+                        <label for="">Email:</label>
+                        <input type="text" name="email" id="contact_email_input" class="quick_post_input" placeholder="in@forever.crypto">
+                    </div>
+                    <div class="col-lg-12 contact_input_wrapper">
+                        <label for="">Message:</label>
+                        <textarea name="message" id="contact_message_input" class="quick_post_input" placeholder="Dear Inforever Team,
+
+...
+
+Holy HODL,
+Satoshi"></textarea>
+                    </div>
+                    <div class="col-lg-12">
+                        {% if status == 'none' %}
+                            <button id="contact_message_submit">Submit</button>
+                        {% elif status == 'success' %}
+                            <button id="contact_message_submit" class="success_contact_message_submit">Submit</button>
+                            <script>
+                                setTimeout(() => {
+                                    document.getElementById("contact_message_submit").classList.remove("success_contact_message_submit")
+                                }, 3000)
+                            </script>
+                        {% elif status == 'error' %}
+                            <button id="contact_message_submit" class="error_contact_message_submit">Submit</button>
+                            <script>
+                                setTimeout(() => {
+                                    document.getElementById("contact_message_submit").classList.remove("error_contact_message_submit")
+                                }, 3000)
+                            </script>
+                        {% endif %}
+                    </div>
+                </form>
             </div>
         </div>
     </div>
