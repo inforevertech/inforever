@@ -339,8 +339,16 @@ html {
     font-size: 1.8rem;
     line-height: 3.5rem;
     font-weight: normal;
+    color: #fff;
 }
 .mission_icon {
     font-size: 8rem;
     margin-top: 6rem;
+}
+.masthead-contact,
+#mission_text {
+    background: none;
+}
+.masthead-mission {
+    padding-bottom: 0;
 }
