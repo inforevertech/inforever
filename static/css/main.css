@@ -228,3 +228,23 @@ html {
 .justify-right {
     justify-content: right;
 }
+
+.circle-img-wrapper {
+    margin: 2rem 0;
+}
+.feature_icon_wrapper {
+    margin-bottom: 2rem;
+}
+
+.masthead {
+    padding-top: 10rem;
+    padding-bottom: 6rem;
+}
+.fee_warning_wrapper {
+    line-height: 3.2rem;
+}
+
+#post_msg {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+}

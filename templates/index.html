@@ -8,7 +8,7 @@
                     <!-- Mashead text and app badges-->
                     <div class="mb-5 mb-lg-0 text-center text-lg-start">
                         <h1 class="display-1 lh-1 mb-3">Store your data <span class="title_emphasize">inforever</span></h1>
-                        <p class="lead fw-normal text-muted mb-5">Utilize decentralized blockchain technologies to keep any data safe, uncensored, and open for everyone.</p>
+                        <p class="lead fw-normal text-muted mb-5">Utilize decentralized blockchain technologies to keep any data protected, clear and open for everyone.</p>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -48,7 +48,7 @@
         <div class="container px-5">
             <div class="row gx-5 justify-content-center">
                 <div class="col-xl-8">
-                    <div class="h2 fs-1 text-white mb-4">
+                    <div class="h2 fs-1 text-white mb-4 fee_warning_wrapper">
                         <p>Data is published on the bitcoin{% if g.net == "btc-test" %} testnet{% endif %} blockchain, so a private key and a bit of satoshis are required to make a post.</p>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                     <p class="lead fw-normal text-muted mb-5 mb-lg-0">Use bitcoin {% if g.net == "btc-test" %} testnet{% endif %} address with some balance to post a message that will be visible for everyone forever.</p>
                     <br>
                     {% if g.net == "btc-test" %}
-                        <p class="lead fw-normal text-muted mb-5 mb-lg-0">We recommended to use <a href="https://testnet-faucet.com/btc-testnet/" class="faucet_link" target="_blank">this faucet</a> to gather some testnet satoshis.</p>
+                        <p class="lead fw-normal text-muted mb-5 mb-lg-0">We recommended to use <a href="https://testnet-faucet.com/btc-testnet/" class="faucet_link" target="_blank">this faucet</a> to collect some testnet satoshis.</p>
                     {% elif g.net == "btc" %}
                         <p class="lead fw-normal text-muted mb-5 mb-lg-0">You will be able to access your message with blockchain explorer right after.</p>
                     {% endif %}
@@ -109,8 +109,62 @@
         </div>
     </section>
 
+    <!-- Info blocks section -->
+    <section id="features" class="bg-light">
+        <div class="container px-5">
+            <div class="row gx-5 align-items-center">
+                <div class="col-lg-5 order-lg-0">
+                    <!-- Features section device mockup-->
+                    <div class="features-device-mockup circle-img-wrapper">
+                        <img class="img-fluid rounded-circle" src="https://source.unsplash.com/u8Jn2rzYIps/900x900" alt="...">
+                    </div>
+                </div>
+                <div class="col-lg-7 order-lg-1 mb-5 mb-lg-0">
+                    <div class="container-fluid px-5">
+                        <div class="row gx-5">
+                            <div class="col-md-6 mb-5 feature_icon_wrapper">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-stars icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Creative</h3>
+                                    <p class="text-muted mb-0">As always, the blockchain is free to see and use for any purpose!</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-5 feature_icon_wrapper">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-chat-square-quote icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Convenient</h3>
+                                    <p class="text-muted mb-0">Share all your thoughts on the go, forever and for everyone!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-5 mb-md-0 feature_icon_wrapper">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-patch-check icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Trustworthy</h3>
+                                    <p class="text-muted mb-0">Code is open source, so you know what is going on under the hood.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 feature_icon_wrapper">
+                                <!-- Feature item-->
+                                <div class="text-center">
+                                    <i class="bi-link-45deg icon-feature text-gradient d-block mb-3"></i>
+                                    <h3 class="font-alt">Committed</h3>
+                                    <p class="text-muted mb-0">Driven by passion, we press on, transforming dreams into reality!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- App badge section-->
+
+    <!-- Contact us section-->
     <section class="bg-gradient-primary-to-secondary" id="download">
         <div class="container px-5">
             <h2 class="text-center text-white font-alt mb-4">Contact us!</h2>
