@@ -329,3 +329,18 @@ html {
 .error_contact_message_submit {
     background-color: #873618 !important;
 }
+.mission_cols {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mission_verse {
+    text-align: center;
+    font-size: 1.8rem;
+    line-height: 3.5rem;
+    font-weight: normal;
+}
+.mission_icon {
+    font-size: 8rem;
+    margin-top: 6rem;
+}

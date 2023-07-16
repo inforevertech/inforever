@@ -138,15 +138,15 @@ def address(id, net=None):
                            human=human))
     
 
-# about us page
+# mission page
 # @app.route('/about', methods=['GET'])
-@optional.routes('/<net>?/about')
-def about(net=None):
+@optional.routes('/<net>?/mission')
+def mission(net=None):
     # switch network
     network_switch(net)
     
     # return static template
-    return response(render_template('about.html'))
+    return response(render_template('mission.html'))
 
 
 # contact us page
