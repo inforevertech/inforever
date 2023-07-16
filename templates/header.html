@@ -25,8 +25,9 @@
             <div class="network_select_wrapper">
                 <label for="network_select" id="network_select_label"><span class="navbar-brand fw-bold">Inforever</span>
                     <select id="network_select">
-                        <option value="btc-main" {% if g.net == "btc-main" %}selected hidden{% endif %}>Bitcoin Blockchain</option>
-                        <option value="btc-test" {% if g.net == "btc-test" %}selected hidden{% endif %}>Bitcoin Testnet</option>
+                        {% for net in g.nets %}
+                            <option value="{{ net['tag'] }}" {% if g.net == net['tag'] %}selected hidden{% endif %}>{{ net['name'] }}</option>
+                        {% endfor %}
                     </select>
                 </label>
             </div>
@@ -50,11 +51,17 @@
 
     <script>
         let network_select = document.getElementById('network_select');
+        let index_url = "{{ url_for('index') }}";
 
         network_select.addEventListener('change', (option) => {
-            let url = window.location.href;
-            url = url.substring(0, url.length - window.location.search.length);
-
-            window.location.href = url + "?net=" + network_select.value;
+            // form a correct path
+            let path = window.location.pathname;
+            while (path.substring(0, 3) == 'btc' || path.substring(1, 4) == 'btc') 
+                if (path.substring(0, 3) == 'btc')
+                    path = path.split('/').slice(1).join('/')
+                else
+                    path = path.split('/').slice(2).join('/')
+           
+            window.location.href = index_url + network_select.value + '/' + path + window.location.search;
         });
     </script>

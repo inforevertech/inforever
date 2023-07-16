@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, make_response, g
+from flask import Flask, render_template, request, redirect, make_response, abort, g
+from flask_optional_routes import OptionalRoutes
 from werkzeug.exceptions import HTTPException
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
@@ -10,15 +11,23 @@ import os.path
 from avatar_generator import generate_avatar_by_address
 
 
-DEFAULT_NET='btc-test'
-
-
 app = Flask(__name__)
+optional = OptionalRoutes(app)
+
+DEFAULT_NET = 'btc-test'
+NET_LIST = [
+    { 'tag': 'btc', 'name': 'Bitcoin Blockchain' },
+    { 'tag': 'btc-test', 'name': 'Bitcoin Testnet'},
+]
 
 
 # main page
-@app.route('/', methods=['GET', 'POST'])
-def index():
+# @app.route('/', methods=['GET', 'POST'])
+@optional.routes('/<net>?/')
+def index(net=None):
+    # switch network
+    network_switch(net)
+    
     if request.method == 'POST':
         # If submit button is pressed get the values from the form: messsage, private key and transaction fee.
         message = request.form['message']
@@ -54,9 +63,13 @@ def index():
                            recommende_fee=get_fee_cached()))
 
 
-# transaction explorer page
-@app.route('/post/<hash>', methods=['GET', 'POST'])
-def post(hash):
+# post explorer page
+# @app.route('/post/<hash>', methods=['GET', 'POST'])
+@optional.routes('/<net>?/post/<hash>')
+def post(hash, net=None):
+    # switch network
+    network_switch(net)
+    
     post = asyncio.run(db_find_post(hash))
     blockchainUrl="https://live.blockcypher.com/btc-testnet/tx/" + hash + "/"
     
@@ -73,8 +86,12 @@ def post(hash):
 
 
 # blockchain messages explorer page
-@app.route('/explorer', methods=['GET', 'POST'])
-def explorer():
+# @app.route('/explorer', methods=['GET', 'POST'])
+@optional.routes('/<net>?/explorer/')
+def explorer(net=None):
+    # switch network
+    network_switch(net)
+    
     # human-readable format filtration
     human = request.args.get('human')
     if human is None or human == "1":
@@ -89,8 +106,12 @@ def explorer():
 
 
 # address/user page
-@app.route('/<id>', methods=['GET', 'POST'])
-def address(id):
+# @app.route('/<id>', methods=['GET', 'POST'])
+@optional.routes('/<net>?/<id>')
+def address(id, net=None):
+    # switch network
+    network_switch(net)
+    
     # get a list of posts
     posts = asyncio.run(db_find_posts_by_addresses(id))
 
@@ -106,10 +127,32 @@ def address(id):
     
 
 # about us page
-@app.route('/about', methods=['GET'])
-def about():
+# @app.route('/about', methods=['GET'])
+@optional.routes('/<net>?/about')
+def about(net=None):
+    # switch network
+    network_switch(net)
+    
     # return static template
     return response(render_template('about.html'))
+
+
+# proccess url network switch
+def network_switch(net):
+    # switch network
+    if correct_cookie('net', net):
+        g.net = net
+    elif net is not None:  # wrong network chosen
+        abort(400, 'No blockchain "' + str(net) + '" found.') 
+        
+
+# check cookie correctness
+def correct_cookie(name, value):
+    if name == 'net':
+        if value is not None and value in [network['tag'] for network in NET_LIST]:
+            return True
+   
+    return False
 
 
 # form http response with optional cookies
@@ -117,11 +160,8 @@ def response(template, cookies=None, **parameters):
     # create a response
     resp = make_response(template)
     
-    # check get parameters and set cookies
-    net = request.args.get('net')
-    if net is not None and net in ['btc-main', 'btc-test']:
-        resp.set_cookie('net', net)
-        print("set cookie!", net)
+    # set current network cookie
+    resp.set_cookie('net', g.net)
         
     return resp
 
@@ -129,10 +169,11 @@ def response(template, cookies=None, **parameters):
 # share some variables with templates through global variables
 @app.before_request
 def set_global_variables():
-    # set default blockchain networl
-    if request.args.get('net') in ['btc-main', 'btc-test']:
+    g.nets = NET_LIST
+    # set default blockchain network
+    if correct_cookie('net', request.args.get('net')):
         g.net = request.args.get('net')
-    elif request.cookies.get('net'):
+    elif correct_cookie('net', request.cookies.get('net')):
         g.net = request.cookies.get('net')
     else:
         g.net = DEFAULT_NET
