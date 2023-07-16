@@ -99,4 +99,4 @@ if __name__ == '__main__':
     
     # launch collector of recent posts
     collector = Collector(top_height)
-    collector.collection_service(past_posts=True, wait_time=0.1)
+    collector.collection_service(past_posts=False, wait_time=100)

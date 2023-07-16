@@ -23,7 +23,7 @@
             <!-- <a class="navbar-brand fw-bold" href="/">Inforever</a> -->
 
             <div class="network_select_wrapper">
-                <label for="network_select" id="network_select_label"><span class="navbar-brand fw-bold">Inforever</span>
+                <label for="network_select" id="network_select_label"><a class="navbar-brand fw-bold network_brand" href="{{ url_for('index') }}">Inforever</a>
                     <select id="network_select">
                         {% for net in g.nets %}
                             <option value="{{ net['tag'] }}" {% if g.net == net['tag'] %}selected hidden{% endif %}>{{ net['name'] }}</option>
