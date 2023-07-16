@@ -8,10 +8,10 @@ from xml.sax.saxutils import escape as xml_escape
 
 
 COLORS = [
-    ['#9878AD', '#9878AD', '#9878AD'],
-    ['#787BAD', '#787BAD', '#787BAD'],
-    ['#78A2AD', '#78A2AD', '#78A2AD'],
-    ['#78AD8A', '#78AD8A', '#78AD8A'],
+    ['#9878AD', '#492661', '#C59BE0'],
+    ['#787BAD', '#141961', '#9B9FE0'],
+    ['#78A2AD', '#104F61', '#9BD1E0'],
+    ['#78AD8A', '#0A6129', '#9BE0B3'],
 ]
 
 INITIALS_SVG_TEMPLATE = """

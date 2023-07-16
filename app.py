@@ -14,11 +14,11 @@ from avatar_generator import generate_avatar_by_address
 app = Flask(__name__)
 optional = OptionalRoutes(app)
 
-DEFAULT_NET = 'btc-test'
 NET_LIST = [
     { 'tag': 'btc', 'name': 'Bitcoin Blockchain' },
     { 'tag': 'btc-test', 'name': 'Bitcoin Testnet'},
 ]
+DEFAULT_NET = NET_LIST[0]['tag']
 
 
 # main page
@@ -42,8 +42,9 @@ def index(net=None):
             transaction_id = key.send([], fee=fee, absolute_fee=True, message=message)
         except bitExceptions.InsufficientFunds as e:
             # form insufficient funds description
-            errorContent = ["Error message: " + str(e),
-                            "Use the following faucet to get testnet satoshis: https://testnet-faucet.com/btc-testnet/"]
+            errorContent = ["Error message: " + str(e)]
+            if g.net == 'btc-test':
+                errorContent.append("Use the following faucet to get testnet satoshis: https://testnet-faucet.com/btc-testnet/")
             
             # return page with insufficient funds information
             return response(render_template('error.html',
@@ -71,7 +72,10 @@ def post(hash, net=None):
     network_switch(net)
     
     post = asyncio.run(db_find_post(hash))
-    blockchainUrl="https://live.blockcypher.com/btc-testnet/tx/" + hash + "/"
+    if g.net == 'btc':
+        blockchainUrl="https://live.blockcypher.com/btc/tx/" + hash + "/"
+    elif g.net == 'btc-test':
+        blockchainUrl="https://live.blockcypher.com/btc-testnet/tx/" + hash + "/"
     
     if not post:
         # form transaction not ready or not existent response
