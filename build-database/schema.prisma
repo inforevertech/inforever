@@ -21,6 +21,7 @@ model Post {
 
   timestamp DateTime
   nonsense  Boolean  @default(false)
+  network   String   @default("btc-test") // or "btc"
 }
 
 model Address {
@@ -29,4 +30,5 @@ model Address {
   post_hash String
   address   String
   direction Boolean // False - sender, True - receiver
+  network   String  @default("btc-test") // or "btc"
 }

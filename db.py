@@ -1,10 +1,11 @@
 import datetime
 from prisma import Prisma
 from nostril import nonsense
+from flask import g
 
 
 # Add a new transaction into the database
-async def db_insert_transaction(tr_hash, block_hash, message, post_date):
+async def db_insert_transaction(tr_hash, block_hash, message, post_date, network):
     post_date = datetime.datetime.fromtimestamp(int(post_date))
     nonsense = is_nonsense(message)
 
@@ -22,7 +23,8 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date):
                 'block': block_hash,
                 'text': message,
                 'timestamp': post_date,
-                'nonsense': nonsense
+                'nonsense': nonsense,
+                'network': network
             },
             'update': {},
         },
@@ -35,6 +37,12 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date):
 async def db_read_transactions(limit=None, where=None, include_addresses=True):
     prisma = Prisma()
     await prisma.connect()
+
+    # specify network
+    if where is None:
+        where = { 'network': g.net }
+    else:
+        where['network'] = g.net
 
     # read transactions
     posts = await prisma.post.find_many(
@@ -56,6 +64,12 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True):
 async def db_transactions_count(where=None):
     prisma = Prisma()
     await prisma.connect()
+
+    # specify network
+    if where is None:
+        where = { 'network': g.net }
+    else:
+        where['network'] = g.net
 
     # receive total number of transactions
     total_posts = await prisma.post.count(where=where)
@@ -121,7 +135,7 @@ async def db_find_post(post_hash):
     # find post by its hash
     post = await prisma.post.find_unique(
         where={
-            'hash': post_hash,
+            'hash': post_hash
         },
         include={
             'addresses': True
@@ -133,7 +147,7 @@ async def db_find_post(post_hash):
 
 
 # Insert senders addresses for a transaction
-async def db_insert_sent_address(tr_hash, addresses):
+async def db_insert_sent_address(tr_hash, addresses, network):
     prisma = Prisma()
     await prisma.connect()
 
@@ -145,7 +159,8 @@ async def db_insert_sent_address(tr_hash, addresses):
             where={
                 'post_hash': tr_hash,
                 'address': address[0],
-                'direction': address[1]
+                'direction': address[1],
+                'network': network
             }
         )
 
@@ -154,7 +169,8 @@ async def db_insert_sent_address(tr_hash, addresses):
                 data={
                     'post_hash': tr_hash,
                     'address': address[0],
-                    'direction': address[1]
+                    'direction': address[1],
+                    'network': network
                 }
             )
 
@@ -165,6 +181,12 @@ async def db_insert_sent_address(tr_hash, addresses):
 async def db_read_addresses(limit=None, where=None):
     prisma = Prisma()
     await prisma.connect()
+
+    # specify network
+    if where is None:
+        where = { 'network': g.net }
+    else:
+        where['network'] = g.net
 
     # read transactions
     posts = await prisma.address.find_many(
@@ -177,24 +199,29 @@ async def db_read_addresses(limit=None, where=None):
 
 
 # Receive a list of posts made by passed address
-async def db_find_posts_by_addresses(address, direction=False, limit=None):
+async def db_find_posts_by_addresses(address, nonsense=None, limit=None):
     prisma = Prisma()
     await prisma.connect()
 
-    # read transactions
-    posts = await prisma.post.find_many(
-        where={
+    # prep 'where' of the query
+    where = {
             'addresses': {
                 'some': {
                     'address': {
                         'equals': address
-                    },
-                    'direction': {
-                        'equals': direction
                     }
                 }
             },
-        },
+            'network': g.net,
+        }
+
+    # set nonsense filter
+    if nonsense is not None:
+        where['nonsense'] = nonsense
+
+    # read transactions
+    posts = await prisma.post.find_many(
+        where=where,
         include={
             'addresses': True
         },

@@ -6,7 +6,11 @@
         <div class="row gx-5 justify-content-center">
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
-                    <p class="mb-2">Bitcoin Testnet Address</p>
+                    {% if g.net == "btc-test" %}
+                        <p class="mb-2">Bitcoin Testnet Address</p>
+                    {% elif g.net == "btc" %}
+                        <p class="mb-2">Bitcoin Blockchain Address</p>
+                    {% endif %}
 
                     {% if totalNmberOfPosts != "0" %}
                         <p class="transaction_id_title mb-lg-0">{{ address }} - {{ totalNmberOfPosts }} posts</p>
@@ -25,8 +29,21 @@
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-12">
+
+                <div class="setting_section">
+                    <div class="return_arrow"><a href="/explorer">&#10150;</a></div>
+                    <div class="filter">
+                        <!-- Rounded switch Human Readable On/Off -->
+                        <label class="switch" id="hum_read_switch">
+                            <input type="checkbox" {% if human %}checked{% endif %}>
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="hum_read_switch_text">Human Readable Filter</span>
+                    </div>
+                </div>
+                
                 {% if totalNmberOfPosts == "0" %}
-                    <h2 class="display-4 lh-1 mb-4">No posts yet...</h2>
+                    <h2 class="display-4 lh-1 mb-4 explorer_list_title">No posts yet...</h2>
                 {% else %}
                     <div class="post_container">
                         {% for message in messages %}
@@ -70,5 +87,27 @@
         </div>
     </div>
 </section>
+
+<!-- script for posts refering and human-readable filter -->
+<script>
+    let post_blocks = document.getElementsByClassName('post_wrapper');
+
+    Array.prototype.forEach.call(post_blocks, (block) => {
+        block.addEventListener('click', () => {
+            // Simulate a mouse click:
+            window.location.href = block.getElementsByClassName('profile_name_link')[0].href;
+        });
+    });
+
+    let switchHumRead = document.getElementById("hum_read_switch");
+    switchHumRead.addEventListener('click', () => {
+        // Simulate a mouse click:
+        {% if human %}
+            window.location.href = "{{ url_for('address', id=address) }}?human=0";
+        {% else %}
+            window.location.href = "{{ url_for('address', id=address) }}?human=1";
+        {% endif %}
+    });
+</script>
 
 {% include "footer.html" %}

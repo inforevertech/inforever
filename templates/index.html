@@ -61,7 +61,7 @@
         <div class="container px-5">
             <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-12 col-lg-5">
-                    <h2 class="display-4 lh-1 mb-4">Post a message on the {% if g.net == "btc-test" %}bitcoin testnet{% elif g.net == "btc" %}Blockchain{% endif %}</h2>
+                    <h2 class="display-4 lh-1 mb-4">Post a message on the {% if g.net == "btc-test" %}bitcoin testnet{% elif g.net == "btc" %}blockchain{% endif %}</h2>
                     <p class="lead fw-normal text-muted mb-5 mb-lg-0">Use bitcoin {% if g.net == "btc-test" %} testnet{% endif %} address with some balance to post a message that will be visible for everyone forever.</p>
                     <br>
                     {% if g.net == "btc-test" %}
@@ -75,7 +75,7 @@
                         <label for="msgInput" class="msgInput_label">Message:
                             <textarea name="message" id="msgInput" cols="30" rows="10" placeholder=""></textarea>
                         </label>
-                        <label for="private_key" class="private_key_label">Testnet Private Key
+                        <label for="private_key" class="private_key_label">{% if g.net == "btc-test" %}Testnet {% endif %}Private Key
                             <input type="text" name="private" id="private_key">
                         </label>
 

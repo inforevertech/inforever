@@ -12,8 +12,13 @@ from avatar_generator import generate_avatar_by_address
 # 2. Put only OP_RETURN statements and related information into the database.
 
 class Collector:
-    def __init__(self, height):
+    def __init__(self, height=0, network='btc'):
         self.height = height
+        self.network = network
+        self.explorer_url = 'https://blockstream.info/' + ('testnet/' if self.network == 'btc-test' else '')
+
+    def set_top_height(self):
+        self.height = int(requests.get(self.explorer_url + 'api/blocks/tip/height').text) - 1
         
     def collection_service(self, past_posts=True, wait_time=100):
         # go through all block starting from the highest
@@ -27,10 +32,10 @@ class Collector:
         
     def collect_block(self, past_posts=True):
         # find current block hash
-        current_block = requests.get('https://blockstream.info/testnet/api/block-height/' + str(self.height)).text
+        current_block = requests.get(self.explorer_url + 'api/block-height/' + str(self.height)).text
 
         # find total number of transactions in the block
-        num_of_transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block)).json().get('tx_count')
+        num_of_transactions = requests.get(self.explorer_url + 'api/block/' + str(current_block)).json().get('tx_count')
         observed_trans_counter = 0
 
         # go through all transactions in the block
@@ -38,7 +43,7 @@ class Collector:
             time.sleep(0.1)  # take a pause to prevent 'too many requests' response
 
             # get up to 25 transactions in the current block
-            transactions = requests.get('https://blockstream.info/testnet/api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
+            transactions = requests.get(self.explorer_url + 'api/block/' + str(current_block) + '/txs/' + str(observed_trans_counter))
             transactions = transactions.json()
 
             observed_trans_counter += len(transactions)
@@ -77,7 +82,7 @@ class Collector:
                 
                 if message: 
                     # put data into the database
-                    asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date))
+                    asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date, self.network))
 
                     addresses = list(addresses)
                     # generate address avatars
@@ -85,7 +90,7 @@ class Collector:
                         generate_avatar_by_address(address[0])
 
                     # add sender addresses information to the db
-                    asyncio.run(db_insert_sent_address(tr_hash, addresses))
+                    asyncio.run(db_insert_sent_address(tr_hash, addresses, self.network))
                     
                     print(post_date, ': ', message, sep='')
                 else:  # no message found, then just go futher
@@ -94,9 +99,7 @@ class Collector:
 
 # starting point
 if __name__ == '__main__':
-    # height of the highest block in the blockchain
-    top_height = int(requests.get('https://blockstream.info/testnet/api/blocks/tip/height').text) - 2
-    
     # launch collector of recent posts
-    collector = Collector(top_height)
-    collector.collection_service(past_posts=False, wait_time=100)
+    collector = Collector(network='btc')
+    collector.set_top_height()  # start fromt the highest block in the blockchain
+    collector.collection_service(past_posts=True, wait_time=0.1)

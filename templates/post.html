@@ -6,7 +6,11 @@
         <div class="row gx-5 justify-content-center">
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
-                    <p class="mb-2">Bitcoin Testnet Post</p>
+                    {% if post.network == "btc-test" %}
+                        <p class="mb-2">Bitcoin Testnet Post</p>
+                    {% elif post.network == "btc" %}
+                        <p class="mb-2">Bitcoin Blockchain Post</p>
+                    {% endif %}
                     <p class="transaction_id_title mb-lg-0">{{ post_hash }}</p>
                 </div>
             </div>
@@ -47,16 +51,27 @@
                     <br>
                     <h5 class="lh-1 mb-2">Post: </span></h5>
                     <p class="lead fw-normal text-muted mb-5 mb-lg-0">{{ post.text }}</p>
+
+                    <br>
+                    {% if post.network == 'btc' %}
+                        <p><a href="https://live.blockcypher.com/btc/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                    {% elif post.network == 'btc-test' %}
+                        <p><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                    {% endif %}
                 {% else %}
                     <h3 class="lh-1 mb-2">Post is still waiting for acceptance into mempool or not existent.</h3>
-                {% endif %}
 
-                <br>
-                <p><a href="{{ blockchainUrl }}" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                    <br>
+                    {% if g.net == 'btc' %}
+                        <p><a href="https://live.blockcypher.com/btc/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                    {% elif g.net == 'btc-test' %}
+                        <p><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="col-sm-8 col-md-6">
                 
-                <h5 class="display-6 mb-4">This post is published on the Bitcoin Blockchain.</h5>
+                <h5 class="display-6 mb-4">This post is published on the Bitcoin {% if post.network == "btc-test" %}Testnet{% elif post.network == "btc" %}Blockchain{% endif %}.</h5>
                 <p class="lead fw-normal text-muted mb-5 mb-lg-0">It is kept forever.<br>Cannot be censored.<br>Accessible by everyone.</p>
                 <button class="btn btn-primary px-3 mb-2 mb-lg-0" id="copy_link_btn">Copy the link</button>
 

@@ -11202,7 +11202,7 @@ footer a:hover, footer a:active, footer a:focus {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: rgb(2, 76, 181);
 }
 
 input:focus + .slider {

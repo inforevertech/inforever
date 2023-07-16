@@ -9,7 +9,7 @@
                     {% if g.net == "btc-test" %}
                         <p class="mb-2">Bitcoin Testnet Explorer</p>
                     {% elif g.net == "btc" %}
-                        <p class="mb-2">Bitcoin Explorer</p>
+                        <p class="mb-2">Bitcoin Blockchain Explorer</p>
                     {% endif %}
                     <p class="transaction_id_title mb-lg-0">{{ totalNmberOfPosts }} posts</p>
                 </div>
@@ -24,10 +24,8 @@
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-12">
-                {% if totalNmberOfPosts == "0" %}
-                    <h2 class="display-4 lh-1 mb-4 explorer_list_title">No posts yet..</h2>
-                {% else %}
-                    <!-- <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2> -->
+
+                <div class="setting_section justify-right">
                     <div class="filter">
                         <!-- Rounded switch Human Readable On/Off -->
                         <label class="switch" id="hum_read_switch">
@@ -36,6 +34,11 @@
                         </label>
                         <span class="hum_read_switch_text">Human Readable Filter</span>
                     </div>
+                </div>
+                {% if totalNmberOfPosts == "0" %}
+                    <h2 class="display-4 lh-1 mb-4 explorer_list_title">No posts yet..</h2>
+                {% else %}
+                    <!-- <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2> -->
 
                     <div class="post_container">
                         {% for message in messages %}
@@ -51,7 +54,9 @@
                                             {% endif %}
                                         {% endfor %}
                                         
-                                        <a href="/post/{{ message.hash }}" class="arrow_address"><span class="from_to_arrow">&#10143;</span></a>
+                                        {% if message.addresses|length > 1 %}
+                                            <a href="/post/{{ message.hash }}" class="arrow_address"><span class="from_to_arrow">&#10143;</span></a>
+                                        {% endif %}
 
                                         <!-- Sent to -->
                                         {% for address in message.addresses %}
@@ -80,7 +85,7 @@
     </div>
 </section>
 
-<!-- script for posts refering -->
+<!-- script for posts refering and human-readable filter -->
 <script>
     let post_blocks = document.getElementsByClassName('post_wrapper');
 

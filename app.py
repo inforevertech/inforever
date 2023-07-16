@@ -35,7 +35,10 @@ def index(net=None):
         fee = int(request.form['fee'])
 
         # Create a key object from the private key.
-        key = PrivateKeyTestnet(private_key)
+        if g.net == 'btc':
+            key = Key(private_key)
+        elif g.net == 'btc-test':
+            key = PrivateKeyTestnet(private_key)
 
         try:
             # Send a transaction to the bitcoin network with the message as the data. Using op_return.
@@ -68,25 +71,19 @@ def index(net=None):
 # @app.route('/post/<hash>', methods=['GET', 'POST'])
 @optional.routes('/<net>?/post/<hash>')
 def post(hash, net=None):
-    # switch network
-    network_switch(net)
-    
     post = asyncio.run(db_find_post(hash))
-    if g.net == 'btc':
-        blockchainUrl="https://live.blockcypher.com/btc/tx/" + hash + "/"
-    elif g.net == 'btc-test':
-        blockchainUrl="https://live.blockcypher.com/btc-testnet/tx/" + hash + "/"
+
+    # switch network according post's network
+    network_switch(post.network)
     
     if not post:
         # form transaction not ready or not existent response
-        return render_template('post.html',
-                                post_hash=hash,
-                                blockchainUrl=blockchainUrl)
+        return response(render_template('post.html',
+                                post_hash=hash))
 
     return response(render_template('post.html',
                             post=post,
-                            post_hash=hash,
-                            blockchainUrl=blockchainUrl))
+                            post_hash=hash))
 
 
 # blockchain messages explorer page
@@ -115,9 +112,16 @@ def explorer(net=None):
 def address(id, net=None):
     # switch network
     network_switch(net)
+
+    # human-readable format filtration
+    human = request.args.get('human')
+    if human is None or human == "1":
+        human, nonse = True, False
+    else:
+        human, nonse = False, None
     
     # get a list of posts
-    posts = asyncio.run(db_find_posts_by_addresses(id))
+    posts = asyncio.run(db_find_posts_by_addresses(id, nonsense=False))
 
     if posts:
         # generate avatar if not present
@@ -127,7 +131,8 @@ def address(id, net=None):
     return response(render_template('address.html',
                            address=id,
                            totalNmberOfPosts=f'{len(posts):,}',
-                           messages=posts))
+                           messages=posts,
+                           human=human))
     
 
 # about us page
