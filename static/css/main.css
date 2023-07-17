@@ -122,7 +122,7 @@ html {
     font-weight: bold;
 }
 .post_date, .separator {
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 .profile_picture {
     border-radius: 5px;
@@ -173,11 +173,14 @@ html {
 }
 .network_select_wrapper {
     flex-basis: auto;
-    flex-grow: 15;
+    flex-grow: 2;
 
     display: flex;
     align-items: center;
     justify-content: left;
+}
+#navbarResponsive {
+    flex-grow: 5;
 }
 #network_select_label {
     display: inline-block;
@@ -377,4 +380,52 @@ html {
 }
 .anytime_recent {
     padding: 5px 15px !important;
+}
+.explorer_search_link {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+
+    border: 2px solid #333;
+    border-radius: 800px;
+    overflow: hidden;
+}
+.explorer_search_link i {
+    font-size: 1.3rem;
+    margin-left: 1.2rem;
+    margin-right: 0.8rem;
+    cursor: pointer;
+}
+.explorer_search_link input {
+    display: inline-block;
+    height: 100%;
+    border: none;
+    border-right: 2px solid #333;
+    outline: none;
+}
+.explorer_search_ul {
+    flex-grow: 3;
+    margin: 0 1rem !important;
+}
+.search_field {
+    flex-grow: 5;
+
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+.search_field input {
+    flex-grow: 5;
+    /* justify-content: start; */
+}
+.explorer-header-link {
+    padding-left: 1rem !important;
+    padding-right: 1.2rem !important;
+    margin-right: 0 !important;
+    display: inline-block;
+}
+.explorer-header-link:hover {
+    background-color: #000;
+    color: #fff !important;
 }

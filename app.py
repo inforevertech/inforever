@@ -106,6 +106,7 @@ def explorer(net=None):
     return response(render_template('explorer.html',
                            totalNmberOfPosts=f'{asyncio.run(db_transactions_count(where=where)):,}',
                            messages=asyncio.run(db_read_transactions(where=where, limit=50)),
+                           search=request.args.get('search'),
                            human=human))
 
 
