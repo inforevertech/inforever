@@ -2,14 +2,15 @@ from flask import Flask, render_template, request, redirect, make_response, abor
 from flask_optional_routes import OptionalRoutes
 from flask_mail import Mail, Message
 from werkzeug.exceptions import HTTPException
+from werkzeug import secure_filename
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
-from db import *
 import datetime
 import asyncio
 import os.path
 import re
+from db import *
 from avatar_generator import generate_avatar_by_address
 
 
@@ -32,13 +33,25 @@ def create(net=None):
 
     if request.method == 'GET':  # show page to write a post
         return response(render_template('create.html',
-                                    recommende_fee=get_fee_cached()))
+                                        recommende_fee=get_fee_cached()))
     
     elif request.method == 'POST':  # save a post
         # If submit button is pressed get the values from the form: messsage, private key and transaction fee.
         message = request.form['message']
         private_key = request.form['private']
         fee = int(request.form['fee'])
+
+        files = request.files.getlist("file[]")  # TODO: add file filter for safety
+        media = {}
+        for file in files:
+            # insert info about the file into the database
+            media_record = asyncio.run(db_insert_media(secure_filename(file.filename), str(file.content_type)))
+            media[str(media_record.id)] = file
+
+        # add media information to the message
+        if media:
+            message += '${' + ','.join(media.keys()) + '}$'
+
 
         # Create a key object from the private key.
         if g.net == 'btc':
@@ -55,6 +68,13 @@ def create(net=None):
             # add sender addresses information to the db
             asyncio.run(db_insert_sent_address(post_id, [(key.address, False)], g.net))
 
+            # upload media files to the server
+            for file_id, file in media.items():
+                # save file with its id as the name
+                file.save(os.path.join(os.path.dirname(os.path.abspath(__file__)), '/static/media/', file_id + '_' + secure_filename(file.filename)))
+                # update media database
+                asyncio.run(db_update_media(int(file_id), post_id))
+
         except bitExceptions.InsufficientFunds as e:
             # form insufficient funds description
             errorContent = ["Error message: " + str(e)]
@@ -63,15 +83,15 @@ def create(net=None):
             
             # return page with insufficient funds information
             return response(render_template('error.html',
-                                   errorTitle="Insufficient Funds",
-                                   additionalInfo=key.address,
-                                   errorContent=errorContent))
-        except:
+                                            errorTitle="Insufficient Funds",
+                                            additionalInfo=key.address,
+                                            errorContent=errorContent))
+        except Exception as e:
             # return page with error description
             return response(render_template('error.html',
-                                   errorTitle="Error occured",
-                                   additionalInfo=key.address,
-                                   errorContent=["Error message: " + str(e)]))
+                                            errorTitle="Error occured",
+                                            additionalInfo=key.address,
+                                            errorContent=["Error message: " + str(e)]))
 
         # redirect to its page
         return redirect(url_for('post', hash=post_id))
@@ -84,7 +104,7 @@ def index(net=None):
     network_switch(net)
 
     return response(render_template('index.html',
-                           recommende_fee=get_fee_cached()))
+                                    recommende_fee=get_fee_cached()))
 
 
 # post explorer page
@@ -97,15 +117,15 @@ def post(hash, net=None):
         network_switch(post.network)
 
         return response(render_template('post.html',
-                            post=post,
-                            post_hash=hash))
+                                        post=post,
+                                        post_hash=hash))
     
     else:  # post was not found
         # switch network to the chosen global one
         network_switch(net)
         # form transaction not ready or not existent response
         return response(render_template('post.html',
-                                post_hash=hash))
+                                        post_hash=hash))
 
     
 # blockchain messages explorer page
@@ -131,10 +151,10 @@ def explorer(net=None):
 
     
     return response(render_template('explorer.html',
-                           totalNmberOfPosts=f'{counter:,}',
-                           messages=results,
-                           search=search if search is not None else '',
-                           human=human))
+                                    totalNmberOfPosts=f'{counter:,}',
+                                    messages=results,
+                                    search=search if search is not None else '',
+                                    human=human))
 
 
 # address/user page
@@ -159,10 +179,10 @@ def address(id, net=None):
             generate_avatar_by_address(id)
 
     return response(render_template('address.html',
-                           address=id,
-                           totalNmberOfPosts=f'{len(posts):,}',
-                           messages=posts,
-                           human=human))
+                                    address=id,
+                                    totalNmberOfPosts=f'{len(posts):,}',
+                                    messages=posts,
+                                    human=human))
     
 
 # mission page
@@ -198,7 +218,8 @@ def contact(net=None):
 
     
     # return static template
-    return response(render_template('contact.html', status=status))
+    return response(render_template('contact.html',
+                                    status=status))
 
 
 # proccess url network switch
@@ -285,17 +306,17 @@ def utility_processor():
 @app.errorhandler(404)
 def page_not_found(e):
     return response(render_template('error.html',
-                            errorTitle="Sorry, this page was not found.",
-                            additionalInfo="Error 404",
-                            errorContent=[str(e)])), 404
+                                    errorTitle="Sorry, this page was not found.",
+                                    additionalInfo="Error 404",
+                                    errorContent=[str(e)])), 404
 
 # other HTTP exceptions
 @app.errorhandler(HTTPException)
 def page_error(e):
     return response(render_template('error.html',
-                            errorTitle="Sorry, a problem occured.",
-                            additionalInfo="Error " + str(e.code),
-                            errorContent=[str(e)])), e.code
+                                    errorTitle="Sorry, a problem occured.",
+                                    additionalInfo="Error " + str(e.code),
+                                    errorContent=[str(e)])), e.code
 
 
 if __name__ == '__main__':

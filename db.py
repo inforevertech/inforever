@@ -315,3 +315,39 @@ async def db_find_posts_by_addresses(address, nonsense=None, limit=None):
 
     await prisma.disconnect()
     return posts
+
+
+# Add a new media information into the database
+async def db_insert_media(filename, type):
+    prisma = Prisma()
+    await prisma.connect()
+
+    # insert a new transaction
+    media = await prisma.media.create(
+        data={
+            'type': type,
+            'filename': filename,
+        },
+    )
+
+    await prisma.disconnect()
+    return media
+
+
+# Update media information
+async def db_update_media(id, post_hash):
+    prisma = Prisma()
+    await prisma.connect()
+
+    # insert a new transaction
+    media = await prisma.media.update(
+        where={
+            'id': id,
+        },
+        data={
+            'post_hash': post_hash,
+        },
+    )
+
+    await prisma.disconnect()
+    return media

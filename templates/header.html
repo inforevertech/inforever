@@ -64,9 +64,16 @@
 
             let url = new URL(window.location.href)
             let params = new URLSearchParams(url.search)
-            params.set('search', search_bar.value)
+
+            // don't add if search value is empty
+            if (search_bar.value.length > 0)
+                params.set('search', search_bar.value)
         
-            window.location.href = explore_btn.href + '?' + params.toString();
+            // add get parameters only if not empty
+            if (params.toString().length > 0)
+                window.location.href = explore_btn.href + '?' + params.toString();
+            else
+                window.location.href = explore_btn.href;
         }
 
         // imitate click on explorer link when hit enter
