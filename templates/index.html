@@ -71,7 +71,7 @@
                     {% endif %}
                 </div>
                 <div class="col-sm-8 col-md-6">
-                    <form class="px-5 px-sm-0" action="/"  method="post">
+                    <form class="px-5 px-sm-0" action="{{ url_for('create') }}"  method="post">
                         <label for="msgInput" class="msgInput_label">Message:
                             <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>
                         </label>

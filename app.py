@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, make_response, abort, g
+from flask import Flask, render_template, request, redirect, make_response, abort, g, url_for
 from flask_optional_routes import OptionalRoutes
 from flask_mail import Mail, Message
 from werkzeug.exceptions import HTTPException
@@ -24,14 +24,17 @@ NET_LIST = [
 DEFAULT_NET = NET_LIST[0]['tag']
 
 
-# main page
-# @app.route('/', methods=['GET', 'POST'])
-@optional.routes('/<net>?/')
-def index(net=None):
+# post creation page
+@optional.routes('/<net>?/create',  methods=['GET', 'POST'])
+def create(net=None):
     # switch network
     network_switch(net)
+
+    if request.method == 'GET':  # show page to write a post
+        return response(render_template('create.html',
+                                    recommende_fee=get_fee_cached()))
     
-    if request.method == 'POST':
+    elif request.method == 'POST':  # save a post
         # If submit button is pressed get the values from the form: messsage, private key and transaction fee.
         message = request.form['message']
         private_key = request.form['private']
@@ -45,7 +48,13 @@ def index(net=None):
 
         try:
             # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-            transaction_id = key.send([], fee=fee, absolute_fee=True, message=message)
+            post_id = key.send([], fee=fee, absolute_fee=True, message=message)
+
+            # insert new post into the database
+            asyncio.run(db_insert_transaction(post_id, None, message, int(datetime.datetime.now().timestamp()), g.net))
+            # add sender addresses information to the db
+            asyncio.run(db_insert_sent_address(post_id, [(key.address, False)], g.net))
+
         except bitExceptions.InsufficientFunds as e:
             # form insufficient funds description
             errorContent = ["Error message: " + str(e)]
@@ -64,33 +73,42 @@ def index(net=None):
                                    additionalInfo=key.address,
                                    errorContent=["Error message: " + str(e)]))
 
-        return redirect("/tr/" + transaction_id)
+        # redirect to its page
+        return redirect(url_for('post', hash=post_id))
+
+
+# main page
+@optional.routes('/<net>?/', methods=['GET'])
+def index(net=None):
+    # switch network
+    network_switch(net)
 
     return response(render_template('index.html',
                            recommende_fee=get_fee_cached()))
 
 
 # post explorer page
-# @app.route('/post/<hash>', methods=['GET', 'POST'])
 @optional.routes('/<net>?/post/<hash>')
 def post(hash, net=None):
     post = asyncio.run(db_find_post(hash))
 
-    # switch network according post's network
-    network_switch(post.network)
+    if post:  # post was found
+        # switch network according post's network
+        network_switch(post.network)
+
+        return response(render_template('post.html',
+                            post=post,
+                            post_hash=hash))
     
-    if not post:
+    else:  # post was not found
+        # switch network to the chosen global one
+        network_switch(net)
         # form transaction not ready or not existent response
         return response(render_template('post.html',
                                 post_hash=hash))
 
-    return response(render_template('post.html',
-                            post=post,
-                            post_hash=hash))
-
-
+    
 # blockchain messages explorer page
-# @app.route('/explorer', methods=['GET', 'POST'])
 @optional.routes('/<net>?/explorer/')
 def explorer(net=None):
     # switch network
@@ -120,7 +138,6 @@ def explorer(net=None):
 
 
 # address/user page
-# @app.route('/<id>', methods=['GET', 'POST'])
 @optional.routes('/<net>?/<id>')
 def address(id, net=None):
     # switch network
@@ -149,7 +166,6 @@ def address(id, net=None):
     
 
 # mission page
-# @app.route('/about', methods=['GET'])
 @optional.routes('/<net>?/mission')
 def mission(net=None):
     # switch network
@@ -160,7 +176,6 @@ def mission(net=None):
 
 
 # contact us page
-# @app.route('/contact', methods=['GET'])
 @optional.routes('/<net>?/contact', methods=['GET', 'POST'])
 def contact(net=None):
     # switch network

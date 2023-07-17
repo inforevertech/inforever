@@ -43,10 +43,10 @@
                             </label>
                             <input type="search" id="search_bar" placeholder="Search" value="{{ search }}">
                         </div>
-                        <a class="nav-link me-lg-3 explorer-header-link" id="explorer-header-link" href="/explorer">Explore</a>
+                        <a class="nav-link me-lg-3 explorer-header-link" id="explorer-header-link" href="{{ url_for('explorer') }}">Explore</a>
                     </li>
                 </ul>
-                <a href="/#post_msg" class="nav-link">
+                <a href="{{ url_for('create') }}" class="nav-link">
                     <button class="btn btn-primary bg-gradient-primary-to-secondary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal" data-bs-target="#feedbackModal">
                         <span class="d-flex align-items-center">
                             Post message

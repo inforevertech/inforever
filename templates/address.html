@@ -63,7 +63,9 @@
                                             {% endif %}
                                         {% endfor %}
                                         
-                                        <span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span>
+                                        {% if message.addresses|length > 1 %}
+                                            <a href="{{ url_for('post', hash=message.hash) }}" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
+                                        {% endif %}
 
                                         <!-- Sent to -->
                                         {% for address in message.addresses %}

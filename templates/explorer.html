@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 {% if totalNmberOfPosts == "0" %}
-                    <h2 class="display-4 lh-1 mb-4 explorer_list_title">No posts yet..</h2>
+                    <h4 class="display-5 lh-1 mb-4 explorer_list_title">No posts were found.</h4>
                 {% else %}
                     <!-- <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2> -->
 
@@ -64,7 +64,7 @@
                                         {% endfor %}
                                         
                                         {% if message.addresses|length > 1 %}
-                                            <a href="/post/{{ message.hash }}" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
+                                            <a href="{{ url_for('post', hash=message.hash) }}" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
                                         {% endif %}
 
                                         <!-- Sent to -->

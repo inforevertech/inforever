@@ -1,0 +1,63 @@
+{% include "header.html" %}
+
+<!-- title information block -->
+<header class="masthead masthead-create text-center">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-xl-12">
+                <div class="h2 fs-1">
+                    <p>What is on your mind today?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Text Info section-->
+<section class="bg-light" id="create_msg">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-8">
+                <form class="px-5 px-sm-0" action="{{ url_for('create')}}"  method="post" id="create_post_form">
+                    <label for="msgInput" class="msgInput_label">Message:
+                        <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>
+                    </label>
+                    <label for="private_key" class="private_key_label">Bitcoin {% if g.net == "btc-test" %}Testnet {% endif %}Private Key:
+                        {% if g.net == "btc-test" %}
+                            <input type="password" name="private" id="private_key" class="quick_post_input" placeholder="Ex: cVwJHvfczdpMeQf4kBhTYWaVPaZgF8J9LiMWnuUU2VyGgCZtLo8p">
+                        {% elif g.net == "btc" %}
+                            <input type="password" name="private" id="private_key" class="quick_post_input" placeholder="Ex: KwsxZPGPPKY6Qd6h1ebVy5ZZcHy43pAK5qQoVoisAPj9scdZXQY1">
+                        {% endif %}
+                        </label>
+
+                    <label for="fee" class="fee_label">Transaction fee (recommended <span id="fee_calculator">0</span> satoshis):
+                        <input type="number" value="0" name="fee" id="fee" class="quick_post_input">
+                    </label>
+
+                    <label for="post_btn" class="label_post_btn">
+                        <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" id="post_btn" type="submit">
+                            <span class="d-flex align-items-center">
+                                Post message
+                            </span>
+                        </button>
+                    </label>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- fee counter script -->
+<script>
+    let textarea = document.getElementById('msgInput');
+    let feeCalculator = document.getElementById('fee_calculator');
+    let feePerChar = {{ recommende_fee }};
+
+    function updateFee() {
+        feeCalculator.textContent = textarea.value.length * feePerChar;
+    }
+
+    textarea.addEventListener('keyup', updateFee);
+</script>
+
+{% include "footer.html" %}

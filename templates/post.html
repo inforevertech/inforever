@@ -6,10 +6,12 @@
         <div class="row gx-5 justify-content-center">
             <div class="col-xl-12">
                 <div class="h2 fs-1 text-white">
-                    {% if post.network == "btc-test" %}
+                    {% if post and post.network == "btc-test" %}
                         <p class="mb-2">Bitcoin Testnet Post</p>
-                    {% elif post.network == "btc" %}
+                    {% elif post and post.network == "btc" %}
                         <p class="mb-2">Bitcoin Blockchain Post</p>
+                    {% elif not post %}
+                        <p class="mb-2">Blockchain Post</p>
                     {% endif %}
                     <p class="transaction_id_title mb-lg-0">{{ post_hash }}</p>
                 </div>
@@ -34,7 +36,9 @@
                             {% endif %}
                         {% endfor %}
                         
-                        <a href="/post/{{ post.hash }}" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
+                        {% if post.addresses|length > 1 %}
+                            <a href="#" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
+                        {% endif %}
 
                         <!-- Sent to -->
                         {% for address in post.addresses %}
@@ -58,19 +62,19 @@
                         <p><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
                     {% endif %}
                 {% else %}
-                    <h3 class="lh-1 mb-2">Post is still waiting for acceptance into mempool or not existent.</h3>
+                    <h3 class="mb-2">Post is still waiting for acceptance into mempool or not existent.</h3>
 
                     <br>
                     {% if g.net == 'btc' %}
-                        <p><a href="https://live.blockcypher.com/btc/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                        <p><a href="https://live.blockcypher.com/btc/tx/{{ post_hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
                     {% elif g.net == 'btc-test' %}
-                        <p><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                        <p><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post_hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
                     {% endif %}
                 {% endif %}
             </div>
             <div class="col-sm-8 col-md-6">
                 
-                <h5 class="display-6 mb-4">This post is published on the Bitcoin {% if post.network == "btc-test" %}Testnet{% elif post.network == "btc" %}Blockchain{% endif %}.</h5>
+                <h5 class="display-6 mb-4">This post {% if post %}is{% else %}can be{% endif %} published on the Bitcoin {% if post and post.network == "btc-test" %}Testnet{% else %}Blockchain{% endif %}.</h5>
                 <p class="lead fw-normal text-muted mb-5 mb-lg-0">It is kept forever.<br>Cannot be censored.<br>Accessible by everyone.</p>
                 <button class="btn btn-primary px-3 mb-2 mb-lg-0" id="copy_link_btn">Copy the link</button>
 
