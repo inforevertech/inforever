@@ -21,12 +21,21 @@
 
 
 <!-- Basic features section-->
-<section class="bg-light section_explorer_address" id="post_msg">
+<section class="bg-light section_explorer_address">
     <div class="container px-5">
-        <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
-            <div class="col-12 col-lg-12">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-12 col-lg-10">
 
                 <div class="setting_section">
+                    <div class="recent_filter">
+                        <div name="recent" id="recent_select">
+                            <div value="D" class="recent_option {% if g.recent == 'D' %}recent_selected{% endif %}">1D</div>
+                            <div value="W" class="recent_option {% if g.recent == 'W' %}recent_selected{% endif %}">1W</div>
+                            <div value="M" class="recent_option {% if g.recent == 'M' %}recent_selected{% endif %}">1M</div>
+                            <div value="Y" class="recent_option {% if g.recent == 'Y' %}recent_selected{% endif %}">1Y</div>
+                            <div value="A" class="anytime_recent recent_option {% if g.recent == 'A' %}recent_selected{% endif %}">Anytime</div>
+                        </div>
+                    </div>
                     <div class="filter">
                         <!-- Rounded switch Human Readable On/Off -->
                         <label class="switch" id="hum_read_switch">
@@ -54,7 +63,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         
-                                        <span class="from_to_arrow">&#8674;</span>
+                                        <span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span>
 
                                         <!-- Sent to -->
                                         {% for address in message.addresses %}
@@ -97,11 +106,31 @@
     let switchHumRead = document.getElementById("hum_read_switch");
     switchHumRead.addEventListener('click', () => {
         // Simulate a mouse click:
+        let url = new URL(window.location.href)
+        let params = new URLSearchParams(url.search);
+
         {% if human %}
-            window.location.href = "{{ url_for('address', id=address) }}?human=0";
+            params.set('human', 0)
         {% else %}
-            window.location.href = "{{ url_for('address', id=address) }}?human=1";
+            params.set('human', 1)
         {% endif %}
+
+        window.location.href = "{{ url_for('address', id=address) }}?" + params.toString()
+    });
+
+    let recent_options = document.getElementsByClassName('recent_option');
+    Array.prototype.forEach.call(recent_options, (option) => {
+        option.addEventListener('click', (el) => {
+            // Simulate a mouse click:
+            document.getElementsByClassName('recent_selected')[0].classList.remove('recent_selected');
+            option.classList.add('recent_selected');
+
+            let url = new URL(window.location.href)
+            let params = new URLSearchParams(url.search);
+            params.set('recent', option.getAttribute('value'))
+
+            window.location.href = "{{ url_for('address', id=address) }}?" + params.toString()
+        });
     });
 </script>
 

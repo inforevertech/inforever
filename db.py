@@ -44,6 +44,18 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True):
     else:
         where['network'] = g.net
 
+    # specify recent range
+    if g.recent == 'D':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=1) }
+    elif g.recent == 'W':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=7) }
+    elif g.recent == 'M':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=30) }
+    elif g.recent == 'Y':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=365) }
+    elif g.recent == 'A':
+        pass
+
     # read transactions
     posts = await prisma.post.find_many(
         where=where,
@@ -70,6 +82,18 @@ async def db_transactions_count(where=None):
         where = { 'network': g.net }
     else:
         where['network'] = g.net
+
+    # specify recent range
+    if g.recent == 'D':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=1) }
+    elif g.recent == 'W':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=7) }
+    elif g.recent == 'M':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=30) }
+    elif g.recent == 'Y':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=365) }
+    elif g.recent == 'A':
+        pass
 
     # receive total number of transactions
     total_posts = await prisma.post.count(where=where)
@@ -214,6 +238,18 @@ async def db_find_posts_by_addresses(address, nonsense=None, limit=None):
             },
             'network': g.net,
         }
+    
+    # specify recent range
+    if g.recent == 'D':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=1) }
+    elif g.recent == 'W':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=7) }
+    elif g.recent == 'M':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=30) }
+    elif g.recent == 'Y':
+        where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=365) }
+    elif g.recent == 'A':
+        pass
 
     # set nonsense filter
     if nonsense is not None:

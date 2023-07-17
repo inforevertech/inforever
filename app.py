@@ -190,6 +190,9 @@ def correct_cookie(name, value):
     if name == 'net':
         if value is not None and value in [network['tag'] for network in NET_LIST]:
             return True
+    elif name == 'recent':
+        if value is not None and value in ['D', 'W', 'M', 'Y', 'A']:
+            return True
    
     return False
 
@@ -209,6 +212,13 @@ def response(template, cookies=None, **parameters):
 @app.before_request
 def set_global_variables():
     g.nets = NET_LIST
+
+    # recent filter
+    if correct_cookie('recent', request.args.get('recent')):
+        g.recent = request.args.get('recent')
+    else:
+        g.recent = "A"  # default
+
     # set default blockchain network
     if correct_cookie('net', request.args.get('net')):
         g.net = request.args.get('net')
