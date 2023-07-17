@@ -8,6 +8,7 @@ datasource db {
 generator client {
   provider             = "prisma-client-py"
   recursive_type_depth = 5
+  previewFeatures      = ["fullTextSearch", "fullTextIndex"]
 }
 
 // data models
@@ -22,6 +23,8 @@ model Post {
   timestamp DateTime
   nonsense  Boolean  @default(false)
   network   String   @default("btc-test") // or "btc"
+
+  @@fulltext([text])
 }
 
 model Address {

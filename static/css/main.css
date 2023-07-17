@@ -429,3 +429,10 @@ html {
     background-color: #000;
     color: #fff !important;
 }
+.bi-search-hidden {
+    display: none;
+}
+.bi-x-lg {
+    color: #333;
+    font-weight: lighter;
+}

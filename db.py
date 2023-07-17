@@ -1,7 +1,56 @@
-import datetime
 from prisma import Prisma
 from nostril import nonsense
 from flask import g
+import datetime
+import asyncio
+
+
+# Perform explorer search
+async def db_search(input, limit=None, where=None, include_addresses=True):
+    # seach in posts
+    prisma = Prisma()
+    await prisma.connect()
+
+    if where is None:
+        where = {}
+
+    where['OR'] = [
+            {
+                'hash': input,
+            },
+            {
+                'block': input,
+            },
+            {
+                'addresses': {
+                    'some': {
+                        'address': {
+                            'equals': input,
+                        }
+                    }
+                }
+            },
+            {
+                'text': {
+                    'search': input,
+                }
+            },
+        ]
+
+    # find relevant posts
+    posts = await prisma.post.find_many(
+        take=limit,
+        where=where,
+        include={
+            'addresses': include_addresses
+        }
+    )
+
+    # how many posts were found
+    counter = await prisma.post.count(where=where)
+    
+    await prisma.disconnect()
+    return (counter, posts)
 
 
 # Add a new transaction into the database

@@ -102,11 +102,20 @@ def explorer(net=None):
         human, where = True, { 'nonsense': False }
     else:
         human, where = False, None
+
+    # search
+    search = request.args.get('search')
+    if search:
+        counter, results = asyncio.run(db_search(search, where=where, limit=50))
+    else:
+        results = asyncio.run(db_read_transactions(where=where, limit=50))
+        counter = asyncio.run(db_transactions_count(where=where))
+
     
     return response(render_template('explorer.html',
-                           totalNmberOfPosts=f'{asyncio.run(db_transactions_count(where=where)):,}',
-                           messages=asyncio.run(db_read_transactions(where=where, limit=50)),
-                           search=request.args.get('search'),
+                           totalNmberOfPosts=f'{counter:,}',
+                           messages=results,
+                           search=search if search is not None else '',
                            human=human))
 
 
@@ -234,7 +243,7 @@ def set_global_variables():
 def utility_processor():
     # Return only 4 last character of an address
     def format_shorten_address(address):
-        return address[:3] + '...' + address[-5:]
+        return address[:4] + '...' + address[-5:]
     
     # Return timestamp in user-friendly date format
     def format_date(post_datetime):
