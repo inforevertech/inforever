@@ -13,7 +13,7 @@ generator client {
 
 // data models
 model Post {
-  id    Int     @id @default(autoincrement())
+  id    Int     @id @unique @default(autoincrement())
   hash  String  @unique
   block String?
 
@@ -31,7 +31,7 @@ model Post {
 }
 
 model Address {
-  id        Int     @id @default(autoincrement())
+  id        Int     @id @unique @default(autoincrement())
   address   String
   direction Boolean // False - sender, True - receiver
   network   String  @default("btc-test") // or "btc"
@@ -41,7 +41,7 @@ model Address {
 }
 
 model Media {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   filename  String
   type      String
   timestamp DateTime @default(now())

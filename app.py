@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, make_response, abort, g, url_for
+from flask import Flask, render_template, request, redirect, make_response, abort, g, url_for, send_file
 from flask_optional_routes import OptionalRoutes
 from flask_mail import Mail, Message
 from werkzeug.exceptions import HTTPException
@@ -23,6 +23,8 @@ NET_LIST = [
     { 'tag': 'btc-test', 'name': 'Bitcoin Testnet'},
 ]
 DEFAULT_NET = NET_LIST[0]['tag']
+UPLOAD_FILES_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
+UPLOAD_ALLOWED_FORMATS = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov']
 
 
 # post creation page
@@ -30,6 +32,7 @@ DEFAULT_NET = NET_LIST[0]['tag']
 def create(net=None):
     # switch network
     network_switch(net)
+    asyncio.run(db_validate_transactions_nonsense())
 
     if request.method == 'GET':  # show page to write a post
         return response(render_template('create.html',
@@ -44,6 +47,9 @@ def create(net=None):
         files = request.files.getlist("file[]")  # TODO: add file filter for safety
         media = {}
         for file in files:
+            # if file is in not acceptable format
+            if not allowed_file(file.filename):
+                continue
             # insert info about the file into the database
             media_record = asyncio.run(db_insert_media(secure_filename(file.filename), str(file.content_type)))
             media[str(media_record.id)] = file
@@ -70,8 +76,10 @@ def create(net=None):
 
             # upload media files to the server
             for file_id, file in media.items():
-                # save file with its id as the name
-                file.save(os.path.join(os.path.dirname(os.path.abspath(__file__)), '/static/media/', file_id + '_' + secure_filename(file.filename)))
+                # save file within the folder named as its id
+                folder_path = os.path.join(UPLOAD_FILES_PATH, str(file_id))
+                os.mkdir(folder_path)
+                file.save(os.path.join(folder_path, secure_filename(file.filename)))
                 # update media database
                 asyncio.run(db_update_media(int(file_id), post_id))
 
@@ -197,8 +205,16 @@ def mission(net=None):
 # media page
 @optional.routes('/media/<id>')
 def media(id):
-    # return static template
-    return 'media #' + str(id)
+    # return static file
+    media = asyncio.run(db_read_media(int(id.strip())))
+
+    # TODO: catch file not found exception
+    try:
+        return send_file(os.path.join(UPLOAD_FILES_PATH, str(media.id), media.filename))
+    except FileNotFoundError as e:
+        return 'File not found.'
+    except:
+        return 'An error occured.'
 
 
 # contact us page
@@ -226,6 +242,12 @@ def contact(net=None):
     # return static template
     return response(render_template('contact.html',
                                     status=status))
+
+
+# filter files
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in UPLOAD_ALLOWED_FORMATS
 
 
 # proccess url network switch

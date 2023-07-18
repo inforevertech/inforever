@@ -112,13 +112,13 @@
 
 <!-- script for posts refering and human-readable filter -->
 <script>
-    let post_blocks = document.getElementsByClassName('post_wrapper');
-    Array.prototype.forEach.call(post_blocks, (block) => {
-        block.addEventListener('click', () => {
-            // Simulate a mouse click:
-            window.location.href = block.getElementsByClassName('profile_name_link')[0].href;
-        });
-    });
+    // let post_blocks = document.getElementsByClassName('post_wrapper');
+    // Array.prototype.forEach.call(post_blocks, (block) => {
+    //     block.addEventListener('click', () => {
+    //         // Simulate a mouse click:
+    //         window.location.href = block.getElementsByClassName('profile_name_link')[0].href;
+    //     });
+    // });
 
     let switchHumRead = document.getElementById("hum_read_switch");
     switchHumRead.addEventListener('click', () => {

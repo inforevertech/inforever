@@ -56,7 +56,9 @@ async def db_search(input, limit=None, where=None, include_addresses=True):
 # Add a new transaction into the database
 async def db_insert_transaction(tr_hash, block_hash, message, post_date, network):
     post_date = datetime.datetime.fromtimestamp(int(post_date))
-    nonsense = is_nonsense(message)
+
+    formatted = message_media_filter(message)
+    nonsense = is_nonsense(formatted)
 
     prisma = Prisma()
     await prisma.connect()
@@ -71,7 +73,7 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date, network
                 'hash': tr_hash,
                 'block': block_hash,
                 'text': message,
-                'formatted_text': message_media_filter(message),
+                'formatted_text': formatted,
                 'timestamp': post_date,
                 'nonsense': nonsense,
                 'network': network
@@ -91,12 +93,15 @@ async def db_update_format_transactions():
     posts = await prisma.post.find_many()
 
     for post in posts:
+        formatted = message_media_filter(post.text)
+
         updated = await prisma.post.update(
             where={
                 'id': post.id,
             },
             data={
-                'formatted_text': message_media_filter(post.text)
+                'formatted_text': formatted,
+                'nonsense': is_nonsense(formatted)
             }
         )
 
@@ -202,7 +207,9 @@ async def db_validate_transactions_nonsense():
     )
 
     for post in posts:
-        nonsense_check = is_nonsense(post.text)
+        nonsense_check = is_nonsense(post.formatted_text)
+        if nonsense_check == False:
+            print(post.id, post.formatted_text, ' makes sense.')
 
         # if do not correspond to the db value
         if post.nonsense != nonsense_check:
@@ -384,6 +391,22 @@ async def db_update_media(id, post_hash):
         },
         data={
             'post_hash': post_hash,
+        },
+    )
+
+    await prisma.disconnect()
+    return media
+
+
+# Read media information
+async def db_read_media(id):
+    prisma = Prisma()
+    await prisma.connect()
+
+    # insert a new transaction
+    media = await prisma.media.find_unique(
+        where={
+            'id': id,
         },
     )
 
