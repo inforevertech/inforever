@@ -100,6 +100,6 @@ class Collector:
 # starting point
 if __name__ == '__main__':
     # launch collector of recent posts
-    collector = Collector(network='btc')
+    collector = Collector(network='btc-test')
     collector.set_top_height()  # start fromt the highest block in the blockchain
-    collector.collection_service(past_posts=False, wait_time=100)
+    collector.collection_service(past_posts=True, wait_time=0.01)

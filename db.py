@@ -208,8 +208,6 @@ async def db_validate_transactions_nonsense():
 
     for post in posts:
         nonsense_check = is_nonsense(post.formatted_text)
-        if nonsense_check == False:
-            print(post.id, post.formatted_text, ' makes sense.')
 
         # if do not correspond to the db value
         if post.nonsense != nonsense_check:
@@ -232,6 +230,8 @@ def is_nonsense(text):
     try:
         if len(text) == 0:  # empty, therefore nonsense
             nonsense_check = True
+        elif len(text) < 5:  # too short but can make sense
+            nonsense_check = False
         elif not nonsense(text):  # seems to make sense
             nonsense_check = False
             # these formats incorrectly recognized as not nonsense

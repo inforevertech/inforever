@@ -14,17 +14,22 @@ from db import *
 from avatar_generator import generate_avatar_by_address
 
 
-app = Flask(__name__)
-optional = OptionalRoutes(app)
-mail = Mail(app)  # TODO: configure email server
-
 NET_LIST = [
     { 'tag': 'btc', 'name': 'Bitcoin Blockchain' },
     { 'tag': 'btc-test', 'name': 'Bitcoin Testnet'},
 ]
 DEFAULT_NET = NET_LIST[0]['tag']
-UPLOAD_FILES_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
-UPLOAD_ALLOWED_FORMATS = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov']
+
+
+app = Flask(__name__)
+optional = OptionalRoutes(app)
+mail = Mail(app)  # TODO: configure email server
+
+
+# file upload configuration
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['UPLOAD_FOLDER'] = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
+app.config['UPLOAD_FORMATS'] = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov']
 
 
 # post creation page
@@ -32,7 +37,6 @@ UPLOAD_ALLOWED_FORMATS = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp
 def create(net=None):
     # switch network
     network_switch(net)
-    asyncio.run(db_validate_transactions_nonsense())
 
     if request.method == 'GET':  # show page to write a post
         return response(render_template('create.html',
@@ -43,8 +47,9 @@ def create(net=None):
         message = request.form['message']
         private_key = request.form['private']
         fee = int(request.form['fee'])
+        # TODO: implement more accurate fee counter
 
-        files = request.files.getlist("file[]")  # TODO: add file filter for safety
+        files = request.files.getlist("file[]")
         media = {}
         for file in files:
             # if file is in not acceptable format
@@ -77,7 +82,7 @@ def create(net=None):
             # upload media files to the server
             for file_id, file in media.items():
                 # save file within the folder named as its id
-                folder_path = os.path.join(UPLOAD_FILES_PATH, str(file_id))
+                folder_path = os.path.join(app.config['UPLOAD_FOLDER'], str(file_id))
                 os.mkdir(folder_path)
                 file.save(os.path.join(folder_path, secure_filename(file.filename)))
                 # update media database
@@ -210,7 +215,7 @@ def media(id):
 
     # TODO: catch file not found exception
     try:
-        return send_file(os.path.join(UPLOAD_FILES_PATH, str(media.id), media.filename))
+        return send_file(os.path.join(app.config['UPLOAD_FOLDER'], str(media.id), media.filename))
     except FileNotFoundError as e:
         return 'File not found.'
     except:
@@ -247,7 +252,7 @@ def contact(net=None):
 # filter files
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in UPLOAD_ALLOWED_FORMATS
+           filename.rsplit('.', 1)[1].lower() in app.config['UPLOAD_FORMATS']
 
 
 # proccess url network switch
