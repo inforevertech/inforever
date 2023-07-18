@@ -16,7 +16,9 @@ model Post {
   id    Int     @id @default(autoincrement())
   hash  String  @unique
   block String?
-  text  String  @db.LongText
+
+  text           String  @db.LongText
+  formatted_text String? @db.LongText
 
   media     Media[]
   addresses Address[]

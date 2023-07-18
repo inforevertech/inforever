@@ -71,6 +71,7 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date, network
                 'hash': tr_hash,
                 'block': block_hash,
                 'text': message,
+                'formatted_text': message_media_filter(message),
                 'timestamp': post_date,
                 'nonsense': nonsense,
                 'network': network
@@ -80,6 +81,42 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date, network
     )
 
     await prisma.disconnect()
+
+
+# Update formatted text for all posts 
+async def db_update_format_transactions():
+    prisma = Prisma()
+    await prisma.connect()
+
+    posts = await prisma.post.find_many()
+
+    for post in posts:
+        updated = await prisma.post.update(
+            where={
+                'id': post.id,
+            },
+            data={
+                'formatted_text': message_media_filter(post.text)
+            }
+        )
+
+    await prisma.disconnect()
+
+
+# remove media tags part in message text
+def message_media_filter(message):
+    message = message.strip()
+
+    # media formatting
+    if '${' in message and '}$' in message:
+        start, end = message.find('${'), message.find('}$')
+
+        media_content = message[start + 2:end]
+        # TODO: insert media_content as media into the db
+
+        message = message[:start]
+
+    return message
 
 
 # Receive a list of transactions
@@ -113,7 +150,8 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True):
             'timestamp': 'desc',
         },
         include={
-            'addresses': include_addresses
+            'addresses': include_addresses,
+            'media': True,
         }
     )
 

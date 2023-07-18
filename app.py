@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, make_response, abor
 from flask_optional_routes import OptionalRoutes
 from flask_mail import Mail, Message
 from werkzeug.exceptions import HTTPException
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
@@ -149,7 +149,6 @@ def explorer(net=None):
         results = asyncio.run(db_read_transactions(where=where, limit=50))
         counter = asyncio.run(db_transactions_count(where=where))
 
-    
     return response(render_template('explorer.html',
                                     totalNmberOfPosts=f'{counter:,}',
                                     messages=results,
@@ -193,6 +192,13 @@ def mission(net=None):
     
     # return static template
     return response(render_template('mission.html'))
+
+
+# media page
+@optional.routes('/media/<id>')
+def media(id):
+    # return static template
+    return 'media #' + str(id)
 
 
 # contact us page
