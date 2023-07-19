@@ -24,45 +24,4 @@
 <!-- Posts list section -->
 {% include 'elements/post_wrapper.html' %}
 
-<!-- script for posts refering and human-readable filter -->
-<script>
-    // let post_blocks = document.getElementsByClassName('post_wrapper');
-    // Array.prototype.forEach.call(post_blocks, (block) => {
-    //     block.addEventListener('click', () => {
-    //         // Simulate a mouse click:
-    //         window.location.href = block.getElementsByClassName('profile_name_link')[0].href;
-    //     });
-    // });
-
-    let switchHumRead = document.getElementById("hum_read_switch");
-    switchHumRead.addEventListener('click', () => {
-        // Simulate a mouse click:
-        let url = new URL(window.location.href)
-        let params = new URLSearchParams(url.search);
-
-        {% if human %}
-            params.set('human', 0)
-        {% else %}
-            params.set('human', 1)
-        {% endif %}
-
-        window.location.href = window.location.origin + window.location.pathname + params.toString()
-    });
-
-    let recent_options = document.getElementsByClassName('recent_option');
-    Array.prototype.forEach.call(recent_options, (option) => {
-        option.addEventListener('click', (el) => {
-            // Simulate a mouse click:
-            document.getElementsByClassName('recent_selected')[0].classList.remove('recent_selected');
-            option.classList.add('recent_selected');
-
-            let url = new URL(window.location.href)
-            let params = new URLSearchParams(url.search);
-            params.set('recent', option.getAttribute('value'))
-
-            window.location.href = window.location.origin + window.location.pathname + params.toString()
-        });
-    });
-</script>
-
 {% endblock %}

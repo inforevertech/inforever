@@ -321,7 +321,8 @@ def utility_processor():
         elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).date():  # post_datetime is yesterday
             return post_datetime.strftime("%-I:%M %p Yesterday")
         else:  # post_datetime is any other day
-            return post_datetime.strftime("%-I:%M %p on %A, %B %-d, %Y")
+            # return post_datetime.strftime("%-I:%M %p on %A, %B %-d, %Y")
+            return post_datetime.strftime("%-I:%M %p on %B %-d, %Y")
     
     # Return url for transaction avatar
     def find_address_avatar(address):
