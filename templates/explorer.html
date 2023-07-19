@@ -1,5 +1,6 @@
-{% include "header.html" %}
+{% extends 'base.html' %}
 
+{% block page_content %}
 <!-- explorer page information block -->
 <header class="masthead masthead-contact text-center bg-gradient-primary-to-secondary">
     <div class="container px-5">
@@ -18,97 +19,8 @@
     </div>
 </header>
 
-
-<!-- Basic features section-->
-<section class="bg-light posts_section" id="explorer_section">
-    <div class="container px-5">
-        <div class="row gx-5 align-items-center justify-content-center">
-            <div class="col-12 col-lg-10">
-
-                <div class="setting_section">
-                    <div class="recent_filter">
-                        <div name="recent" id="recent_select">
-                            <div value="D" class="recent_option {% if g.recent == 'D' %}recent_selected{% endif %}">1D</div>
-                            <div value="W" class="recent_option {% if g.recent == 'W' %}recent_selected{% endif %}">1W</div>
-                            <div value="M" class="recent_option {% if g.recent == 'M' %}recent_selected{% endif %}">1M</div>
-                            <div value="Y" class="recent_option {% if g.recent == 'Y' %}recent_selected{% endif %}">1Y</div>
-                            <div value="A" class="anytime_recent recent_option {% if g.recent == 'A' %}recent_selected{% endif %}">Anytime</div>
-                        </div>
-                    </div>
-                    <div class="filter">
-                        <!-- Rounded switch Human Readable On/Off -->
-                        <label class="switch" id="hum_read_switch">
-                            <input type="checkbox" {% if human %}checked{% endif %}>
-                            <span class="slider round"></span>
-                        </label>
-                        <span class="hum_read_switch_text">Human Readable Filter</span>
-                    </div>
-                </div>
-                {% if totalNmberOfPosts == "0" %}
-                    <h4 class="display-5 lh-1 mb-4 explorer_list_title">No posts were found.</h4>
-                {% else %}
-                    <!-- <h2 class="display-4 lh-1 mb-4 explorer_list_title">Most interesting posts</h2> -->
-
-                    <div class="post_container">
-                        {% for message in messages %}
-                            <div class="post_wrapper">
-                                <div class="post row">
-                                    <div class="col-7">
-                                        <div class="post-info">
-                                            <div class="post_profile_image">
-                                                <!-- Sent from -->
-                                                {% for address in message.addresses %}
-                                                    {% if not address.direction %}
-                                                        <a href="/{{ address.address }}">
-                                                            <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                
-                                                {% if message.addresses|length > 1 %}
-                                                    <a href="{{ url_for('post', hash=message.hash) }}" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
-                                                {% endif %}
-
-                                                <!-- Sent to -->
-                                                {% for address in message.addresses %}
-                                                    {% if address.direction %}
-                                                        <a href="/{{ address.address }}">
-                                                            <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
-                                            <div class="post_content">
-                                                <div class="post_relevant_information">
-                                                    <a href="/post/{{ message.hash }}" class="profile_name_link">Post #{{ format_shorten_address(message.hash) }}</a>
-                                                    <span class="separator">&#9900;</span>
-                                                    <span class="post_date">{{ format_date(message.timestamp) }}</span>
-                                                </div>
-                                                <div class="post_text">{{ message.formatted_text }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-5">
-                                        <div class="post_media">
-                                            {% for media in message.media %}
-                                                <div class="media">
-                                                    <a href="{{ url_for('media', id=media.id) }}" target="_blank">
-                                                        <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
-                                                        <span class="media_filename">{{ media.filename }}</span>
-                                                    </a>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</section>
+<!-- Posts list section -->
+{% include 'elements/post_wrapper.html' %}
 
 <!-- script for posts refering and human-readable filter -->
 <script>
@@ -132,7 +44,11 @@
             params.set('human', 1)
         {% endif %}
 
-        window.location.href = "{{ url_for('explorer') }}?" + params.toString()
+        // add get parameters only if not empty
+        if (params.toString().length > 0)
+                window.location.href = window.location.origin + window.location.pathname + '?' + params.toString();
+        else
+            window.location.href = window.location.origin + window.location.pathname;
     });
 
     let recent_options = document.getElementsByClassName('recent_option');
@@ -146,9 +62,12 @@
             let params = new URLSearchParams(url.search);
             params.set('recent', option.getAttribute('value'))
 
-            window.location.href = "{{ url_for('explorer') }}?" + params.toString()
-        });
+            // add get parameters only if not empty
+            if (params.toString().length > 0)
+                    window.location.href = window.location.origin + window.location.pathname + '?' + params.toString();
+            else
+                window.location.href = window.location.origin + window.location.pathname;
+            });
     });
 </script>
-
-{% include "footer.html" %}
+{% endblock %}

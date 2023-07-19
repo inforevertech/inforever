@@ -156,7 +156,7 @@ def explorer(net=None):
 
     # search
     search = request.args.get('search')
-    if search:
+    if search and search.strip():
         counter, results = asyncio.run(db_search(search, where=where, limit=50))
     else:
         results = asyncio.run(db_read_transactions(where=where, limit=50))

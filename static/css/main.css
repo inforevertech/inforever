@@ -516,3 +516,18 @@ html {
     color: #9f1ae2;
     border-color: #9f1ae2;
 }
+
+.post_page_media {
+    background-color: transparent;
+    padding: 0;
+    margin-top: 2rem;
+}
+.post_page_media .media {
+    background-color: #fff;
+}
+.external_explorer {
+    margin-top: 2rem;
+}
+.post_network {
+    color: #333;
+}

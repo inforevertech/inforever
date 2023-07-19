@@ -1,4 +1,6 @@
-{% include "header.html" %}
+{% extends 'base.html' %}
+
+{% block page_content %}
 
     <!-- Mashead header-->
     <header class="masthead">
@@ -194,4 +196,4 @@
         textarea.addEventListener('keyup', updateFee);
     </script>
 
-{% include "footer.html" %}
+{% endblock %}

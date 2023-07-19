@@ -42,7 +42,8 @@ async def db_search(input, limit=None, where=None, include_addresses=True):
         take=limit,
         where=where,
         include={
-            'addresses': include_addresses
+            'addresses': include_addresses,
+            'media': True
         }
     )
 
@@ -256,7 +257,8 @@ async def db_find_post(post_hash):
             'hash': post_hash
         },
         include={
-            'addresses': True
+            'addresses': True,
+            'media': True
         }
     )
     
@@ -353,7 +355,8 @@ async def db_find_posts_by_addresses(address, nonsense=None, limit=None):
     posts = await prisma.post.find_many(
         where=where,
         include={
-            'addresses': True
+            'addresses': True,
+            'media': True
         },
         take=limit
     )

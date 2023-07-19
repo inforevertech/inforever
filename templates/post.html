@@ -1,4 +1,6 @@
-{% include "header.html" %}
+{% extends 'base.html' %}
+
+{% block page_content %}
 
 <!-- transaction id information block -->
 <header class="masthead text-center bg-gradient-primary-to-secondary">
@@ -52,15 +54,20 @@
 
                     <h5 class="lh-1 mb-2"><span class="post_date">{{ format_date(post.timestamp) }}</span></h5>
                     <br>
-                    <h5 class="lh-1 mb-2">Post: </span></h5>
+                    <!-- <h5 class="lh-1 mb-2">Content: </span></h5> -->
                     <p class="lead fw-normal text-muted mb-5 mb-lg-0">{{ post.formatted_text }}</p>
 
                     <br>
-                    {% if post.network == 'btc' %}
-                        <p><a href="https://live.blockcypher.com/btc/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
-                    {% elif post.network == 'btc-test' %}
-                        <p><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
-                    {% endif %}
+                    <div class="post_media post_page_media">
+                        {% for media in post.media %}
+                            <div class="media">
+                                <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                    <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
+                                    <span class="media_filename">{{ media.filename }}</span>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% else %}
                     <h3 class="mb-2">Post is still waiting for acceptance into mempool or not existent.</h3>
 
@@ -77,6 +84,12 @@
                 <h5 class="display-6 mb-4">This post {% if post %}is{% else %}can be{% endif %} published on the Bitcoin {% if post and post.network == "btc-test" %}Testnet{% else %}Blockchain{% endif %}.</h5>
                 <p class="lead fw-normal text-muted mb-5 mb-lg-0">It is kept forever.<br>Cannot be censored.<br>Accessible by everyone.</p>
                 <button class="btn btn-primary px-3 mb-2 mb-lg-0" id="copy_link_btn">Copy the link</button>
+
+                {% if post.network == 'btc' %}
+                    <p class="external_explorer"><a href="https://live.blockcypher.com/btc/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                {% elif post.network == 'btc-test' %}
+                    <p class="external_explorer"><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
+                {% endif %}
 
             </div>
         </div>
@@ -110,4 +123,4 @@
     });
 </script>
 
-{% include "footer.html" %}
+{% endblock %}

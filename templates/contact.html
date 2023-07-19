@@ -1,4 +1,6 @@
-{% include "header.html" %}
+{% extends 'base.html' %}
+
+{% block page_content %}
 
 <!-- title information block -->
 <header class="masthead masthead-contact text-center bg-gradient-primary-to-secondary">
@@ -61,4 +63,4 @@ Satoshi"></textarea>
     </div>
 </section>
 
-{% include "footer.html" %}
+{% endblock %}
