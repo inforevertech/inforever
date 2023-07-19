@@ -40,7 +40,7 @@ def create(net=None):
 
     if request.method == 'GET':  # show page to write a post
         return response(render_template('create.html',
-                                        recommende_fee=get_fee_cached()))
+                                        recommende_fee=get_fee_cached(fast=False)))
     
     elif request.method == 'POST':  # save a post
         # If submit button is pressed get the values from the form: messsage, private key and transaction fee.

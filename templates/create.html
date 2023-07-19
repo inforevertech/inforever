@@ -60,8 +60,9 @@
     let feePerChar = {{ recommende_fee }};
 
     function updateFee() {
-        feeCalculator.textContent = textarea.value.length * feePerChar;
+        feeCalculator.textContent = (new Blob([textarea.value]).size + 200) * feePerChar;
     }
+    updateFee()
 
     textarea.addEventListener('keyup', updateFee);
 </script>
