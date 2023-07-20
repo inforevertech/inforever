@@ -75,12 +75,20 @@
                                     <div class="col-5">
                                         <div class="post_media">
                                             {% for media in message.media %}
-                                                <div class="media">
-                                                    <a href="{{ url_for('media', id=media.id) }}" target="_blank">
-                                                        <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
-                                                        <span class="media_filename">{{ media.filename }}</span>
-                                                    </a>
-                                                </div>
+                                                {% if media.type == "image/jpeg" %}
+                                                    <div class="media_pic">
+                                                        <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                                            <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
+                                                        </a>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="media">
+                                                        <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                                            <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
+                                                            <span class="media_filename">{{ media.filename }}</span>
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
                                             {% endfor %}
                                         </div>
                                     </div>

@@ -531,3 +531,15 @@ html {
 .post_network {
     color: #333;
 }
+
+.media_pic {
+    width: 100%;
+    overflow: hidden;
+
+    border-radius: 5px;
+    background: 2px solid #ccc;
+    margin-bottom: 10px;
+}
+.media_pic img {
+    width: 100%;
+}
