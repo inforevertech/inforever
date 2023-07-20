@@ -81,6 +81,14 @@
                                                             <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
                                                         </a>
                                                     </div>
+                                                {% elif media.type == "video/mp4" %}
+                                                    <div class="media_pic">
+                                                        <!-- <a href="{{ url_for('media', id=media.id) }}" target="_blank"> -->
+                                                            <video alt="media" class="media_image" controls>
+                                                                <source src="{{ url_for('media', id=media.id) }}" type="video/mp4">
+                                                            </video>
+                                                        <!-- </a> -->
+                                                    </div>
                                                 {% else %}
                                                     <div class="media">
                                                         <a href="{{ url_for('media', id=media.id) }}" target="_blank">

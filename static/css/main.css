@@ -481,7 +481,7 @@ html {
 
 .post_media {
     background: #fff;
-    padding: 20px 30px 30px 30px;
+    padding: 20px 30px;
     height: 100%;
 }
 
@@ -540,6 +540,16 @@ html {
     background: 2px solid #ccc;
     margin-bottom: 10px;
 }
-.media_pic img {
+.media_pic img, .media_pic video {
     width: 100%;
+    overflow: hidden;
+}
+.media_upload_caution {
+    margin-top: 1rem;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+.media_pic:last-child {
+    margin-bottom: 0 !important;
 }

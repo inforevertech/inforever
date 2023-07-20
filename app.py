@@ -29,7 +29,7 @@ mail = Mail(app)  # TODO: configure email server
 # file upload configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
-app.config['UPLOAD_FORMATS'] = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov']
+app.config['UPLOAD_FORMATS'] = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov', 'mp4', 'json', 'xslsx', 'pptx']
 
 
 # post creation page
@@ -47,13 +47,13 @@ def create(net=None):
         message = request.form['message']
         private_key = request.form['private']
         fee = int(request.form['fee'])
-        # TODO: implement more accurate fee counter
 
         files = request.files.getlist("file[]")
         media = {}
         for file in files:
             # if file is in not acceptable format
             if not allowed_file(file.filename):
+                # TODO: cause exception and return error page
                 continue
             # insert info about the file into the database
             media_record = asyncio.run(db_insert_media(secure_filename(file.filename), str(file.content_type)))
