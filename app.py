@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
+from dotenv import load_dotenv, find_dotenv
 import datetime
 import asyncio
 import os.path
@@ -25,11 +26,13 @@ app = Flask(__name__)
 optional = OptionalRoutes(app)
 mail = Mail(app)  # TODO: configure email server
 
-
 # file upload configuration
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
 app.config['UPLOAD_FORMATS'] = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov', 'mp4', 'json', 'xslsx', 'pptx']
+
+# local env variables
+load_dotenv(find_dotenv())
 
 
 # post creation page
@@ -249,6 +252,17 @@ def contact(net=None):
                                     status=status))
 
 
+# donate page
+@optional.routes('/<net>?/donate', methods=['GET', 'POST'])
+def donate(net=None):
+    # switch network
+    network_switch(net)
+    
+    # return static template
+    return response(render_template('donate.html',
+                                    address=os.environ.get("BTC_ADDRESS")))
+
+
 # filter files
 def allowed_file(filename):
     return '.' in filename and \
@@ -354,5 +368,5 @@ def page_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
 

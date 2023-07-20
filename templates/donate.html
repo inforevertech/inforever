@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+<!-- title information block -->
+<header class="masthead masthead-contact text-center bg-gradient-primary-to-secondary">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-xl-12">
+                <div class="h2 fs-1 text-white">
+                    <p class="mb-2">Donate</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Text Info section-->
+<section class="bg-light donate_info_section">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-6">
+                <p class="donation_text lh1">If you wish to support Inforever,<br>please make a BTC donation for us.</p>
+                <p class="donation_qrcode"><img src="{{ url_for('static', filename='img/btc_address.png') }}" alt="bitcoin donation qr-code"></p>
+                <p class="donation_address">{{ address }}</p>
+                <p class="donation_copy">
+                    <button class="btn btn-primary px-3 mb-2 mb-lg-0" id="copy_address_btn">Copy the address</button>
+                </p>
+                <!-- <p  class="donation_text addition_donation_text lh1">Don't hesitate to <a href="{{ url_for('contact') }}" target="_blank">contact us</a><br>for alternative ways to support.</p> -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- copy to address to clipboard script -->
+<script>
+    function copyTextToClipboard(text) {
+        if (!navigator.clipboard) {
+            fallbackCopyTextToClipboard(text);
+            return;
+        }
+
+        navigator.clipboard.writeText(text).then(function() {
+            console.log('Async: Copying to clipboard was successful!');
+        }, function(err) {
+            console.error('Async: Could not copy text: ', err);
+        });
+    }
+
+    // on button click add the link to clipboard
+    const button = document.getElementById("copy_address_btn");
+    button.addEventListener("click", (event) => {
+        copyTextToClipboard("{{ address}}");
+
+        button.classList.add("clicked_copy_btn");
+        setTimeout(() => {
+            button.classList.remove("clicked_copy_btn")
+        }, 3000);
+    });
+</script>
+
+{% endblock %}

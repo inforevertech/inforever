@@ -70,6 +70,9 @@ html {
     margin-top: 30px;
     transition: background-color 1s;
 }
+#copy_address_btn {
+    transition: background-color 1s;
+}
 .clicked_copy_btn {
     background-color: green !important;
 }
@@ -552,4 +555,40 @@ html {
 }
 .media_pic:last-child {
     margin-bottom: 0 !important;
+}
+.donation_text {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: normal;
+    /* color: #6c757d !important; */
+}
+.donation_qrcode {
+    width: 100%;
+    height: 350px;
+    text-align: center;
+
+    margin: 2.5rem 0;
+}
+.donation_qrcode img {
+    height: 100%;
+    overflow: hidden;
+    border-radius: 15px;
+}
+.donation_text a {
+    color: #000;
+    text-decoration: none;
+}
+.donate_info_section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+.donation_address {
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+}
+.donation_copy {
+    text-align: center;
+    margin-bottom: 0;
 }
