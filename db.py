@@ -148,6 +148,9 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True):
     elif g.recent == 'A':
         pass
 
+    # specify human readable format
+    where['nonsense'] = not g.human
+
     # read transactions
     posts = await prisma.post.find_many(
         where=where,
@@ -187,6 +190,9 @@ async def db_transactions_count(where=None):
         where['timestamp'] = { 'gt': datetime.datetime.now() - datetime.timedelta(days=365) }
     elif g.recent == 'A':
         pass
+
+    # specify human readable format
+    where['nonsense'] = not g.human
 
     # receive total number of transactions
     total_posts = await prisma.post.count(where=where)
@@ -319,7 +325,7 @@ async def db_read_addresses(limit=None, where=None):
 
 
 # Receive a list of posts made by passed address
-async def db_find_posts_by_addresses(address, nonsense=None, limit=None):
+async def db_find_posts_by_addresses(address, limit=None):
     prisma = Prisma()
     await prisma.connect()
 
@@ -347,9 +353,8 @@ async def db_find_posts_by_addresses(address, nonsense=None, limit=None):
     elif g.recent == 'A':
         pass
 
-    # set nonsense filter
-    if nonsense is not None:
-        where['nonsense'] = nonsense
+    # specify human readable format
+    where['nonsense'] = not g.human
 
     # read transactions
     posts = await prisma.post.find_many(

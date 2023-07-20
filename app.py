@@ -149,27 +149,19 @@ def post(hash, net=None):
 def explorer(net=None):
     # switch network
     network_switch(net)
-    
-    # human-readable format filtration
-    human = request.args.get('human')
-    if human is None or human == "1":
-        human, where = True, { 'nonsense': False }
-    else:
-        human, where = False, None
 
     # search
     search = request.args.get('search')
     if search and search.strip():
-        counter, results = asyncio.run(db_search(search, where=where, limit=50))
+        counter, results = asyncio.run(db_search(search, limit=50))
     else:
-        results = asyncio.run(db_read_transactions(where=where, limit=50))
-        counter = asyncio.run(db_transactions_count(where=where))
+        results = asyncio.run(db_read_transactions(limit=50))
+        counter = asyncio.run(db_transactions_count())
 
     return response(render_template('explorer.html',
                                     totalNmberOfPosts=f'{counter:,}',
                                     messages=results,
-                                    search=search if search is not None else '',
-                                    human=human))
+                                    search=search if search is not None else ''))
 
 
 # address/user page
@@ -177,16 +169,9 @@ def explorer(net=None):
 def address(id, net=None):
     # switch network
     network_switch(net)
-
-    # human-readable format filtration
-    human = request.args.get('human')
-    if human is None or human == "1":
-        human, nonse = True, False
-    else:
-        human, nonse = False, None
     
     # get a list of posts
-    posts = asyncio.run(db_find_posts_by_addresses(id, nonsense=False))
+    posts = asyncio.run(db_find_posts_by_addresses(id))
 
     if posts:
         # generate avatar if not present
@@ -196,8 +181,7 @@ def address(id, net=None):
     return response(render_template('address.html',
                                     address=id,
                                     totalNmberOfPosts=f'{len(posts):,}',
-                                    messages=posts,
-                                    human=human))
+                                    messages=posts))
     
 
 # mission page
@@ -286,6 +270,9 @@ def correct_cookie(name, value):
     elif name == 'recent':
         if value is not None and value in ['D', 'W', 'M', 'Y', 'A']:
             return True
+    elif name == 'human':
+        if value in ['0', '1']:
+            return True
    
     return False
 
@@ -311,6 +298,12 @@ def set_global_variables():
         g.recent = request.args.get('recent')
     else:
         g.recent = "A"  # default
+
+    # human filter
+    if correct_cookie('human', request.args.get('human')):
+        g.human = request.args.get('human') == '1'
+    else:
+        g.human = False  # default
 
     # set default blockchain network
     if correct_cookie('net', request.args.get('net')):
@@ -368,5 +361,5 @@ def page_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True)
 
