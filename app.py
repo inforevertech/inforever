@@ -27,7 +27,7 @@ optional = OptionalRoutes(app)
 mail = Mail(app)  # TODO: configure email server
 
 # file upload configuration
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 128 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
 app.config['UPLOAD_FORMATS'] = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov', 'mp4', 'json', 'xslsx', 'pptx']
 
@@ -127,6 +127,7 @@ def index(net=None):
 @optional.routes('/<net>?/post/<hash>')
 def post(hash, net=None):
     post = asyncio.run(db_find_post(hash))
+    explorer_url = "https://blockstream.info/" + "testnet/" if g.net == 'btc-test' else ""  + "tx/"
 
     if post:  # post was found
         # switch network according post's network
@@ -134,14 +135,16 @@ def post(hash, net=None):
 
         return response(render_template('post.html',
                                         post=post,
-                                        post_hash=hash))
+                                        post_hash=hash,
+                                        explorer_url=explorer_url))
     
     else:  # post was not found
         # switch network to the chosen global one
         network_switch(net)
         # form transaction not ready or not existent response
         return response(render_template('post.html',
-                                        post_hash=hash))
+                                        post_hash=hash,
+                                        explorer_url=explorer_url))
 
     
 # blockchain messages explorer page

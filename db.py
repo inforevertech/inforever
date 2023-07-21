@@ -149,7 +149,8 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True):
         pass
 
     # specify human readable format
-    where['nonsense'] = not g.human
+    if g.human:
+        where['nonsense'] = False
 
     # read transactions
     posts = await prisma.post.find_many(
@@ -192,7 +193,8 @@ async def db_transactions_count(where=None):
         pass
 
     # specify human readable format
-    where['nonsense'] = not g.human
+    if g.human:
+        where['nonsense'] = False
 
     # receive total number of transactions
     total_posts = await prisma.post.count(where=where)
@@ -354,7 +356,8 @@ async def db_find_posts_by_addresses(address, limit=None):
         pass
 
     # specify human readable format
-    where['nonsense'] = not g.human
+    if g.human:
+        where['nonsense'] = False
 
     # read transactions
     posts = await prisma.post.find_many(

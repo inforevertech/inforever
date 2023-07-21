@@ -398,7 +398,7 @@ html {
     height: 100%;
     width: 100%;
 
-    border: 2px solid #333;
+    border: 1px solid #333;
     border-radius: 800px;
     overflow: hidden;
 }
@@ -412,7 +412,7 @@ html {
     display: inline-block;
     height: 100%;
     border: none;
-    border-right: 2px solid #333;
+    border-right: 1px solid #333;
     outline: none;
 }
 .explorer_search_ul {
@@ -435,6 +435,7 @@ html {
     padding-right: 1.2rem !important;
     margin-right: 0 !important;
     display: inline-block;
+    padding-top: 10px;
 }
 .explorer-header-link:hover {
     background-color: #000;
@@ -599,4 +600,12 @@ html {
     display: inline-block;
     transform: rotate(-10deg) scale(1.2);
     color: rgb(2, 76, 181);
+}
+
+#search_bar, .explorer_search_link {
+    background-color: #f8f9fa;
+}
+#search_bar {
+    margin: 10px 0;
+    display: inline-block;
 }

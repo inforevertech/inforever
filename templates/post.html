@@ -86,27 +86,15 @@
                     </div>
                 {% else %}
                     <h3 class="mb-2">Post is still waiting for acceptance into mempool or not existent.</h3>
-
                     <br>
-                    {% if g.net == 'btc' %}
-                        <p><a href="https://live.blockcypher.com/btc/tx/{{ post_hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
-                    {% elif g.net == 'btc-test' %}
-                        <p><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post_hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
-                    {% endif %}
+                    <p><a href="{{ explorer_url }}{{ post_hash }}" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
                 {% endif %}
             </div>
             <div class="col-sm-8 col-md-6">
-                
                 <h5 class="display-6 mb-4">This post {% if post %}is{% else %}can be{% endif %} published on the Bitcoin {% if post and post.network == "btc-test" %}Testnet{% else %}Blockchain{% endif %}.</h5>
                 <p class="lead fw-normal text-muted mb-5 mb-lg-0">It is kept forever.<br>Cannot be censored.<br>Accessible by everyone.</p>
                 <button class="btn btn-primary px-3 mb-2 mb-lg-0" id="copy_link_btn">Copy the link</button>
-
-                {% if post.network == 'btc' %}
-                    <p class="external_explorer"><a href="https://live.blockcypher.com/btc/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
-                {% elif post.network == 'btc-test' %}
-                    <p class="external_explorer"><a href="https://live.blockcypher.com/btc-testnet/tx/{{ post.hash }}/" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
-                {% endif %}
-
+                <p class="external_explorer"><a href="{{ explorer_url }}{{ post.hash }}" target="_blank" rel="noopener noreferrer" class="external_explorer_link">See transaction status in blockchain explorer</a></p>
             </div>
         </div>
     </div>
