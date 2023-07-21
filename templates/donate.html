@@ -20,11 +20,11 @@
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center">
             <div class="col-6">
-                <p class="donation_text lh1">If you wish to support Inforever,<br>please make a BTC donation for us.</p>
+                <p class="donation_text lh1">If you wish to support Inforever,<br>consider making a <span class="bitcoin_donate_icon"><i class="bi bi-currency-bitcoin"></i></span> donation for us.</p>
                 <p class="donation_qrcode"><img src="{{ url_for('static', filename='img/btc_address.png') }}" alt="bitcoin donation qr-code"></p>
                 <p class="donation_address">{{ address }}</p>
                 <p class="donation_copy">
-                    <button class="btn btn-primary px-3 mb-2 mb-lg-0" id="copy_address_btn">Copy the address</button>
+                    <button class="btn btn-primary bg-gradient-primary-to-secondary px-3 mb-2 mb-lg-0" id="copy_address_btn">Copy the address</button>
                 </p>
                 <!-- <p  class="donation_text addition_donation_text lh1">Don't hesitate to <a href="{{ url_for('contact') }}" target="_blank">contact us</a><br>for alternative ways to support.</p> -->
             </div>

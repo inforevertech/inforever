@@ -74,7 +74,7 @@ html {
     transition: background-color 1s;
 }
 .clicked_copy_btn {
-    background-color: green !important;
+    background: green !important;
 }
 .transaction_id_title {
     color: #fff;
@@ -567,7 +567,7 @@ html {
     height: 350px;
     text-align: center;
 
-    margin: 2.5rem 0;
+    margin: 1.5rem 0 2.5rem;
 }
 .donation_qrcode img {
     height: 100%;
@@ -584,7 +584,7 @@ html {
 }
 .donation_address {
     text-align: center;
-    margin-top: 3rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
     font-size: 1.2rem;
 }
@@ -594,4 +594,9 @@ html {
 }
 .post_text {
     overflow-wrap: break-word;
+}
+.bitcoin_donate_icon {
+    display: inline-block;
+    transform: rotate(-10deg) scale(1.2);
+    color: rgb(2, 76, 181);
 }
