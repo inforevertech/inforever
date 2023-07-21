@@ -285,8 +285,10 @@ def response(template, cookies=None, **parameters):
     # create a response
     resp = make_response(template)
     
-    # set current network cookie
+    # set current cookies
     resp.set_cookie('net', g.net)
+    resp.set_cookie('recent', g.recent)
+    resp.set_cookie('human', '1' if g.human else '0')
         
     return resp
 
@@ -299,12 +301,16 @@ def set_global_variables():
     # recent filter
     if correct_cookie('recent', request.args.get('recent')):
         g.recent = request.args.get('recent')
+    elif correct_cookie('recent', request.cookies.get('recent')):
+        g.recent = request.cookies.get('recent')
     else:
         g.recent = "A"  # default
 
     # human filter
     if correct_cookie('human', request.args.get('human')):
         g.human = request.args.get('human') == '1'
+    elif correct_cookie('human', request.cookies.get('human')):
+        g.human = request.cookies.get('human') == '1'
     else:
         g.human = False  # default
 
