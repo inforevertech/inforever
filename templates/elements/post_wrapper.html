@@ -20,7 +20,7 @@
                             <input type="checkbox" {% if g.human %}checked{% endif %}>
                             <span class="slider round"></span>
                         </label>
-                        <span class="hum_read_switch_text">Human Readable Filter</span>
+                        <span class="hum_read_switch_text">Human Readable</span>
                     </div>
                 </div>
                 {% if totalNmberOfPosts == "0" %}
@@ -58,7 +58,7 @@
                                             </div>
                                             <div class="post_content">
                                                 <div class="post_relevant_information">
-                                                    <a href="/post/{{ message.hash }}" class="profile_name_link">Post #{{ format_shorten_address(message.hash) }}</a>
+                                                    <a href="{{ url_for('post', hash=message.hash) }}" class="profile_name_link">Post #{{ format_shorten_address(message.hash) }}</a>
                                                     <span class="separator">&#9900;</span>
                                                     <span class="post_date">{{ format_date(message.timestamp) }}</span>
                                                     <span class="separator">&#9900;</span>
@@ -67,6 +67,8 @@
                                                     {% elif message.network == 'btc-test' %}
                                                         <span class="post_network"><i class="bi bi-code-slash"></i></span>
                                                     {% endif %}
+                                                    <span class="separator">&#9900;</span>
+                                                    <span class="post_link"><a href="{{ url_for('post', hash=message.hash) }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a></span>
                                                 </div>
                                                 <div class="post_text">{{ message.formatted_text }}</div>
                                             </div>

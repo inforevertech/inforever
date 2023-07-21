@@ -95,7 +95,7 @@ html {
 
 .post_wrapper {
     /* padding: 20px 30px 30px 30px; */
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     
     border: 1px solid #ccc;
     border-radius: 20px;
@@ -103,11 +103,12 @@ html {
 
     background-color: #FDFDFC;
     display: block;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 .post_profile_image a {
     display: inline-block;
     margin-right: 20px;
+    margin-top: 10px;
 }
 .arrow_address {
     margin-right: 0 !important;
@@ -138,8 +139,11 @@ html {
 .profile_picture {
     border-radius: 5px;
 }
-.section_explorer_address, .posts_section {
+.section_explorer_address {
     padding-top: 3rem;
+}
+.posts_section {
+    padding-top: 1rem;
 }
 .from_to_arrow {
     font-size: 1.9rem;
@@ -172,7 +176,7 @@ html {
 
 
 .post_container {
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 .hum_read_switch_text {
     margin-left: 10px;
@@ -559,7 +563,7 @@ html {
 }
 .donation_text {
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: normal;
     /* color: #6c757d !important; */
 }
@@ -608,4 +612,18 @@ html {
 #search_bar {
     margin: 10px 0;
     display: inline-block;
+}
+
+.masthead-explorer {
+    padding-top: 8rem;
+    padding-bottom: 3rem;
+}
+
+.post_link a {
+    color: #333;
+    font-size: 0.95rem;
+    transition: 0.3s color;
+}
+.post_link a:hover {
+    color: rgb(2, 76, 181) !important;
 }
