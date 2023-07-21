@@ -31,7 +31,7 @@
                         {% for message in messages %}
                             <div class="post_wrapper">
                                 <div class="post row">
-                                    <div class="col-7">
+                                    <div class="{% if message.media %}col-7{% else %}col-12{% endif %}">
                                         <div class="post-info">
                                             <div class="post_profile_image">
                                                 <!-- Sent from -->
@@ -71,48 +71,59 @@
                                                     <span class="post_link"><a href="{{ url_for('post', hash=message.hash) }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a></span>
                                                 </div>
                                                 <div class="post_text">{{ message.formatted_text }}</div>
+                                                <div class="post_reactions">
+                                                    <div class="reaction" id="reaction_like">&#128151;</div>
+                                                    <div class="reaction" id="reaction_like">&#x1F44F;</div>
+                                                    <div class="reaction" id="reaction_like">&#x1F525;</div>
+                                                    <div class="reaction" id="reaction_like">&#x1F9E0;</div>
+                                                    <div class="reaction" id="reaction_like">&#x1F602;</div>
+                                                    <div class="reaction" id="reaction_like">&#x1F6A8;</div>
+                                                    <div class="reaction" id="reaction_like">&#x1F4B0;</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-5">
-                                        <div class="post_media">
-                                            <!-- videos -->
-                                            {% for media in message.media %}
-                                                {% if media.type == "video/mp4" %}
-                                                    <div class="media_pic">
-                                                        <!-- <a href="{{ url_for('media', id=media.id) }}" target="_blank"> -->
-                                                            <video alt="media" class="media_image" controls>
-                                                                <source src="{{ url_for('media', id=media.id) }}" type="video/mp4">
-                                                            </video>
-                                                        <!-- </a> -->
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
+                                    {% if message.media %}
+                                        <div class="col-5">
+                                            <div class="post_media">
+                                                <!-- videos -->
+                                                {% for media in message.media %}
+                                                    {% if media.type == "video/mp4" %}
+                                                        <div class="media_pic">
+                                                            <!-- <a href="{{ url_for('media', id=media.id) }}" target="_blank"> -->
+                                                                <video alt="media" class="media_image" controls>
+                                                                    <source src="{{ url_for('media', id=media.id) }}" type="video/mp4">
+                                                                </video>
+                                                            <!-- </a> -->
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
 
-                                            <!-- images -->
-                                            {% for media in message.media %}
-                                                {% if media.type == "image/jpeg" %}
-                                                    <div class="media_pic {% if message.media|length > 1 %}multiple_post_pics{% endif %}">
-                                                        <a href="{{ url_for('media', id=media.id) }}" target="_blank">
-                                                            <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
-                                                        </a>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
+                                                <!-- images -->
+                                                {% for media in message.media %}
+                                                    {% if media.type == "image/jpeg" %}
+                                                        <div class="media_pic {% if message.media|length > 1 %}multiple_post_pics{% endif %}">
+                                                            <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                                                <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
 
-                                            <!-- other files -->
-                                            {% for media in message.media %}
-                                                {% if media.type != "image/jpeg" and media.type != "video/mp4" %}
-                                                    <div class="media">
-                                                        <a href="{{ url_for('media', id=media.id) }}" target="_blank">
-                                                            <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
-                                                            <span class="media_filename">{{ media.filename }}</span>
-                                                        </a>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
+                                                <!-- other files -->
+                                                {% for media in message.media %}
+                                                    {% if media.type != "image/jpeg" and media.type != "video/mp4" %}
+                                                        <div class="media">
+                                                            <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                                                <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
+                                                                <span class="media_filename">{{ media.filename }}</span>
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}
@@ -170,5 +181,13 @@
             else
                 window.location.href = window.location.origin + window.location.pathname;
             });
+    });
+
+    let reactions = document.getElementsByClassName('reaction');
+    Array.prototype.forEach.call(reactions, (reaction) => {
+        reaction.addEventListener('click', (el) => {
+            // Simulate a mouse click:
+            reaction.classList.add('reaction_active')
+        });
     });
 </script>
