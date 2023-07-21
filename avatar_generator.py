@@ -39,7 +39,7 @@ def get_png_avatar(text, output_file):
 
     text = text.strip()
     if text:
-        initials = text[-3:]
+        initials = text[-2:]
 
     random_color = random.choice(COLORS)
     svg_avatar = INITIALS_SVG_TEMPLATE.format(**{

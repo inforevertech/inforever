@@ -59,14 +59,9 @@
 
                     <br>
                     <div class="post_media post_page_media">
-                        {% for media in post.media %}
-                            {% if media.type == "image/jpeg" %}
-                                <div class="media_pic">
-                                    <a href="{{ url_for('media', id=media.id) }}" target="_blank">
-                                        <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
-                                    </a>
-                                </div>
-                            {% elif media.type == "video/mp4" %}
+                         <!-- videos -->
+                         {% for media in post.media %}
+                            {% if media.type == "video/mp4" %}
                                 <div class="media_pic">
                                     <!-- <a href="{{ url_for('media', id=media.id) }}" target="_blank"> -->
                                         <video alt="media" class="media_image" controls>
@@ -74,7 +69,23 @@
                                         </video>
                                     <!-- </a> -->
                                 </div>
-                            {% else %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- images -->
+                        {% for media in post.media %}
+                            {% if media.type == "image/jpeg" %}
+                                <div class="media_pic {% if post.media|length > 1 %}multiple_post_pics{% endif %}">
+                                    <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                        <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- other files -->
+                        {% for media in post.media %}
+                            {% if media.type != "image/jpeg" and media.type != "video/mp4" %}
                                 <div class="media">
                                     <a href="{{ url_for('media', id=media.id) }}" target="_blank">
                                         <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
