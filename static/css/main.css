@@ -648,13 +648,38 @@ html {
     background-color: rgba(248, 248, 248, 0.4);
     padding: 3px 14px 6px;
     margin-right: 0.4rem;
+    margin-bottom: 0.8rem;
     border-radius: 800px;
     cursor: pointer;
 }
 .reaction:hover {
-    border: 1px solid rgba(2, 76, 181, 0.2);
-    background-color: rgba(2, 76, 181, 0.2);
+    border: 1px solid rgba(2, 76, 181, 0.2) !important;
+    background-color: rgba(2, 76, 181, 0.2) !important;
 }
 .reaction_active {
-    background-color: rgba(2, 76, 181, 0.1);
+    background-color: rgba(2, 76, 181, 0.1) !important;
+}
+.reaction_comment {
+    border: 1px solid rgba(2, 76, 181, 0.1);
+    background-color: rgba(2, 76, 181, 0.05);
+}
+.reaction_comment i {
+    /* color: rgb(2, 76, 181); */
+    color: #000;
+    display: inline-block;
+    margin: 0 6px;
+    transform: translateY(2px);
+}
+.reaction_number {
+    font-size: 0.85rem;
+    display: inline-block;
+    margin-left: 8px;
+    color: #333;
+}
+.reaction_comment .reaction_number {
+    margin-left: 3px;
+}
+.post_reaction_comment {
+    width: 100%;
+    text-align: center;
 }

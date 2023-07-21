@@ -96,13 +96,14 @@
                         {% endfor %}
                     </div>
                     <div class="post_reactions">
-                        <div class="reaction" id="reaction_like">&#128151;</div>
-                        <div class="reaction" id="reaction_like">&#x1F44F;</div>
-                        <div class="reaction" id="reaction_like">&#x1F525;</div>
-                        <div class="reaction" id="reaction_like">&#x1F9E0;</div>
-                        <div class="reaction" id="reaction_like">&#x1F602;</div>
-                        <div class="reaction" id="reaction_like">&#x1F6A8;</div>
-                        <div class="reaction" id="reaction_like">&#x1F4B0;</div>
+                        <div class="reaction reaction_like">&#x1F60D;<span class="reaction_number">5K</span></div>
+                        <div class="reaction">&#x1F44F;</div>
+                        <div class="reaction reaction_fire">&#x1F525;<span class="reaction_number">764</span></div>
+                        <div class="reaction">&#x1F9E0;</div>
+                        <div class="reaction reaction_laugh">&#x1F602;<span class="reaction_number">98</span></div>
+                        <div class="reaction">&#x1F6A8;</div>
+                        <div class="reaction">&#x1F4B0;</div>
+                        <div class="reaction reaction_comment post_reaction_comment"><i class="bi bi-chat-right-text"></i><span class="reaction_number">132</span></div>
                     </div>
                 {% else %}
                     <h3 class="mb-2">Post is still waiting for acceptance into mempool or not existent.</h3>
@@ -144,6 +145,14 @@
         setTimeout(() => {
             button.classList.remove("clicked_copy_btn")
         }, 3000);
+    });
+
+    let reactions = document.getElementsByClassName('reaction');
+    Array.prototype.forEach.call(reactions, (reaction) => {
+        reaction.addEventListener('click', (el) => {
+            // Simulate a mouse click:
+            reaction.classList.toggle('reaction_active')
+        });
     });
 </script>
 
