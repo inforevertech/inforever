@@ -20,6 +20,15 @@ NET_LIST = [
     { 'tag': 'btc-test', 'name': 'Bitcoin Testnet'},
 ]
 DEFAULT_NET = NET_LIST[0]['tag']
+REACTIONS = {
+    "love": "&#x1F60D;",
+    "applause": "&#x1F44F;",
+    "fire": "&#x1F525;",
+    "brain": "&#x1F9E0;",
+    "laugh": "&#x1F602;",
+    "alarm": "&#x1F6A8;",
+    "money": "&#x1F4B0;"
+}  # correspond to reactions in db
 
 
 app = Flask(__name__)
@@ -75,12 +84,12 @@ def create(net=None):
 
         try:
             # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-            post_id = key.send([], fee=fee, absolute_fee=True, message=message)
+            post_hash = key.send([], fee=fee, absolute_fee=True, message=message)
 
             # insert new post into the database
-            asyncio.run(db_insert_transaction(post_id, None, message, int(datetime.datetime.now().timestamp()), g.net))
+            asyncio.run(db_insert_transaction(post_hash, None, message, int(datetime.datetime.now().timestamp()), g.net))
             # add sender addresses information to the db
-            asyncio.run(db_insert_sent_address(post_id, [(key.address, False)], g.net))
+            asyncio.run(db_insert_sent_address(post_hash, [(key.address, False)], g.net))
 
             # upload media files to the server
             for file_id, file in media.items():
@@ -89,7 +98,7 @@ def create(net=None):
                 os.mkdir(folder_path)
                 file.save(os.path.join(folder_path, secure_filename(file.filename)))
                 # update media database
-                asyncio.run(db_update_media(int(file_id), post_id))
+                asyncio.run(db_update_media(int(file_id), post_hash))
 
         except bitExceptions.InsufficientFunds as e:
             # form insufficient funds description
@@ -110,7 +119,7 @@ def create(net=None):
                                             errorContent=["Error message: " + str(e)]))
 
         # redirect to its page
-        return redirect(url_for('post', hash=post_id))
+        return redirect(url_for('post', hash=post_hash))
 
 
 # main page
@@ -126,6 +135,12 @@ def index(net=None):
 # post explorer page
 @optional.routes('/<net>?/post/<hash>')
 def post(hash, net=None):
+    # reactions
+    reaction = request.args.get('reaction')
+    if reaction in REACTIONS.keys():
+        asyncio.run(db_update_reactions(hash, reaction))
+
+    # find post in the database
     post = asyncio.run(db_find_post(hash))
     explorer_url = "https://blockstream.info/" + "testnet/" if g.net == 'btc-test' else ""  + "tx/"
 
@@ -152,6 +167,13 @@ def post(hash, net=None):
 def explorer(net=None):
     # switch network
     network_switch(net)
+
+    # reactions
+    reaction = request.args.get('reaction')
+    if reaction and '_' in reaction:
+        post_hash, reaction = reaction.split('_')
+        if reaction in REACTIONS.keys():
+            asyncio.run(db_update_reactions(post_hash, reaction))
 
     # search
     search = request.args.get('search')
@@ -321,6 +343,9 @@ def set_global_variables():
         g.net = request.cookies.get('net')
     else:
         g.net = DEFAULT_NET
+
+    # set global list of reactions
+    g.reactions = REACTIONS
         
 
 # Template fields format functions

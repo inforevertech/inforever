@@ -23,7 +23,7 @@
 </header>
 
 <!-- Basic features section-->
-<section class="bg-light" id="post_msg">
+<section id="post_msg">
     <div class="container px-5">
         <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
             <div class="col-12 col-lg-5">
@@ -96,13 +96,14 @@
                         {% endfor %}
                     </div>
                     <div class="post_reactions">
-                        <div class="reaction reaction_like">&#x1F60D;<span class="reaction_number">5K</span></div>
-                        <div class="reaction">&#x1F44F;</div>
-                        <div class="reaction reaction_fire">&#x1F525;<span class="reaction_number">764</span></div>
-                        <div class="reaction">&#x1F9E0;</div>
-                        <div class="reaction reaction_laugh">&#x1F602;<span class="reaction_number">98</span></div>
-                        <div class="reaction">&#x1F6A8;</div>
-                        <div class="reaction">&#x1F4B0;</div>
+                        {% for reaction in g.reactions %}
+                            <div class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ post.hash }}">{{ g.reactions[reaction]|safe }}
+                                {% if post[reaction + '_counter'] > 0 %}
+                                    <span class="reaction_number">{{ post[reaction + '_counter'] }}</span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
                         <div class="reaction reaction_comment post_reaction_comment"><i class="bi bi-chat-right-text"></i><span class="reaction_number">132</span></div>
                     </div>
                 {% else %}
@@ -152,6 +153,12 @@
         reaction.addEventListener('click', (el) => {
             // Simulate a mouse click:
             reaction.classList.toggle('reaction_active')
+
+            let url = new URL(window.location.href)
+            let params = new URLSearchParams(url.search);
+            params.set('reaction', reaction.getAttribute('data-reaction'))
+
+            window.location.href = window.location.origin + window.location.pathname + '?' + params.toString();
         });
     });
 </script>

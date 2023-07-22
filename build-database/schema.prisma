@@ -20,6 +20,14 @@ model Post {
   text           String  @db.LongText
   formatted_text String? @db.LongText
 
+  love_counter     Int @default(0)
+  applause_counter Int @default(0)
+  fire_counter     Int @default(0)
+  brain_counter    Int @default(0)
+  laugh_counter    Int @default(0)
+  alarm_counter    Int @default(0)
+  money_counter    Int @default(0)
+
   media     Media[]
   addresses Address[]
 

@@ -423,3 +423,23 @@ async def db_read_media(id):
 
     await prisma.disconnect()
     return media
+
+
+# Update reactions counter
+async def db_update_reactions(post_hash, reaction):
+    prisma = Prisma()
+    await prisma.connect()
+    
+    # insert a new reaction
+    reaction = await prisma.post.update(
+        where={
+            'hash': post_hash,
+        },
+        data={
+            reaction + '_counter': {
+                'increment': 1,
+            }
+        }
+    )
+
+    await prisma.disconnect()

@@ -671,10 +671,12 @@ html {
     transform: translateY(2px);
 }
 .reaction_number {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     display: inline-block;
     margin-left: 8px;
+    margin-right: 4px;
     color: #333;
+    margin-bottom: 2px;
 }
 .reaction_comment .reaction_number {
     margin-left: 3px;
