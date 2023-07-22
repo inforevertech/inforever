@@ -97,12 +97,14 @@ html {
     /* padding: 20px 30px 30px 30px; */
     margin-bottom: 25px;
     
-    border: 1px solid #ccc;
-    border-radius: 20px;
+    /* border: 1px solid #ccc; */
+    /* background-color: rgba(2, 76, 181, 0.1); */
+    border: 5px solid rgba(2, 76, 181, 0.06);
+    border-radius: 10px;
     overflow: hidden;
 
     background-color: #FDFDFC;
-    display: block;
+    display: block;#FDFDFC
     /* cursor: pointer; */
 }
 .post_profile_image a {
@@ -180,7 +182,7 @@ html {
 }
 .hum_read_switch_text {
     margin-left: 10px;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     display: inline-block;
 
     position: relative;
@@ -291,6 +293,10 @@ html {
     outline: none;
     display: inline-block;
 }
+.post-info {
+    background-color: #fff;
+    border-bottom-left-radius: 15px;
+}
 .quick_post_input:focus {
     outline: 1px solid rgb(35, 47, 204);
     border: 1px solid rgb(35, 47, 204);
@@ -378,19 +384,28 @@ html {
     display: flex;
 }
 #recent_select div {
-    border: 2px solid #ccc;
-    background-color: #fff;
+    /* border: 3px solid rgba(2, 76, 181, 0.1); */
+    background-color: rgba(2, 76, 181, 0.4);
     padding: 5px 10px;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin: 0.4rem 0.3rem;
     outline: none;
     border-radius: 4px;
+    color: #FDFDFC;
+    font-weight: bold;
+}
+#recent_select div:hover {
+    /* background-color: #FDFDFC; */
+    color: rgb(2, 76, 181) !important;
+    /* border-color: #fff; */
+    /* border-color: rgb(2, 76, 181); */
+    /* background-color: rgba(2, 76, 181, 0.05); */
 }
 .recent_selected {
     background-color: rgb(2, 76, 181) !important;
     color: #fff;
-    border: 2px solid rgb(2, 76, 181) !important;
+    /* border: 2px solid rgb(2, 76, 181) !important; */
 
 }
 .anytime_recent {
@@ -499,7 +514,7 @@ html {
 }
 
 .post-info {
-    padding: 20px 30px 30px 30px;
+    padding: 10px 30px 25px 30px;
     height: 100%;
 }
 
@@ -638,30 +653,31 @@ html {
     /* margin-right: 3%; */
     display: inline-block;
 }
+.interactions {
+    padding: 5px 30px 6px 30px;
+}
 .post_reactions {
-    margin-top: 2rem;
     display: flex;
     flex-wrap: wrap;
+
 }
 .reaction {
-    border: 1px solid rgba(225, 225, 225, 1);
-    background-color: rgba(248, 248, 248, 0.4);
+    /* border: 1px solid rgba(225, 225, 225, 1); */
+    /* background-color: rgba(248, 248, 248, 0.4); */
+    background-color: #fff;
     padding: 3px 14px 6px;
     margin-right: 0.4rem;
     margin-bottom: 0.8rem;
     border-radius: 800px;
     cursor: pointer;
+    border: none;
 }
 .reaction:hover {
-    border: 1px solid rgba(2, 76, 181, 0.2) !important;
+    /* border: 1px solid rgba(2, 76, 181, 0.2) !important; */
     background-color: rgba(2, 76, 181, 0.2) !important;
 }
 .reaction_active {
     background-color: rgba(2, 76, 181, 0.1) !important;
-}
-.reaction_comment {
-    border: 1px solid rgba(2, 76, 181, 0.1);
-    background-color: rgba(2, 76, 181, 0.05);
 }
 .reaction_comment i {
     /* color: rgb(2, 76, 181); */
@@ -684,4 +700,54 @@ html {
 .post_reaction_comment {
     width: 100%;
     text-align: center;
+}
+
+.interaction_row {
+    background-color: rgba(2, 76, 181, 0.03);
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+.comment_textarea {
+    width: 90%;
+    border: none;
+    background-color: inherit;
+    outline: none;
+    background: #fff;
+
+    height: 30px;
+    min-height: 30px !important;
+    margin-top: 13px;
+    margin-bottom: 13px;
+}
+.reaction_comment_wrap {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.reaction_comment {
+    border-radius: 5px;
+    background-color: #fff;
+}
+.comment_icon {
+    display: block;
+    padding: 0 20px;
+    height: 100%;
+    transition: 0.1s transform;
+}
+
+.comment_icon i {
+    cursor: pointer;
+}
+
+.comment_next_icon:hover {
+    transform: scale(1.6) translate(2px, -1px);  
+}
+.comment_icon button {
+    border: none;
+    background-color: inherit;
+    outline: none;
+    cursor: pointer;
+}
+.slider {
+    background-color: rgba(2, 76, 181, 0.4) !important;
 }

@@ -163,17 +163,19 @@ def post(hash, net=None):
 
     
 # blockchain messages explorer page
-@optional.routes('/<net>?/explorer/')
+@optional.routes('/<net>?/explorer/', methods=['GET', 'POST'])
 def explorer(net=None):
     # switch network
     network_switch(net)
 
-    # reactions
-    reaction = request.args.get('reaction')
-    if reaction and '_' in reaction:
-        post_hash, reaction = reaction.split('_')
-        if reaction in REACTIONS.keys():
-            asyncio.run(db_update_reactions(post_hash, reaction))
+    # post interaction
+    if request.method == 'POST' and 'comment_post' in request.form:
+        # reacted with a button
+        if 'comment_reaction' in request.form and request.form['comment_reaction'] in REACTIONS.keys():
+            asyncio.run(db_update_reactions(request.form['comment_post'], request.form['comment_reaction']))
+        # replied with a comment
+        elif 'comment' in request.form:
+            pass # TODO: add commenting backend
 
     # search
     search = request.args.get('search')

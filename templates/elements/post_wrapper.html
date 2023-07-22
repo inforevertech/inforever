@@ -67,21 +67,10 @@
                                                     {% elif message.network == 'btc-test' %}
                                                         <span class="post_network"><i class="bi bi-code-slash"></i></span>
                                                     {% endif %}
-                                                    <span class="separator">&#9900;</span>
-                                                    <span class="post_link"><a href="{{ url_for('post', hash=message.hash) }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a></span>
+                                                    <!-- <span class="separator">&#9900;</span> -->
+                                                    <!-- <span class="post_link"><a href="{{ url_for('post', hash=message.hash) }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a></span> -->
                                                 </div>
                                                 <div class="post_text">{{ message.formatted_text }}</div>
-                                                <div class="post_reactions">
-                                                    {% for reaction in g.reactions %}
-                                                        <div class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ message.hash }}">{{ g.reactions[reaction]|safe }}
-                                                            {% if message[reaction + '_counter'] > 0 %}
-                                                                <span class="reaction_number">{{ message[reaction + '_counter'] }}</span>
-                                                            {% endif %}
-                                                        </div>
-                                                    {% endfor %}
-
-                                                    <div class="reaction reaction_comment"><i class="bi bi-chat-right-text"></i><span class="reaction_number">...</span></div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -126,6 +115,35 @@
                                             </div>
                                         </div>
                                     {% endif %}
+                                </div>
+                                <div class="interaction_row row">
+                                    <div class="col-12">
+                                        <form method="POST">
+                                            <div class="interactions">
+                                                <div class="post_reactions">
+                                                    {% for reaction in g.reactions %}
+                                                        <button class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ message.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
+                                                            {% if message[reaction + '_counter'] > 0 %}
+                                                                <span class="reaction_number">{{ message[reaction + '_counter'] }}</span>
+                                                            {% endif %}
+                                                        </button>
+                                                    {% endfor %}
+                                                    
+                                                </div>
+                                                <div class="post_comments">
+                                                    <div class="reaction_comment">
+                                                        <div class="reaction_comment_wrap">
+                                                            <span class="comment_icon"><label for="comment_{{ message.hash }}"><i class="bi bi-chat-right-text"></i></label></span>
+                                                            <textarea name="comment_textarea" id="comment_{{ message.hash }}" class="comment_textarea" placeholder="Leave a comment"></textarea>
+                                                            <input type="hidden" name="comment_post" value="{{ message.hash }}">
+                                                            <input type="hidden" name="comment_reaction" id="comment_reaction_{{ message.hash }}" value="">
+                                                            <span class="comment_icon comment_next_icon"><button type="submit"><i class="bi bi-arrow-right"></i></button></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
@@ -189,13 +207,16 @@
     Array.prototype.forEach.call(reactions, (reaction) => {
         reaction.addEventListener('click', (el) => {
             // Simulate a mouse click:
-            reaction.classList.toggle('reaction_active')
+            reaction.classList.toggle('reaction_active');
 
-            let url = new URL(window.location.href)
-            let params = new URLSearchParams(url.search);
-            params.set('reaction', `${reaction.getAttribute('data-post')}_${reaction.getAttribute('data-reaction')}`)
+            let reaction_input = document.getElementById('comment_reaction_' + reaction.getAttribute('data-post'));
+            reaction_input.value = reaction.getAttribute('data-reaction');
 
-            window.location.href = window.location.origin + window.location.pathname + '?' + params.toString();
+            // let url = new URL(window.location.href)
+            // let params = new URLSearchParams(url.search);
+            // params.set('reaction', `${reaction.getAttribute('data-post')}_${reaction.getAttribute('data-reaction')}`)
+
+            // window.location.href = window.location.origin + window.location.pathname + '?' + params.toString();
         });
     });
 </script>
