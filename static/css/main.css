@@ -749,5 +749,5 @@ html {
     cursor: pointer;
 }
 .slider {
-    background-color: rgba(2, 76, 181, 0.4) !important;
+    background-color: rgba(2, 76, 181, 0.4);
 }

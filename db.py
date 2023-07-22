@@ -3,6 +3,7 @@ from nostril import nonsense
 from flask import g
 import datetime
 import asyncio
+import random
 
 
 # Perform explorer search
@@ -78,6 +79,37 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date, network
                 'timestamp': post_date,
                 'nonsense': nonsense,
                 'network': network
+            },
+            'update': {},
+        },
+    )
+
+    await prisma.disconnect()
+
+
+# Insert new comment on post
+async def db_insert_comment(post_hash, text, network="inforever"):
+    formatted = message_media_filter(text)
+    nonsense = is_nonsense(formatted)
+    tr_hash = str(random.getrandbits(64))
+
+    prisma = Prisma()
+    await prisma.connect()
+
+    # insert a new transaction
+    post = await prisma.post.upsert(
+        where={
+            'hash': tr_hash
+        },
+        data={
+            'create': {
+                'hash': tr_hash,
+                'text': text,
+                'formatted_text': formatted,
+                'nonsense': nonsense,
+                'network': network,
+                'isReply': True,
+                'replyToHash': post_hash 
             },
             'update': {},
         },

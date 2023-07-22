@@ -33,7 +33,12 @@ model Post {
 
   timestamp DateTime @default(now())
   nonsense  Boolean  @default(false)
-  network   String   @default("btc-test") // or "btc"
+  network   String   @default("inforever")
+
+  isReply     Boolean @default(false)
+  replyTo     Post?   @relation("replyComment", fields: [replyToHash], references: [hash])
+  replyToHash String?
+  repliers    Post[]  @relation("replyComment")
 
   @@fulltext([text])
 }

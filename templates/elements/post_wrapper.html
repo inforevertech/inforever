@@ -134,7 +134,7 @@
                                                     <div class="reaction_comment">
                                                         <div class="reaction_comment_wrap">
                                                             <span class="comment_icon"><label for="comment_{{ message.hash }}"><i class="bi bi-chat-right-text"></i></label></span>
-                                                            <textarea name="comment_textarea" id="comment_{{ message.hash }}" class="comment_textarea" placeholder="Leave a comment"></textarea>
+                                                            <textarea name="comment_text" id="comment_{{ message.hash }}" class="comment_textarea" placeholder="Leave a comment" maxlength="5000"></textarea>
                                                             <input type="hidden" name="comment_post" value="{{ message.hash }}">
                                                             <input type="hidden" name="comment_reaction" id="comment_reaction_{{ message.hash }}" value="">
                                                             <span class="comment_icon comment_next_icon"><button type="submit"><i class="bi bi-arrow-right"></i></button></span>
