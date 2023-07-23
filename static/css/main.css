@@ -508,7 +508,6 @@ html {
 .post_media {
     background: #fff;
     padding: 20px 30px;
-    height: 100%;
 
     display: flex;
     justify-content: space-between;
@@ -572,6 +571,9 @@ html {
     border-radius: 5px;
     background: 2px solid #ccc;
     margin-bottom: 10px;
+}
+.media_pic video {
+    border-radius: 15px;
 }
 .media_pic img, .media_pic video {
     width: 100%;

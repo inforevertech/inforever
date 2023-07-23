@@ -18,6 +18,7 @@ from avatar_generator import generate_avatar_by_address
 NET_LIST = [
     { 'tag': 'btc', 'name': 'Bitcoin Blockchain' },
     { 'tag': 'btc-test', 'name': 'Bitcoin Testnet'},
+    # { 'tag': 'sample', 'name': 'Sample Network' },
 ]
 DEFAULT_NET = NET_LIST[0]['tag']
 REACTIONS = {

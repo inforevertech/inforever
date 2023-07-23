@@ -51,7 +51,7 @@
             <div class="row gx-5 justify-content-center">
                 <div class="col-xl-8">
                     <div class="h2 fs-1 text-white mb-4 fee_warning_wrapper">
-                        <p>Data is published on the bitcoin{% if g.net == "btc-test" %} testnet{% endif %} blockchain, so a private key and a bit of satoshis are required to make a post.</p>
+                        <p>Data is published on the Bitcoin{% if g.net == "btc-test" %} testnet{% endif %} blockchain, so a private key and a bit of satoshis are required to make a post.</p>
                     </div>
                 </div>
             </div>
@@ -63,12 +63,12 @@
         <div class="container px-5">
             <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-12 col-lg-5">
-                    <h2 class="display-4 lh-1 mb-4">Post a message on the {% if g.net == "btc-test" %}bitcoin testnet{% elif g.net == "btc" %}blockchain{% endif %}</h2>
+                    <h2 class="display-4 lh-1 mb-4">Post a message on the {% if g.net == "btc-test" %}bitcoin testnet{% else %}blockchain{% endif %}</h2>
                     <p class="lead fw-normal text-muted mb-5 mb-lg-0">Use bitcoin {% if g.net == "btc-test" %} testnet{% endif %} address with some balance to post a message that will be visible for everyone forever.</p>
                     <br>
                     {% if g.net == "btc-test" %}
                         <p class="lead fw-normal text-muted mb-5 mb-lg-0">We recommended to use <a href="https://testnet-faucet.com/btc-testnet/" class="faucet_link" target="_blank">this faucet</a> to collect some testnet satoshis.</p>
-                    {% elif g.net == "btc" %}
+                    {% else %}
                         <p class="lead fw-normal text-muted mb-5 mb-lg-0">You will be able to access your message with blockchain explorer right after.</p>
                     {% endif %}
                 </div>
@@ -80,7 +80,7 @@
                         <label for="private_key" class="private_key_label">Bitcoin {% if g.net == "btc-test" %}Testnet {% endif %}Private Key:
                             {% if g.net == "btc-test" %}
                                 <input type="password" name="private" id="private_key" class="quick_post_input" placeholder="Ex: cVwJHvfczdpMeQf4kBhTYWaVPaZgF8J9LiMWnuUU2VyGgCZtLo8p">
-                            {% elif g.net == "btc" %}
+                            {% else %}
                                 <input type="password" name="private" id="private_key" class="quick_post_input" placeholder="Ex: KwsxZPGPPKY6Qd6h1ebVy5ZZcHy43pAK5qQoVoisAPj9scdZXQY1">
                             {% endif %}
                             </label>
