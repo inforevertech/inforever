@@ -5,6 +5,14 @@ import datetime
 import random
 
 
+# maximum number of nested replies to show
+NESTED_REPLIES_LIMIT = 5
+# form query part for nested replies
+nested_replies = { 'include': { 'repliers': True } }
+for _ in range(NESTED_REPLIES_LIMIT):
+    nested_replies = { 'include': { 'repliers': nested_replies } }
+
+
 # Perform explorer search
 async def db_search(input, limit=None, where=None, include_addresses=True):
     # seach in posts
@@ -333,7 +341,7 @@ async def db_find_post(post_hash):
         include={
             'addresses': True,
             'media': True,
-            'repliers': True,
+            'repliers': nested_replies,
         }
     )
     

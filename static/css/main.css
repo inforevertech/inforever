@@ -706,6 +706,7 @@ html {
 .post_reaction_comment {
     width: 100%;
     text-align: center;
+    background-color: #fff;
 }
 
 .interaction_row {
@@ -832,3 +833,21 @@ html {
  .post_empty_moto {
     margin-top: 3rem;
  }
+ .reply_reaction_comment_wrap {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-bottom: 5px;
+
+    font-size: 0.95rem;
+ }
+ .reply_reaction_comment_wrap .comment_textarea {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+ }
+ .sub_reply {
+    border-left: 1px solid #ddd;
+    padding-left: 25px;
+    margin-top: 20px;
+ }
+ 

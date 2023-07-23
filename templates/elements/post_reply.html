@@ -1,0 +1,31 @@
+<div class="{% if sub_reply %}sub_reply{% else %}reply{% endif %}">
+    <div class="reply_info">
+        <img src="{{ url_for('static', filename='avatars/profile.png') }}" alt="profile picture">
+        <div class="reply_name">Incognito</div>
+        <span class="separator">&#9900;</span>
+        <div class="reply_datetime">{{ format_date(reply.timestamp) }}</div>
+    </div>
+    <div class="reply_text">
+        {{ reply.text }}
+    </div>
+    <div class="post_reactions reply_reactions">
+        {% for reaction in g.reactions %}
+            <button class="reaction reaction_{{ reaction }} reply_reaction" data-reaction="{{ reaction }}" data-post="{{ reply.hash }}" data-parent="{{ post.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
+                {% if reply[reaction + '_counter'] > 0 %}
+                    <!-- <span class="reaction_number">{{ reply[reaction + '_counter'] }}</span> -->
+                    <input type="hidden" id="comment_reaction_{{ reply.hash }}">
+                {% endif %}
+            </button>
+        {% endfor %}
+    </div>
+    <div class="reaction_comment_wrap reply_reaction_comment_wrap">
+        <span class="comment_icon"><label for="comment_{{ reply.hash }}"><i class="bi bi-chat-right-text"></i></label></span>
+        <textarea name="comment_text" id="comment_{{ reply.hash }}" class="comment_textarea" placeholder="Leave a reply" maxlength="5000"></textarea>
+        <span class="comment_icon comment_next_icon reply_comment_next_icon" data-reply="{{ reply.hash }}"><button type="submit"><i class="bi bi-arrow-right"></i></button></span>
+    </div>
+
+    {% set sub_reply = True %}
+    {% for reply in reply.repliers %}
+        {% include 'elements/post_reply.html' %}
+    {% endfor %}
+</div>

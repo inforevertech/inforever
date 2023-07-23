@@ -138,6 +138,7 @@ def index(net=None):
 def post(hash, net=None):
     # post interaction
     if request.method == 'POST' and 'comment_post' in request.form:
+        print(request.form['comment_post'], request.form['comment_text'])
         # reacted with a button
         if 'comment_reaction' in request.form and request.form['comment_reaction'] in REACTIONS.keys():
             asyncio.run(db_update_reactions(request.form['comment_post'], request.form['comment_reaction']))

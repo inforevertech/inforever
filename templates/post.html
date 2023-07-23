@@ -26,7 +26,7 @@
 
 <!-- Basic features section-->
 <section id="post_msg">
-    <form method="POST">
+    <form method="POST" id="interaction_form">
         <div class="container px-5">
             <div class="row gx-5 align-items-start justify-content-center justify-content-lg-between">
                 <div class="col-12 col-lg-6">
@@ -106,8 +106,6 @@
                                     {% endif %}
                                 </button>
                             {% endfor %}
-
-                            <!-- <div class="reaction reaction_comment post_reaction_comment"><i class="bi bi-chat-right-text"></i><span class="reaction_number">132</span></div> -->
                         </div>
                         
                         <div class="post_info">
@@ -139,27 +137,7 @@
                         </div>
                         <div class="published_replies post_published_replies">
                             {% for reply in post.repliers %}
-                                <div class="reply">
-                                    <div class="reply_info">
-                                        <img src="{{ url_for('static', filename='avatars/profile.png') }}" alt="profile picture">
-                                        <div class="reply_name">Incognito</div>
-                                        <span class="separator">&#9900;</span>
-                                        <div class="reply_datetime">{{ format_date(reply.timestamp) }}</div>
-                                    </div>
-                                    <div class="reply_text">
-                                        {{ reply.text }}
-                                    </div>
-                                    <div class="post_reactions reply_reactions">
-                                        {% for reaction in g.reactions %}
-                                            <button class="reaction reaction_{{ reaction }} reply_reaction" data-reaction="{{ reaction }}" data-post="{{ reply.hash }}" data-parent="{{ post.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
-                                                {% if reply[reaction + '_counter'] > 0 %}
-                                                    <span class="reaction_number">{{ reply[reaction + '_counter'] }}</span>
-                                                    <input type="hidden" id="comment_reaction_{{ reply.hash }}">
-                                                {% endif %}
-                                            </button>
-                                        {% endfor %}
-                                    </div>
-                                </div>
+                                {% include 'elements/post_reply.html' %}
                             {% endfor %}
                         </div>
                     {% else %}
@@ -216,6 +194,22 @@
                 document.getElementById('comment_post_' + post_parent_hash).value = reaction.getAttribute('data-post');
             }
         
+        });
+    });
+
+    let btn_replies = document.getElementsByClassName('reply_comment_next_icon');
+    Array.prototype.forEach.call(btn_replies, (btn_reply) => {
+        btn_reply.addEventListener('click', (event) => {
+            // prevent default form submit
+            event.preventDefault();
+            // update hash
+            let post_hash = document.getElementById('comment_post_{{ post.hash }}');
+            post_hash.value = btn_reply.getAttribute('data-reply');
+            // update text value
+            let comment_text = document.getElementById('comment_{{ post.hash }}');
+            comment_text.value = document.getElementById('comment_' + btn_reply.getAttribute('data-reply')).value;
+            // submit the form
+            document.getElementById('interaction_form').submit();
         });
     });
 </script>
