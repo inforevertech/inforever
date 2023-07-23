@@ -22,7 +22,7 @@ NET_LIST = [
 DEFAULT_NET = NET_LIST[0]['tag']
 REACTIONS = {
     "love": "&#x1F60D;",
-    "applause": "&#x1F44F;",
+    # "applause": "&#x1F44F;",
     "fire": "&#x1F525;",
     "brain": "&#x1F9E0;",
     "laugh": "&#x1F602;",
@@ -133,12 +133,16 @@ def index(net=None):
 
 
 # post explorer page
-@optional.routes('/<net>?/post/<hash>')
+@optional.routes('/<net>?/post/<hash>', methods=['GET', 'POST'])
 def post(hash, net=None):
-    # reactions
-    reaction = request.args.get('reaction')
-    if reaction in REACTIONS.keys():
-        asyncio.run(db_update_reactions(hash, reaction))
+    # post interaction
+    if request.method == 'POST' and 'comment_post' in request.form:
+        # reacted with a button
+        if 'comment_reaction' in request.form and request.form['comment_reaction'] in REACTIONS.keys():
+            asyncio.run(db_update_reactions(request.form['comment_post'], request.form['comment_reaction']))
+        # replied with a comment
+        elif 'comment_text' in request.form and request.form['comment_text'].strip():
+            asyncio.run(db_insert_comment(request.form['comment_post'], request.form['comment_text']))
 
     # find post in the database
     post = asyncio.run(db_find_post(hash))
@@ -192,10 +196,19 @@ def explorer(net=None):
 
 
 # address/user page
-@optional.routes('/<net>?/<id>')
+@optional.routes('/<net>?/<id>', methods=['GET', 'POST'])
 def address(id, net=None):
     # switch network
     network_switch(net)
+
+    # post interaction
+    if request.method == 'POST' and 'comment_post' in request.form:
+        # reacted with a button
+        if 'comment_reaction' in request.form and request.form['comment_reaction'] in REACTIONS.keys():
+            asyncio.run(db_update_reactions(request.form['comment_post'], request.form['comment_reaction']))
+        # replied with a comment
+        elif 'comment_text' in request.form and request.form['comment_text'].strip():
+            asyncio.run(db_insert_comment(request.form['comment_post'], request.form['comment_text']))
     
     # get a list of posts
     posts = asyncio.run(db_find_posts_by_addresses(id))

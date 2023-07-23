@@ -67,8 +67,11 @@ html {
     display: block;
 }
 #copy_link_btn {
-    margin-top: 30px;
+    margin-top: 20px;
     transition: background-color 1s;
+}
+#copy_link_btn.post_empty_copy {
+    margin-top: 50px;
 }
 #copy_address_btn {
     transition: background-color 1s;
@@ -550,6 +553,7 @@ html {
     background-color: transparent;
     padding: 0;
     margin-top: 2rem;
+    margin-bottom: 2rem;
 }
 .post_page_media .media {
     background-color: #fff;
@@ -798,3 +802,31 @@ html {
 .reply_reactions .reaction {
     border: 1px solid #ddd;
 }
+ .post_page_reactions {
+    padding: 0;
+ }
+ .post_page_reactions .reaction {
+    background-color: rgba(2, 76, 181, 0.03);
+ }
+ .post_published_replies .reply {
+    border: 1px solid #ccc;
+    border-radius: 15px !important;
+    margin-bottom: 15px;
+    padding: 20px 20px 10px !important;
+ }
+ .post_reaction_comment {
+    border: 1px solid #ccc;
+    padding: 0 3px;
+    overflow: hidden;
+    margin-bottom: 0px;
+ }
+ .three_dots_repliers {
+    text-align: center;
+    font-size: 1.7rem;
+    height: 20px;
+    margin-bottom: 20px;
+    color: #aaa;
+ }
+ .post_empty_moto {
+    margin-top: 3rem;
+ }

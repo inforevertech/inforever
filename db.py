@@ -11,8 +11,11 @@ async def db_search(input, limit=None, where=None, include_addresses=True):
     prisma = Prisma()
     await prisma.connect()
 
+    # search only among posts not replies
     if where is None:
-        where = {}
+        where = { 'isReply': False }
+    else:
+        where['isReply'] = False
 
     where['OR'] = [
             {
@@ -43,7 +46,8 @@ async def db_search(input, limit=None, where=None, include_addresses=True):
         where=where,
         include={
             'addresses': include_addresses,
-            'media': True
+            'media': True,
+            'repliers': True,
         }
     )
 

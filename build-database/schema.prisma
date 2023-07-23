@@ -38,7 +38,7 @@ model Post {
   isReply     Boolean @default(false)
   replyTo     Post?   @relation("replyComment", fields: [replyToHash], references: [hash])
   replyToHash String?
-  repliers    Post[]  @relation("replyComment")  // TODO: setup correct replies and display them
+  repliers    Post[]  @relation("replyComment")
 
   @@fulltext([text])
 }
