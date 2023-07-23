@@ -216,6 +216,21 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True, r
     return posts
 
 
+# Return the number of replies
+async def db_count_replies(post_hash):
+    prisma = Prisma()
+    await prisma.connect()
+
+    replies = await prisma.post.count(
+        where={
+            'replyToHash': post_hash,
+        },
+    )
+
+    await prisma.disconnect()
+    return replies
+
+
 # read comments
 async def db_read_replies(post_hash, limit=None, where=None):
     prisma = Prisma()

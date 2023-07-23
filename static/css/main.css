@@ -850,4 +850,12 @@ html {
     padding-left: 25px;
     margin-top: 20px;
  }
- 
+ a.reaction {
+    color: #333;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: rgba(2, 76, 181, 0.1);
+ }
