@@ -174,7 +174,7 @@ def explorer(net=None):
         if 'comment_reaction' in request.form and request.form['comment_reaction'] in REACTIONS.keys():
             asyncio.run(db_update_reactions(request.form['comment_post'], request.form['comment_reaction']))
         # replied with a comment
-        elif 'comment_text' in request.form:
+        elif 'comment_text' in request.form and request.form['comment_text'].strip():
             asyncio.run(db_insert_comment(request.form['comment_post'], request.form['comment_text']))
 
     # search

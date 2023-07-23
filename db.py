@@ -2,7 +2,6 @@ from prisma import Prisma
 from nostril import nonsense
 from flask import g
 import datetime
-import asyncio
 import random
 
 
@@ -158,15 +157,18 @@ def message_media_filter(message):
 
 
 # Receive a list of transactions
-async def db_read_transactions(limit=None, where=None, include_addresses=True):
+async def db_read_transactions(limit=None, where=None, include_addresses=True, replies=False):
     prisma = Prisma()
     await prisma.connect()
 
     # specify network
     if where is None:
-        where = { 'network': g.net }
+        where = { 'isReply': replies }
     else:
-        where['network'] = g.net
+        where['isReply'] = replies
+
+    # specify network
+    where['network'] = g.net
 
     # specify recent range
     if g.recent == 'D':
@@ -194,12 +196,40 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True):
         include={
             'addresses': include_addresses,
             'media': True,
+            'repliers': True,
         }
     )
 
     await prisma.disconnect()
     return posts
 
+
+# read comments
+async def db_read_replies(post_hash, limit=None, where=None):
+    prisma = Prisma()
+    await prisma.connect()
+
+    # select replies only
+    if where is None:
+        where = { 'replyToHash': post_hash }
+    else:
+        where['replyToHash'] = post_hash
+
+
+    replies = await prisma.post.find_many(
+        where=where,
+        limit=limit,
+        order={
+            'timestamp': 'desc',
+        },
+        include={
+            'media': True,
+        }
+    )
+
+    await prisma.disconnect()
+    return replies
+    
 
 # Receive total number of posts in the database
 async def db_transactions_count(where=None):

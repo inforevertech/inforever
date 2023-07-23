@@ -134,11 +134,37 @@
                                                     <div class="reaction_comment">
                                                         <div class="reaction_comment_wrap">
                                                             <span class="comment_icon"><label for="comment_{{ message.hash }}"><i class="bi bi-chat-right-text"></i></label></span>
-                                                            <textarea name="comment_text" id="comment_{{ message.hash }}" class="comment_textarea" placeholder="Leave a comment" maxlength="5000"></textarea>
-                                                            <input type="hidden" name="comment_post" value="{{ message.hash }}">
+                                                            <textarea name="comment_text" id="comment_{{ message.hash }}" class="comment_textarea" placeholder="Leave a reply" maxlength="5000"></textarea>
+                                                            <input type="hidden" id="comment_post_{{ message.hash }}" name="comment_post" value="{{ message.hash }}">
                                                             <input type="hidden" name="comment_reaction" id="comment_reaction_{{ message.hash }}" value="">
                                                             <span class="comment_icon comment_next_icon"><button type="submit"><i class="bi bi-arrow-right"></i></button></span>
                                                         </div>
+                                                    </div>
+
+                                                    <div class="published_replies">
+                                                        {% for reply in message.repliers %}
+                                                            <div class="reply">
+                                                                <div class="reply_info">
+                                                                    <img src="{{ url_for('static', filename='avatars/profile.png') }}" alt="profile picture">
+                                                                    <div class="reply_name">Incognito</div>
+                                                                    <span class="separator">&#9900;</span>
+                                                                    <div class="reply_datetime">{{ format_date(reply.timestamp) }}</div>
+                                                                </div>
+                                                                <div class="reply_text">
+                                                                    {{ reply.text }}
+                                                                </div>
+                                                                <div class="post_reactions reply_reactions">
+                                                                    {% for reaction in g.reactions %}
+                                                                        <button class="reaction reaction_{{ reaction }} reply_reaction" data-reaction="{{ reaction }}" data-post="{{ reply.hash }}" data-parent="{{ message.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
+                                                                            {% if reply[reaction + '_counter'] > 0 %}
+                                                                                <span class="reaction_number">{{ reply[reaction + '_counter'] }}</span>
+                                                                                <input type="hidden" id="comment_reaction_{{ reply.hash }}">
+                                                                            {% endif %}
+                                                                        </button>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -209,14 +235,17 @@
             // Simulate a mouse click:
             reaction.classList.toggle('reaction_active');
 
-            let reaction_input = document.getElementById('comment_reaction_' + reaction.getAttribute('data-post'));
-            reaction_input.value = reaction.getAttribute('data-reaction');
-
-            // let url = new URL(window.location.href)
-            // let params = new URLSearchParams(url.search);
-            // params.set('reaction', `${reaction.getAttribute('data-post')}_${reaction.getAttribute('data-reaction')}`)
-
-            // window.location.href = window.location.origin + window.location.pathname + '?' + params.toString();
+            if (!reaction.classList.contains('reply_reaction')) {
+                let reaction_input = document.getElementById('comment_reaction_' + reaction.getAttribute('data-post'));
+                reaction_input.value = reaction.getAttribute('data-reaction');
+            }
+            // update correct input values for replies
+            else if (reaction.classList.contains('reply_reaction')) {
+                let post_parent_hash = reaction.getAttribute('data-parent');
+                document.getElementById('comment_reaction_' + post_parent_hash).value = reaction.getAttribute('data-reaction');
+                document.getElementById('comment_post_' + post_parent_hash).value = reaction.getAttribute('data-post');
+            }
+        
         });
     });
 </script>
