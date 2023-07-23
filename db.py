@@ -328,7 +328,8 @@ async def db_find_post(post_hash):
         },
         include={
             'addresses': True,
-            'media': True
+            'media': True,
+            'repliers': True,
         }
     )
     
@@ -426,7 +427,8 @@ async def db_find_posts_by_addresses(address, limit=None):
         where=where,
         include={
             'addresses': True,
-            'media': True
+            'media': True,
+            'repliers': True,
         },
         take=limit
     )

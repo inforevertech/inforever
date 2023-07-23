@@ -776,12 +776,15 @@ html {
     font-weight: bold;
 }
 .reply {
-    padding: 15px 30px;
+    padding: 5px 30px;
     margin-bottom: 0;
     /* border-bottom: 10px solid rgba(2, 76, 181, 0.03); */
 }
+.reply:first-child {
+    padding-top: 15px;
+}
 .reply:last-child {
-    padding-bottom: 30px;
+    padding-bottom: 10px;
 }
 .reply_datetime {
     font-size: 0.9rem;
