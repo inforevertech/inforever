@@ -131,8 +131,12 @@
 
                                                     <a href="{{ url_for('post', hash=message.hash) }}" class="reaction">
                                                         <i class="bi bi-chat-right-text"></i>
-                                                        <span class="reaction_number">{{ message.repliers|length }}</span>
+                                                        <span class="reaction_number">{{ nestedReplies[message.hash] }}</span>
                                                     </a>
+                                                    
+                                                    <!-- IMPORTANT INPUT HIDDEN FIELDS FOR REACTIONS -->
+                                                    <input type="hidden" id="comment_post_{{ message.hash }}" name="comment_post" value="{{ message.hash }}">
+                                                    <input type="hidden" name="comment_reaction" id="comment_reaction_{{ message.hash }}" value="">
                                                 </div>
                                             </div>
                                         </form>
@@ -199,20 +203,10 @@
     let reactions = document.getElementsByClassName('reaction');
     Array.prototype.forEach.call(reactions, (reaction) => {
         reaction.addEventListener('click', (el) => {
-            // Simulate a mouse click:
             reaction.classList.toggle('reaction_active');
 
-            if (!reaction.classList.contains('reply_reaction')) {
-                let reaction_input = document.getElementById('comment_reaction_' + reaction.getAttribute('data-post'));
-                reaction_input.value = reaction.getAttribute('data-reaction');
-            }
-            // update correct input values for replies
-            else if (reaction.classList.contains('reply_reaction')) {
-                let post_parent_hash = reaction.getAttribute('data-parent');
-                document.getElementById('comment_reaction_' + post_parent_hash).value = reaction.getAttribute('data-reaction');
-                document.getElementById('comment_post_' + post_parent_hash).value = reaction.getAttribute('data-post');
-            }
-        
+            let reaction_input = document.getElementById('comment_reaction_' + reaction.getAttribute('data-post'));
+            reaction_input.value = reaction.getAttribute('data-reaction');        
         });
     });
 </script>

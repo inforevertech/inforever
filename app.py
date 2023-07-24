@@ -7,6 +7,7 @@ from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
 from dotenv import load_dotenv, find_dotenv
+import logging
 import datetime
 import asyncio
 import os.path
@@ -177,6 +178,7 @@ def explorer(net=None):
     if request.method == 'POST' and 'comment_post' in request.form:
         # reacted with a button
         if 'comment_reaction' in request.form and request.form['comment_reaction'] in REACTIONS.keys():
+            print('reaction:', request.form['comment_reaction'])
             asyncio.run(db_update_reactions(request.form['comment_post'], request.form['comment_reaction']))
         # replied with a comment
         elif 'comment_text' in request.form and request.form['comment_text'].strip():
@@ -193,7 +195,8 @@ def explorer(net=None):
     return response(render_template('explorer.html',
                                     totalNmberOfPosts=f'{counter:,}',
                                     messages=results,
-                                    search=search if search is not None else ''))
+                                    search=search if search is not None else '',
+                                    nestedReplies=asyncio.run(db_count_nested_replies(results))))
 
 
 # address/user page
@@ -222,7 +225,8 @@ def address(id, net=None):
     return response(render_template('address.html',
                                     address=id,
                                     totalNmberOfPosts=f'{len(posts):,}',
-                                    messages=posts))
+                                    messages=posts,
+                                    nestedReplies=asyncio.run(db_count_nested_replies(posts))))
     
 
 # mission page

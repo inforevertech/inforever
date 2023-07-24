@@ -1,3 +1,4 @@
+from collections import deque
 from prisma import Prisma
 from nostril import nonsense
 from flask import g
@@ -216,19 +217,33 @@ async def db_read_transactions(limit=None, where=None, include_addresses=True, r
     return posts
 
 
-# Return the number of replies
-async def db_count_replies(post_hash):
+# Return the number of nested replies
+async def db_count_nested_replies(posts):
     prisma = Prisma()
     await prisma.connect()
 
-    replies = await prisma.post.count(
-        where={
-            'replyToHash': post_hash,
-        },
-    )
+    replies_counter = {}
+
+    # go through all passed posts
+    for post in posts:
+        # use BFS approach to count nested replies
+        queue = deque([post.hash])
+        replies_counter[post.hash] = 0
+        
+        while len(queue) > 0:
+            replies = await prisma.post.find_many(
+                where={
+                    'replyToHash': queue.popleft(),
+                },
+            )
+
+            for reply in replies:
+                queue.append(reply.hash)
+                replies_counter[post.hash] += 1
+
 
     await prisma.disconnect()
-    return replies
+    return replies_counter
 
 
 # read comments

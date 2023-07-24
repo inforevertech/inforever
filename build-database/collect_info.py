@@ -2,6 +2,7 @@ import requests
 import time
 import asyncio
 import sys, os
+import logging
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from db import *
@@ -27,7 +28,7 @@ class Collector:
                 self.collect_block(past_posts=past_posts)
                 self.height += -1 if past_posts else 1
             except Exception as e:
-                print(str(self.height), ': ', str(e), sep='')
+                logging.info(str(self.height), ': ', str(e), sep='')
             time.sleep(wait_time)
         
     def collect_block(self, past_posts=True):
@@ -92,13 +93,16 @@ class Collector:
                     # add sender addresses information to the db
                     asyncio.run(db_insert_sent_address(tr_hash, addresses, self.network))
                     
-                    print(post_date, ': ', message, sep='')
+                    logging.info(post_date, ': ', message, sep='')
                 else:  # no message found, then just go futher
                     continue
             
 
 # starting point
 if __name__ == '__main__':
+    # set logging level to debug
+    logging.basicConfig(level=logging.DEBUG)
+
     # launch collector of recent posts
     collector = Collector(network='btc')
     collector.set_top_height()  # start fromt the highest block in the blockchain
