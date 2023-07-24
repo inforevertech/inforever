@@ -53,8 +53,18 @@ def create(net=None):
     network_switch(net)
 
     if request.method == 'GET':  # show page to write a post
+        # if reply to a post
+        if request.args.get('reply'):
+            # find post in the database
+            post = asyncio.run(db_find_post(request.args.get('reply')))
+            if post:  # switch network according post's network
+                network_switch(post.network)
+            else:  # abort because post is not found
+                abort(400, f"Post #{request.args.get('reply')} was not found.")
+
         return response(render_template('create.html',
-                                        recommende_fee=get_fee_cached(fast=False)))
+                                        recommende_fee=get_fee_cached(fast=False),
+                                        reply=request.args.get('reply')))
     
     elif request.method == 'POST':  # save a post
         # If submit button is pressed get the values from the form: messsage, private key and transaction fee.
@@ -178,7 +188,6 @@ def explorer(net=None):
     if request.method == 'POST' and 'comment_post' in request.form:
         # reacted with a button
         if 'comment_reaction' in request.form and request.form['comment_reaction'] in REACTIONS.keys():
-            print('reaction:', request.form['comment_reaction'])
             asyncio.run(db_update_reactions(request.form['comment_post'], request.form['comment_reaction']))
         # replied with a comment
         elif 'comment_text' in request.form and request.form['comment_text'].strip():
@@ -371,9 +380,13 @@ def set_global_variables():
 # Template fields format functions
 @app.context_processor
 def utility_processor():
-    # Return only 4 last character of an address
+    # Return only specific character of an address
     def format_shorten_address(address):
         return address[:4] + '...' + address[-5:]
+    
+    # Return only specific character of an address
+    def format_shorten_post_hash(hash):
+        return hash[:2] + '...' + hash[-4:]
     
     # Return timestamp in user-friendly date format
     def format_date(post_datetime):
@@ -393,6 +406,7 @@ def utility_processor():
         return 'avatars/' + address + '.png'  # otherwise
     
     return dict(format_shorten_address=format_shorten_address,
+                format_shorten_post_hash=format_shorten_post_hash,
                 format_date=format_date,
                 find_address_avatar=find_address_avatar)
 

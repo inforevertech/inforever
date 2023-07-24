@@ -32,6 +32,10 @@
                 <div class="col-12 col-lg-6">
                     {% if post %}
                         <div class="post_profile_image">
+                            <!-- <span class="post_submenu">
+                                <i class="bi bi-three-dots"></i>
+                            </span> -->
+
                             <!-- Sent from -->
                             {% for address in post.addresses %}
                                 {% if not address.direction %}
@@ -106,6 +110,11 @@
                                     {% endif %}
                                 </button>
                             {% endfor %}
+
+                            <a href="{{ url_for('create', reply=post.hash) }}" class="reaction btc_reaction">
+                                <i class="bi bi-reply-fill"></i>
+                                <i class="bi bi-currency-bitcoin"></i>
+                            </a>
                         </div>
                         
                         <div class="post_info">
@@ -169,6 +178,9 @@
     // on button click add the link to clipboard
     const button = document.getElementById("copy_link_btn");
     button.addEventListener("click", (event) => {
+        // prevent default form submit
+        event.preventDefault();
+        
         copyTextToClipboard("{{ url_for('post', hash=post_hash, _external=True) }}");
 
         button.classList.add("clicked_copy_btn");

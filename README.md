@@ -13,6 +13,7 @@ Inforever works as a client-oriented user-friendly interface to display and shar
 ## To launch
 ```shell
 # Launch MySQL server on your local machine and create a database
+# Don't forget to configure ./.env and ./build-database/.env files
 
 # 1. Install virtualenv
 pip install virtualenv
@@ -27,8 +28,6 @@ source venv/bin/activate
 
 # 4. Install dependencies
 pip install -r requirements.txt
-
-# Don't forget to configure ./.env and ./buil-data-base/.env files NOW
 
 # 5. Generate database structure
 prisma generate --schema=./build-database/schema.prisma

@@ -121,18 +121,26 @@
                                         <form method="POST">
                                             <div class="interactions">
                                                 <div class="post_reactions">
-                                                    {% for reaction in g.reactions %}
-                                                        <button class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ message.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
-                                                            {% if message[reaction + '_counter'] > 0 %}
-                                                                <span class="reaction_number">{{ message[reaction + '_counter'] }}</span>
-                                                            {% endif %}
-                                                        </button>
-                                                    {% endfor %}
+                                                    <div class="post_reactions_left">
+                                                        {% for reaction in g.reactions %}
+                                                            <button class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ message.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
+                                                                {% if message[reaction + '_counter'] > 0 %}
+                                                                    <span class="reaction_number">{{ message[reaction + '_counter'] }}</span>
+                                                                {% endif %}
+                                                            </button>
+                                                        {% endfor %}
 
-                                                    <a href="{{ url_for('post', hash=message.hash) }}" class="reaction">
-                                                        <i class="bi bi-chat-right-text"></i>
-                                                        <span class="reaction_number">{{ nestedReplies[message.hash] }}</span>
-                                                    </a>
+                                                        <a href="{{ url_for('post', hash=message.hash) }}" class="reaction">
+                                                            <i class="bi bi-chat-right-text"></i>
+                                                            <span class="reaction_number">{{ nestedReplies[message.hash] }}</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="post_reactions_right">
+                                                        <a href="{{ url_for('create', reply=message.hash) }}" class="reaction btc_reaction">
+                                                            <i class="bi bi-reply-fill"></i>
+                                                            <i class="bi bi-currency-bitcoin"></i>
+                                                        </a>
+                                                    </div>
                                                     
                                                     <!-- IMPORTANT INPUT HIDDEN FIELDS FOR REACTIONS -->
                                                     <input type="hidden" id="comment_post_{{ message.hash }}" name="comment_post" value="{{ message.hash }}">

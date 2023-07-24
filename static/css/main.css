@@ -39,11 +39,11 @@ html {
 
     resize: none; /*remove the resize handle on the bottom right*/
 }
-#private_key {
+#private_key, #btc_donation_reply {
     display: block;
     width: 100%;
 }
-.private_key_label, .fee_label {
+.private_key_label, .fee_label, .btc_donation_reply_label {
     margin-top: 20px;
 }
 .label_media_files {
@@ -113,7 +113,6 @@ html {
 .post_profile_image a {
     display: inline-block;
     margin-right: 20px;
-    margin-top: 10px;
 }
 .arrow_address {
     margin-right: 0 !important;
@@ -157,6 +156,8 @@ html {
     display: inline-block;
     transform: translateY(6px);
     margin-right: 20px;
+
+    transition: 0.1s color;
 }
 
 .return_arrow {
@@ -304,7 +305,7 @@ html {
     outline: 1px solid rgb(35, 47, 204);
     border: 1px solid rgb(35, 47, 204);
 }
-#private_key {
+#private_key, #btc_donation_reply {
     font-size: 0.9rem;
 }
 .bg-gradient-secondary-to-primary {
@@ -400,16 +401,18 @@ html {
 }
 #recent_select div:hover {
     /* background-color: #FDFDFC; */
-    color: rgb(2, 76, 181) !important;
+    color: rgb(2, 76, 181);
     /* border-color: #fff; */
     /* border-color: rgb(2, 76, 181); */
     /* background-color: rgba(2, 76, 181, 0.05); */
 }
 .recent_selected {
     background-color: rgb(2, 76, 181) !important;
-    color: #fff;
+    color: #fff !important;
     /* border: 2px solid rgb(2, 76, 181) !important; */
-
+}
+.recent_selected:hover {
+    color: #ccc !important;
 }
 .anytime_recent {
     padding: 5px 15px !important;
@@ -807,6 +810,7 @@ html {
 }
  .post_page_reactions {
     padding: 0;
+    flex-wrap: wrap !important;
  }
  .post_page_reactions .reaction {
     background-color: rgba(2, 76, 181, 0.03);
@@ -851,11 +855,70 @@ html {
     margin-top: 20px;
  }
  a.reaction {
-    color: #333;
     text-decoration: none;
     border: none;
     outline: none;
     padding-left: 30px;
     padding-right: 30px;
     background-color: rgba(2, 76, 181, 0.1);
+    color: #333;
+ }
+ a.btc_reaction:hover {
+    background-color: #333 !important;
+ }
+ a.reaction .reaction_number {
+    /* color: #fff; */
+    /* font-weight: bold; */
+    font-size: 0.9rem;
+ }
+ .post_submenu {
+    display: inline-block;
+    padding: 2px 7px;
+
+    margin-right: 20px;
+    transform: translateY(2px);
+
+    border: 2px solid #ccc;
+    border-radius: 500%;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 16px;
+
+    transition: 0.1s color, 0.1s border-color;
+ }
+ .post_submenu:hover, .from_to_arrow:hover {
+    color: #333;
+    border-color: #333;
+ }
+ .btc_reaction_number {
+    padding-left: 0;
+    margin-left: 0;
+ }
+ .post_reactions {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-wrap: nowrap;
+ }
+ a.btc_reaction, .post_page_reactions a.btc_reaction {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: inline-block;
+    margin-top: 1px;
+
+    background-color: rgb(2, 76, 181);
+    color: #fff;
+    transition: 0.1s background-color;
+ }
+ .post_page_reactions a.btc_reaction {
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* background-color: #333; */
+ }
+ .btc_reaction_number {
+    font-size: 0.85rem;
+ }
+ .create_reply_post_link {
+    color: #000;
  }
