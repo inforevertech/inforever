@@ -64,7 +64,7 @@ def create(net=None):
 
         return response(render_template('create.html',
                                         recommende_fee=get_fee_cached(fast=False),
-                                        reply=request.args.get('reply')))
+                                        replyToHash=request.args.get('reply')))
     
     elif request.method == 'POST':  # save a post
         # If submit button is pressed get the values from the form: messsage, private key and transaction fee.
@@ -72,6 +72,13 @@ def create(net=None):
         private_key = request.form['private']
         fee = int(request.form['fee'])
 
+        # post is replying to another one or not
+        if request.form['replyToHash'] and asyncio.run(db_find_post(request.form['replyToHash'])):
+            replyToHash = request.form['replyToHash']
+        else:
+            replyToHash = None
+
+        # process attached media files
         files = request.files.getlist("file[]")
         media = {}
         for file in files:
@@ -99,7 +106,7 @@ def create(net=None):
             post_hash = key.send([], fee=fee, absolute_fee=True, message=message)
 
             # insert new post into the database
-            asyncio.run(db_insert_transaction(post_hash, None, message, int(datetime.datetime.now().timestamp()), g.net))
+            asyncio.run(db_insert_transaction(post_hash, None, message, int(datetime.datetime.now().timestamp()), g.net, replyToHash=replyToHash))
             # add sender addresses information to the db
             asyncio.run(db_insert_sent_address(post_hash, [(key.address, False)], g.net))
 
@@ -405,10 +412,26 @@ def utility_processor():
             return 'avatars/profile.png'
         return 'avatars/' + address + '.png'  # otherwise
     
+    # Return whether some of replies are comments
+    def comment_replies(replies):
+        for reply in replies:
+            if not reply.fullPost:
+                return True
+        return False
+    
+    # Return whether some of replies are full posts
+    def full_post_replies(replies):
+        for reply in replies:
+            if reply.fullPost:
+                return True
+        return False
+    
     return dict(format_shorten_address=format_shorten_address,
                 format_shorten_post_hash=format_shorten_post_hash,
                 format_date=format_date,
-                find_address_avatar=find_address_avatar)
+                find_address_avatar=find_address_avatar,
+                full_post_replies=full_post_replies,
+                comment_replies=comment_replies)
 
 
 # 404 page not found

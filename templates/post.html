@@ -59,7 +59,15 @@
                             {% endfor %}
                         </div>
 
-                        <h5 class="lh-1 mb-2"><span class="post_date">{{ format_date(post.timestamp) }}</span></h5>
+                        <h5 class="lh-1 mb-2">
+                            <span class="post_date">{{ format_date(post.timestamp) }}</span>
+                            {% if post.isReply %}
+                                <span class="separator">&#9900;</span>
+                                <span class="post_replying_to">
+                                    replying to <a href="{{ url_for('post', hash=post.replyToHash) }}" class="reply_post_link">#{{ format_shorten_post_hash(post.replyToHash) }}</a>
+                                </span>
+                            {% endif %}
+                        </h5>
                         <br>
                         <!-- <h5 class="lh-1 mb-2">Content: </span></h5> -->
                         <p class="lead fw-normal text-muted mb-5 mb-lg-0 post_text">{{ post.formatted_text }}</p>
@@ -134,21 +142,43 @@
                     <div class="reaction_comment post_reaction_comment">
                         <div class="reaction_comment_wrap">
                             <span class="comment_icon"><label for="comment_{{ post.hash }}"><i class="bi bi-chat-right-text"></i></label></span>
-                            <textarea name="comment_text" id="comment_{{ post.hash }}" class="comment_textarea" placeholder="Leave a reply" maxlength="5000"></textarea>
+                            <textarea name="comment_text" id="comment_{{ post.hash }}" class="comment_textarea" placeholder="Leave a comment" maxlength="5000"></textarea>
                             <input type="hidden" id="comment_post_{{ post.hash }}" name="comment_post" value="{{ post.hash }}">
                             <input type="hidden" name="comment_reaction" id="comment_reaction_{{ post.hash }}" value="">
                             <span class="comment_icon comment_next_icon"><button type="submit"><i class="bi bi-arrow-right"></i></button></span>
                         </div>
                     </div>
                     {% if post.repliers %}
-                        <div class="three_dots_repliers">
-                            <i class="bi bi-three-dots"></i>
-                        </div>
-                        <div class="published_replies post_published_replies">
-                            {% for reply in post.repliers %}
-                                {% include 'elements/post_reply.html' %}
-                            {% endfor %}
-                        </div>
+
+                        {% if full_post_replies(post.repliers) %}
+                            <div class="three_dots_repliers">
+                                <i class="bi bi-three-dots"></i>
+                            </div>
+                            <!-- FULL POST REPLIES -->
+                            <div class="published_replies post_published_replies">
+                                {% for reply in post.repliers %}
+                                    {% set fullPosts = True %}
+                                    {% if reply.fullPost %}
+                                        {% include 'elements/post_reply.html' %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if comment_replies(post.repliers) %}
+                            <div class="three_dots_repliers">
+                                <i class="bi bi-three-dots"></i>
+                            </div>
+                            <!-- COMMENT REPLIES -->
+                            <div class="published_replies post_published_replies">
+                                {% for reply in post.repliers %}
+                                    {% set fullPosts = False %}
+                                    {% if not reply.fullPost %}
+                                        {% include 'elements/post_reply.html' %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     {% else %}
                         <h5 class="display-6 mb-4 post_empty_moto">This post {% if post %}is{% else %}can be{% endif %} published on the Bitcoin {% if post and post.network == "btc-test" %}Testnet{% else %}Blockchain{% endif %}.</h5>
                         <p class="lead fw-normal text-muted mb-5 mb-lg-0">It is kept forever.<br>Cannot be censored.<br>Accessible by everyone.</p>

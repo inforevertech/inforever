@@ -35,6 +35,7 @@ model Post {
   nonsense  Boolean  @default(false)
   network   String   @default("inforever")
 
+  fullPost    Boolean @default(true)
   isReply     Boolean @default(false)
   replyTo     Post?   @relation("replyComment", fields: [replyToHash], references: [hash])
   replyToHash String?

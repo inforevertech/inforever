@@ -8,8 +8,8 @@
         <div class="row gx-5 justify-content-center">
             <div class="col-xl-12">
                 <div class="h2 fs-1">
-                    {% if reply %}
-                        <p>Reply to post <a href="{{ url_for('post', hash=reply) }}" target="_blank" class="create_reply_post_link">#{{ format_shorten_post_hash(reply) }}</a></p>
+                    {% if replyToHash %}
+                        <p>Reply to post <a href="{{ url_for('post', hash=reply) }}" target="_blank" class="create_reply_post_link">#{{ format_shorten_post_hash(replyToHash) }}</a></p>
                     {% else %}
                         <p>What is on your mind today?</p>
                     {% endif %}
@@ -25,6 +25,10 @@
         <div class="row gx-5 align-items-center justify-content-center">
             <div class="col-8">
                 <form class="px-5 px-sm-0" action="{{ url_for('create')}}" enctype="multipart/form-data" method="post" id="create_post_form">
+                    {% if replyToHash %}
+                        <input type="hidden" name="replyToHash" value="{{ replyToHash }}">
+                    {% endif %}
+
                     <label for="msgInput" class="msgInput_label">Message:
                         <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>
                     </label>

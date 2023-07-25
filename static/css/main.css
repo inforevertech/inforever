@@ -115,7 +115,7 @@ html {
     margin-right: 20px;
 }
 .arrow_address {
-    margin-right: 0 !important;
+    margin-right: 20px !important;
 }
 .post_relevant_information {
     margin-bottom: 10px;
@@ -155,7 +155,7 @@ html {
     color: #ccc;
     display: inline-block;
     transform: translateY(6px);
-    margin-right: 20px;
+    /* margin-right: 20px; */
 
     transition: 0.1s color;
 }
@@ -811,6 +811,7 @@ html {
  .post_page_reactions {
     padding: 0;
     flex-wrap: wrap !important;
+    justify-content: start !important;
  }
  .post_page_reactions .reaction {
     background-color: rgba(2, 76, 181, 0.03);
@@ -820,6 +821,9 @@ html {
     border-radius: 15px !important;
     margin-bottom: 15px;
     padding: 20px 20px 10px !important;
+ }
+ .post_published_replies .reply:last-child {
+    margin-bottom: 0;
  }
  .post_reaction_comment {
     border: 1px solid #ccc;
@@ -921,4 +925,18 @@ html {
  }
  .create_reply_post_link {
     color: #000;
+ }
+ .reply_post_link {
+    color: #333;
+ }
+ .post_replying_to {
+    font-size: 0.95rem;
+ }
+ .additional_top_margin {
+    margin-top: 10px;
+ }
+ h5 .post_replying_to {
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: #333;
  }

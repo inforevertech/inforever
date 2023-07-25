@@ -37,7 +37,7 @@
                                                 <!-- Sent from -->
                                                 {% for address in message.addresses %}
                                                     {% if not address.direction %}
-                                                        <a href="/{{ address.address }}">
+                                                        <a href="/{{ address.address }}" class="{% if not message.addresses|length > 1 %}additional_top_margin{% endif %}">
                                                             <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
                                                         </a>
                                                     {% endif %}
@@ -67,6 +67,14 @@
                                                     {% elif message.network == 'btc-test' %}
                                                         <span class="post_network"><i class="bi bi-code-slash"></i></span>
                                                     {% endif %}
+
+                                                    {% if message.isReply %}
+                                                        <span class="separator">&#9900;</span>
+                                                        <span class="post_replying_to">
+                                                            replying to <a href="{{ url_for('post', hash=message.replyToHash) }}" class="reply_post_link">#{{ format_shorten_post_hash(message.replyToHash) }}</a>
+                                                        </span>
+                                                    {% endif %}
+
                                                     <!-- <span class="separator">&#9900;</span> -->
                                                     <!-- <span class="post_link"><a href="{{ url_for('post', hash=message.hash) }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a></span> -->
                                                 </div>
