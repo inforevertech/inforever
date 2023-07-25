@@ -9,7 +9,7 @@
             <div class="col-xl-12">
                 <div class="h2 fs-1">
                     {% if replyToHash %}
-                        <p>Reply to post <a href="{{ url_for('post', hash=reply) }}" target="_blank" class="create_reply_post_link">#{{ format_shorten_post_hash(replyToHash) }}</a></p>
+                        <p>Reply to post <a href="{{ url_for('post', hash=replyToHash) }}" target="_blank" class="create_reply_post_link">#{{ format_shorten_post_hash(replyToHash) }}</a></p>
                     {% else %}
                         <p>What is on your mind today?</p>
                     {% endif %}
@@ -25,9 +25,8 @@
         <div class="row gx-5 align-items-center justify-content-center">
             <div class="col-8">
                 <form class="px-5 px-sm-0" action="{{ url_for('create')}}" enctype="multipart/form-data" method="post" id="create_post_form">
-                    {% if replyToHash %}
+                    
                         <input type="hidden" name="replyToHash" value="{{ replyToHash }}">
-                    {% endif %}
 
                     <label for="msgInput" class="msgInput_label">Message:
                         <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>
@@ -40,9 +39,9 @@
                         {% endif %}
                     </label>
 
-                    {% if g.net == "btc" and reply %}
+                    {% if replyToHash %}
                         <label for="btc_donation_reply" class="btc_donation_reply_label">Optional Bitcoin donation for the author:
-                            <input type="number" name="btc_donation_reply" id="btc_donation_reply" class="quick_post_input" placeholder="Ex: 0.0001" step="0.0001">
+                            <input type="number" name="btc_donation_reply" id="btc_donation_reply" class="quick_post_input" placeholder="Ex: 0.0001" step="0.00000001">
                         </label>
                     {% endif %}
 

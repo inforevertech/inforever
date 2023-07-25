@@ -75,8 +75,16 @@ def create(net=None):
         # post is replying to another one or not
         if request.form['replyToHash'] and asyncio.run(db_find_post(request.form['replyToHash'])):
             replyToHash = request.form['replyToHash']
+            # optional donation for the author
+            btc_donation_reply = request.form['btc_donation_reply']
+            try:
+                if btc_donation_reply and float(btc_donation_reply) > 0:
+                    btc_donation_reply = float(btc_donation_reply)
+            except Exception as e:
+                btc_donation_reply = None
         else:
             replyToHash = None
+            btc_donation_reply = None
 
         # process attached media files
         files = request.files.getlist("file[]")
@@ -102,11 +110,19 @@ def create(net=None):
             key = PrivateKeyTestnet(private_key)
 
         try:
-            # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-            post_hash = key.send([], fee=fee, absolute_fee=True, message=message)
+            if btc_donation_reply is None:
+                # Send a transaction to the bitcoin network with the message as the data. Using op_return.
+                post_hash = key.send([], fee=fee, absolute_fee=True, message=message)
+            else:
+                # Send a transaction with a donation to the address of the replied post author
+                replied_post = asyncio.run(db_find_post(replyToHash))
+                if not replied_post.author:
+                    abort(400, "Address of post's author is not found. Cannot send a donation.") 
+                post_hash = key.send([(replied_post.author, btc_donation_reply, 'btc')], fee=fee, absolute_fee=True, message=message)
 
             # insert new post into the database
-            asyncio.run(db_insert_transaction(post_hash, None, message, int(datetime.datetime.now().timestamp()), g.net, replyToHash=replyToHash))
+            asyncio.run(db_insert_transaction(post_hash, None, message, int(datetime.datetime.now().timestamp()), g.net,
+                                              replyToHash=replyToHash, postedLocally=True, author=key.address, donation=btc_donation_reply, fee=fee))
             # add sender addresses information to the db
             asyncio.run(db_insert_sent_address(post_hash, [(key.address, False)], g.net))
 

@@ -8,7 +8,7 @@ import random
 
 # maximum number of nested replies to show
 NESTED_REPLIES_LIMIT = 5
-# form query part for nested replies0
+# form query part for nested replies
 nested_replies = { 'include': { 'repliers': True } }
 for _ in range(NESTED_REPLIES_LIMIT):
     nested_replies = { 'include': { 'repliers': nested_replies, 'addresses': True } }
@@ -68,7 +68,8 @@ async def db_search(input, limit=None, where=None, include_addresses=True):
 
 
 # Add a new transaction into the database
-async def db_insert_transaction(tr_hash, block_hash, message, post_date, network, replyToHash=None):
+async def db_insert_transaction(tr_hash, block_hash, message, post_date, network,
+                                replyToHash=None, postedLocally=False, author=None, donation=None, fee=None):
     post_date = datetime.datetime.fromtimestamp(int(post_date))
 
     formatted = message_media_filter(message)
@@ -91,6 +92,10 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date, network
                 'timestamp': post_date,
                 'nonsense': nonsense,
                 'network': network,
+                'postedLocally': postedLocally,
+                'author': author,
+                'donation': donation,
+                'fee': fee,
                 'fullPost': True,
                 'isReply': replyToHash is not None,
                 'replyToHash': replyToHash,
@@ -256,16 +261,14 @@ async def db_read_comments(post_hash, limit=None, where=None):
     prisma = Prisma()
     await prisma.connect()
 
-    # select short replies only
+    # select replies only
     if where is None:
-        where = {
-            'replyToHash': post_hash,
-            'fullPost': False,
-        }
+        where = { 'replyToHash': post_hash }
     else:
         where['replyToHash'] = post_hash
-        where['fullPost'] = False
 
+    # select only comments among replies
+    where['fullPost'] = False
 
     replies = await prisma.post.find_many(
         where=where,

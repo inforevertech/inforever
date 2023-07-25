@@ -143,12 +143,14 @@
                                                             <span class="reaction_number">{{ nestedReplies[message.hash] }}</span>
                                                         </a>
                                                     </div>
-                                                    <div class="post_reactions_right">
-                                                        <a href="{{ url_for('create', reply=message.hash) }}" class="reaction btc_reaction">
-                                                            <i class="bi bi-reply-fill"></i>
-                                                            <i class="bi bi-currency-bitcoin"></i>
-                                                        </a>
-                                                    </div>
+                                                    {% if message.postedLocally %}
+                                                        <div class="post_reactions_right">
+                                                            <a href="{{ url_for('create', reply=message.hash) }}" class="reaction btc_reaction">
+                                                                <i class="bi bi-reply-fill"></i>
+                                                                <i class="bi bi-currency-bitcoin"></i>
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
                                                     
                                                     <!-- IMPORTANT INPUT HIDDEN FIELDS FOR REACTIONS -->
                                                     <input type="hidden" id="comment_post_{{ message.hash }}" name="comment_post" value="{{ message.hash }}">
