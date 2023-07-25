@@ -130,7 +130,8 @@ async def db_insert_comment(post_hash, text, network="inforever"):
                 'network': network,
                 'isReply': True,
                 'fullPost': False,
-                'replyToHash': post_hash 
+                'replyToHash': post_hash ,
+                'postedLocally': True,
             },
             'update': {},
         },
@@ -169,10 +170,7 @@ def message_media_filter(message):
     # media formatting
     if '${' in message and '}$' in message:
         start, end = message.find('${'), message.find('}$')
-
-        media_content = message[start + 2:end]
-        # TODO: insert media_content as media into the db
-
+        # media_content = message[start + 2:end]
         message = message[:start]
 
     return message
@@ -254,6 +252,26 @@ async def db_count_nested_replies(posts):
 
     await prisma.disconnect()
     return replies_counter
+
+
+# Return the number of full post replies
+async def db_count_full_post_replies(posts):
+    prisma = Prisma()
+    await prisma.connect()
+
+    full_post_replies_counter = {}
+
+    # go through all passed posts
+    for post in posts:
+        full_post_replies_counter[post.hash] = await prisma.post.count(
+            where={
+                'replyToHash': post.hash,
+                'fullPost': True,
+            },
+        )
+
+    await prisma.disconnect()
+    return full_post_replies_counter
 
 
 # read comments

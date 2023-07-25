@@ -182,6 +182,7 @@ def post(hash, net=None):
     # find post in the database
     post = asyncio.run(db_find_post(hash))
     explorer_url = "https://blockstream.info/" + "testnet/" if g.net == 'btc-test' else ""  + "tx/"
+    fullPostReplies = asyncio.run(db_count_full_post_replies([post]))[post.hash]
 
     if post:  # post was found
         # switch network according post's network
@@ -190,7 +191,8 @@ def post(hash, net=None):
         return response(render_template('post.html',
                                         post=post,
                                         post_hash=hash,
-                                        explorer_url=explorer_url))
+                                        explorer_url=explorer_url,
+                                        fullPostReplies=fullPostReplies))
     
     else:  # post was not found
         # switch network to the chosen global one
@@ -198,7 +200,8 @@ def post(hash, net=None):
         # form transaction not ready or not existent response
         return response(render_template('post.html',
                                         post_hash=hash,
-                                        explorer_url=explorer_url))
+                                        explorer_url=explorer_url,
+                                        fullPostReplies=fullPostReplies))
 
     
 # blockchain messages explorer page
@@ -228,7 +231,8 @@ def explorer(net=None):
                                     totalNmberOfPosts=f'{counter:,}',
                                     messages=results,
                                     search=search if search is not None else '',
-                                    nestedReplies=asyncio.run(db_count_nested_replies(results))))
+                                    nestedReplies=asyncio.run(db_count_nested_replies(results)),
+                                    fullPostReplies=asyncio.run(db_count_full_post_replies(results))))
 
 
 # address/user page
@@ -258,7 +262,8 @@ def address(id, net=None):
                                     address=id,
                                     totalNmberOfPosts=f'{len(posts):,}',
                                     messages=posts,
-                                    nestedReplies=asyncio.run(db_count_nested_replies(posts))))
+                                    nestedReplies=asyncio.run(db_count_nested_replies(posts)),
+                                    fullPostReplies=asyncio.run(db_count_full_post_replies(posts))))
     
 
 # mission page

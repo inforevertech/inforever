@@ -25,8 +25,7 @@
         <div class="row gx-5 align-items-center justify-content-center">
             <div class="col-8">
                 <form class="px-5 px-sm-0" action="{{ url_for('create')}}" enctype="multipart/form-data" method="post" id="create_post_form">
-                    
-                        <input type="hidden" name="replyToHash" value="{{ replyToHash }}">
+                    <input type="hidden" name="replyToHash" value="{{ replyToHash }}">
 
                     <label for="msgInput" class="msgInput_label">Message:
                         <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>

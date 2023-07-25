@@ -148,6 +148,9 @@
                                                             <a href="{{ url_for('create', reply=message.hash) }}" class="reaction btc_reaction">
                                                                 <i class="bi bi-reply-fill"></i>
                                                                 <i class="bi bi-currency-bitcoin"></i>
+                                                                {% if fullPostReplies[message.hash] > 0 %}
+                                                                    <span class="reaction_number full_post_replies_counter">{{ fullPostReplies[message.hash] }}</span>
+                                                                {% endif %}
                                                             </a>
                                                         </div>
                                                     {% endif %}
