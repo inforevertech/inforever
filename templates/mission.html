@@ -26,13 +26,94 @@
                         All words and beings keep protesting to decentralize the land.<br>
                         Our trace is always present, and we are here for all to see<br>
                         That our words we keep forever, that we are open to be free.<br>
-
-                        <i class="bi bi-broadcast-pin mission_icon d-block mb-3"></i>
                     </p>
                 </div>
             </div>
         </div>
     </section>
+
 </div>
+
+<secion id="mission_questions">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="mission_questions col-8">
+
+                <!-- QUESTION 1 -->
+                <div class="mission_question">
+                    <div class="question_preface">
+                        <span class="preface_question">What is Inforever? Why is it special?</span>
+                        <span class="preface_expand"><i class="bi bi-caret-left"></i></span>
+                    </div>
+                    <div class="question_answer">
+                        <p>Inforever is a post-sharing platform utilizing the Bitcoin blockchain as the protocol for data storage. This approach presents some unique advantages, such as censorship resistance, imperishability of records, and unrestricted public access to data for everyone who has access to the blockchain.</p>
+                    </div>
+                </div>
+
+                <!-- QUESTION 2 -->
+                <div class="mission_question">
+                    <div class="question_preface">
+                        <span class="preface_question">Why do we exploit only Bitcoin blockchain?</span>
+                        <span class="preface_expand"><i class="bi bi-caret-left"></i></span>
+                    </div>
+                    <div class="question_answer">
+                        <p>Bitcoin blockchain is the time-tested decentralized ledger relying on its community without any explicit leaders. Thus, we believe that utilizing the Bitcoin protocol is the most trustworthy way to share value units (satoshis) and suitable information.</p>
+                    </div>
+                </div>
+
+                <!-- QUESTION 3 -->
+                <div class="mission_question">
+                    <div class="question_preface">
+                        <span class="preface_question">Why do we keep all code open source?</span>
+                        <span class="preface_expand"><i class="bi bi-caret-left"></i></span>
+                    </div>
+                    <div class="question_answer">
+                        <p>While regular web users are having a hard time protecting their privacy online, we are convinced that everyone has the right to know how the software they are using was built. Thus, to be completely honest with our users, we keep our codebase accessible for everyone to explore, share and expand.</p>
+                    </div>
+                </div>
+
+                <!-- QUESTION 4 -->
+                <div class="mission_question">
+                    <div class="question_preface">
+                        <span class="preface_question">Why is testnet network kept available?</span>
+                        <span class="preface_expand"><i class="bi bi-caret-left"></i></span>
+                    </div>
+                    <div class="question_answer">
+                        <p>To allow users to experiment with the platform first without spending valuable satoshis, we decided to keep the Bitcoin test network accessible for all users of Inforever. Thus, everyone can get a taste of posting and exploring relevant data on the blockchain.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</secion>
+
+<div class="mission_share_icon">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
+            <div class="mission_cols col-12 col-lg-12">
+                <p><i class="bi bi-broadcast-pin mission_icon d-block mb-3"></i></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let questions = document.querySelectorAll('.mission_question');
+    questions.forEach(question => {
+        let preface = question.querySelector('.question_preface');
+        let expand = question.querySelector('.preface_expand');
+        let answer = question.querySelector('.question_answer');
+        preface.addEventListener('click', () => {
+            if (expand.classList.contains('preface_expand_active')) {
+                expand.classList.remove('preface_expand_active');
+                answer.classList.remove('question_answer_active');
+            } else {
+                expand.classList.add('preface_expand_active');
+                answer.classList.add('question_answer_active');
+            }
+        });
+    });
+</script>
 
 {% endblock %}

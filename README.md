@@ -1,6 +1,6 @@
 # Inforever
 
-Inforever is a post-sharing platform utilizing the Bitcoin blockchain as the platform for data storage. This approach presents some unique advantages, such as censorship resistance, imperishability of records, and unrestricted public access to data for everyone who has access to the blockchain.
+Inforever is a post-sharing platform utilizing the Bitcoin blockchain as the protocol for data storage. This approach presents some unique advantages, such as censorship resistance, imperishability of records, and unrestricted public access to data for everyone who has access to the blockchain.
 
 Inforever works as a client-oriented user-friendly interface to display and share information in ```OP_RETURN``` statements.
 

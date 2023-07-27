@@ -367,7 +367,10 @@ html {
 }
 .mission_icon {
     font-size: 8rem;
-    margin-top: 6rem;
+
+    background: -webkit-linear-gradient(45deg, #2937f0, #9f1ae2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .masthead-contact,
 #mission_text {
@@ -990,4 +993,53 @@ html {
     color: #333;
     width: 100%;
     display: inline-block;
+}
+.mission_questions {
+    padding-top: 5rem;
+    padding-bottom: 4rem;
+}
+.mission_question {
+    border: 1px solid #888;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+.mission_question:last-child {
+    margin-bottom: 0 !important;
+}
+.question_preface {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
+}
+.mission_question:hover {
+    background-color: #fafafa;
+}
+.preface_expand {
+    /* font-size: 1.5rem; */
+    color: #555;
+    transition: 0.3s transform;
+}
+.preface_expand_active {
+    transform: rotate(-90deg);
+}
+.preface_question {
+    font-size: 1.5rem;
+    font-family: "Kanit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.question_answer {
+    height: 0;
+    overflow: hidden;
+
+    padding: 0 1.5rem;
+    font-size: 1.1rem;
+    transition: 0.3s height, 0.1s padding;
+}
+.question_answer_active {
+    height: auto !important;
+    padding: 0.5rem 1.5rem 1rem;
 }
