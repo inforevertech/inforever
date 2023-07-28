@@ -126,13 +126,15 @@
                                 </button>
                             {% endfor %}
 
-                            <a href="{{ url_for('create', reply=post.hash) }}" class="reaction btc_reaction">
-                                <i class="bi bi-reply-fill"></i>
-                                <i class="bi bi-currency-bitcoin"></i>
-                                {% if fullPostReplies > 0 %}
-                                    <span class="reaction_number full_post_replies_counter">{{ fullPostReplies }}</span>
-                                {% endif %}
-                            </a>
+                            {% if post.postedLocally %}
+                                <a href="{{ url_for('create', reply=post.hash) }}" class="reaction btc_reaction">
+                                    <i class="bi bi-reply-fill"></i>
+                                    <i class="bi bi-currency-bitcoin"></i>
+                                    {% if fullPostReplies > 0 %}
+                                        <span class="reaction_number full_post_replies_counter">{{ fullPostReplies }}</span>
+                                    {% endif %}
+                                </a>
+                            {% endif %}
                         </div>
 
                         <div class="reaction_comment post_reaction_comment">

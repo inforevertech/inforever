@@ -98,7 +98,7 @@ def create(net=None):
             media_record = asyncio.run(db_insert_media(secure_filename(file.filename), str(file.content_type)))
             media[str(media_record.id)] = file
 
-        # add media information to the message
+        # add media information to the post
         if media:
             message += '${' + ','.join(media.keys()) + '}$'
 
@@ -204,7 +204,7 @@ def post(hash, net=None):
                                         fullPostReplies=fullPostReplies))
 
     
-# blockchain messages explorer page
+# blockchain posts explorer page
 @optional.routes('/<net>?/explorer/', methods=['GET', 'POST'])
 def explorer(net=None):
     # switch network
@@ -229,7 +229,7 @@ def explorer(net=None):
 
     return response(render_template('explorer.html',
                                     totalNmberOfPosts=f'{counter:,}',
-                                    messages=results,
+                                    posts=results,
                                     search=search if search is not None else '',
                                     nestedReplies=asyncio.run(db_count_nested_replies(results)),
                                     fullPostReplies=asyncio.run(db_count_full_post_replies(results))))
@@ -261,7 +261,7 @@ def address(id, net=None):
     return response(render_template('address.html',
                                     address=id,
                                     totalNmberOfPosts=f'{len(posts):,}',
-                                    messages=posts,
+                                    posts=posts,
                                     nestedReplies=asyncio.run(db_count_nested_replies(posts)),
                                     fullPostReplies=asyncio.run(db_count_full_post_replies(posts))))
     

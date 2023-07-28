@@ -18,8 +18,11 @@ class Collector:
         self.network = network
         self.explorer_url = 'https://blockstream.info/' + ('testnet/' if self.network == 'btc-test' else '')
 
-    def set_top_height(self):
-        self.height = int(requests.get(self.explorer_url + 'api/blocks/tip/height').text) - 1
+    def set_height(self, height=-1):
+        if height == -1:
+            self.height = int(requests.get(self.explorer_url + 'api/blocks/tip/height').text) - 1
+        else:
+            self.height = height
         
     def collection_service(self, past_posts=True, wait_time=100):
         # go through all block starting from the highest
@@ -28,7 +31,7 @@ class Collector:
                 self.collect_block(past_posts=past_posts)
                 self.height += -1 if past_posts else 1
             except Exception as e:
-                logging.info(str(self.height), ': ', str(e), sep='')
+                logging.info(str(self.height) + ': ' + str(e))
             time.sleep(wait_time)
         
     def collect_block(self, past_posts=True):
@@ -93,7 +96,7 @@ class Collector:
                     # add sender addresses information to the db
                     asyncio.run(db_insert_sent_address(tr_hash, addresses, self.network))
                     
-                    logging.info(post_date, ': ', message, sep='')
+                    logging.info(str(post_date) + ': ' + message)
                 else:  # no message found, then just go futher
                     continue
             
@@ -101,9 +104,9 @@ class Collector:
 # starting point
 if __name__ == '__main__':
     # set logging level to debug
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     # launch collector of recent posts
     collector = Collector(network='btc')
-    collector.set_top_height()  # start fromt the highest block in the blockchain
-    collector.collection_service(past_posts=True, wait_time=0.01)
+    collector.set_height(height=799634)  # start from the block of this hight in the blockchain
+    collector.collection_service(past_posts=False, wait_time=0.01)

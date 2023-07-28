@@ -28,27 +28,27 @@
                 {% else %}
 
                     <div class="post_container">
-                        {% for message in messages %}
+                        {% for post in posts %}
                             <div class="post_wrapper">
                                 <div class="post row">
-                                    <div class="{% if message.media %}col-7{% else %}col-12{% endif %}">
+                                    <div class="{% if post.media %}col-7{% else %}col-12{% endif %}">
                                         <div class="post-info">
                                             <div class="post_profile_image">
                                                 <!-- Sent from -->
-                                                {% for address in message.addresses %}
+                                                {% for address in post.addresses %}
                                                     {% if not address.direction %}
-                                                        <a href="/{{ address.address }}" class="{% if not message.addresses|length > 1 %}additional_top_margin{% endif %}">
+                                                        <a href="/{{ address.address }}" class="{% if not post.addresses|length > 1 %}additional_top_margin{% endif %}">
                                                             <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
                                                         </a>
                                                     {% endif %}
                                                 {% endfor %}
                                                 
-                                                {% if message.addresses|length > 1 %}
-                                                    <a href="{{ url_for('post', hash=message.hash) }}" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
+                                                {% if post.addresses|length > 1 %}
+                                                    <a href="{{ url_for('post', hash=post.hash) }}" class="arrow_address"><span class="from_to_arrow"><i class="bi bi-arrow-right-circle"></i></span></a>
                                                 {% endif %}
 
                                                 <!-- Sent to -->
-                                                {% for address in message.addresses %}
+                                                {% for address in post.addresses %}
                                                     {% if address.direction %}
                                                         <a href="/{{ address.address }}">
                                                             <img src="{{ url_for('static', filename=find_address_avatar(address.address)) }}" alt="profile picture" class="profile_picture">
@@ -58,35 +58,35 @@
                                             </div>
                                             <div class="post_content">
                                                 <div class="post_relevant_information">
-                                                    <a href="{{ url_for('post', hash=message.hash) }}" class="profile_name_link">Post #{{ format_shorten_address(message.hash) }}</a>
+                                                    <a href="{{ url_for('post', hash=post.hash) }}" class="profile_name_link">Post #{{ format_shorten_address(post.hash) }}</a>
                                                     <span class="separator">&#9900;</span>
-                                                    <span class="post_date">{{ format_date(message.timestamp) }}</span>
+                                                    <span class="post_date">{{ format_date(post.timestamp) }}</span>
                                                     <span class="separator">&#9900;</span>
-                                                    {% if message.network == 'btc' %}
+                                                    {% if post.network == 'btc' %}
                                                         <span class="post_network"><i class="bi bi-currency-bitcoin"></i></span>
-                                                    {% elif message.network == 'btc-test' %}
+                                                    {% elif post.network == 'btc-test' %}
                                                         <span class="post_network"><i class="bi bi-code-slash"></i></span>
                                                     {% endif %}
 
-                                                    {% if message.isReply %}
+                                                    {% if post.isReply %}
                                                         <span class="separator">&#9900;</span>
                                                         <span class="post_replying_to">
-                                                            replying to <a href="{{ url_for('post', hash=message.replyToHash) }}" class="reply_post_link">#{{ format_shorten_post_hash(message.replyToHash) }}</a>
+                                                            replying to <a href="{{ url_for('post', hash=post.replyToHash) }}" class="reply_post_link">#{{ format_shorten_post_hash(post.replyToHash) }}</a>
                                                         </span>
                                                     {% endif %}
 
                                                     <!-- <span class="separator">&#9900;</span> -->
-                                                    <!-- <span class="post_link"><a href="{{ url_for('post', hash=message.hash) }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a></span> -->
+                                                    <!-- <span class="post_link"><a href="{{ url_for('post', hash=post.hash) }}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a></span> -->
                                                 </div>
-                                                <div class="post_text">{{ message.formatted_text }}</div>
+                                                <div class="post_text">{{ post.formatted_text }}</div>
                                             </div>
                                         </div>
                                     </div>
-                                    {% if message.media %}
+                                    {% if post.media %}
                                         <div class="col-5">
                                             <div class="post_media">
                                                 <!-- videos -->
-                                                {% for media in message.media %}
+                                                {% for media in post.media %}
                                                     {% if media.type == "video/mp4" %}
                                                         <div class="media_pic">
                                                             <!-- <a href="{{ url_for('media', id=media.id) }}" target="_blank"> -->
@@ -99,9 +99,9 @@
                                                 {% endfor %}
 
                                                 <!-- images -->
-                                                {% for media in message.media %}
+                                                {% for media in post.media %}
                                                     {% if media.type == "image/jpeg" %}
-                                                        <div class="media_pic {% if message.media|length > 1 %}multiple_post_pics{% endif %}">
+                                                        <div class="media_pic {% if post.media|length > 1 %}multiple_post_pics{% endif %}">
                                                             <a href="{{ url_for('media', id=media.id) }}" target="_blank">
                                                                 <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
                                                             </a>
@@ -110,7 +110,7 @@
                                                 {% endfor %}
 
                                                 <!-- other files -->
-                                                {% for media in message.media %}
+                                                {% for media in post.media %}
                                                     {% if media.type != "image/jpeg" and media.type != "video/mp4" %}
                                                         <div class="media">
                                                             <a href="{{ url_for('media', id=media.id) }}" target="_blank">
@@ -131,33 +131,33 @@
                                                 <div class="post_reactions">
                                                     <div class="post_reactions_left">
                                                         {% for reaction in g.reactions %}
-                                                            <button class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ message.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
-                                                                {% if message[reaction + '_counter'] > 0 %}
-                                                                    <span class="reaction_number">{{ message[reaction + '_counter'] }}</span>
+                                                            <button class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ post.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
+                                                                {% if post[reaction + '_counter'] > 0 %}
+                                                                    <span class="reaction_number">{{ post[reaction + '_counter'] }}</span>
                                                                 {% endif %}
                                                             </button>
                                                         {% endfor %}
 
-                                                        <a href="{{ url_for('post', hash=message.hash) }}" class="reaction">
+                                                        <a href="{{ url_for('post', hash=post.hash) }}" class="reaction">
                                                             <i class="bi bi-chat-right-text"></i>
-                                                            <span class="reaction_number">{{ nestedReplies[message.hash] }}</span>
+                                                            <span class="reaction_number">{{ nestedReplies[post.hash] }}</span>
                                                         </a>
                                                     </div>
-                                                    {% if message.postedLocally %}
+                                                    {% if post.postedLocally %}
                                                         <div class="post_reactions_right">
-                                                            <a href="{{ url_for('create', reply=message.hash) }}" class="reaction btc_reaction">
+                                                            <a href="{{ url_for('create', reply=post.hash) }}" class="reaction btc_reaction">
                                                                 <i class="bi bi-reply-fill"></i>
                                                                 <i class="bi bi-currency-bitcoin"></i>
-                                                                {% if fullPostReplies[message.hash] > 0 %}
-                                                                    <span class="reaction_number full_post_replies_counter">{{ fullPostReplies[message.hash] }}</span>
+                                                                {% if fullPostReplies[post.hash] > 0 %}
+                                                                    <span class="reaction_number full_post_replies_counter">{{ fullPostReplies[post.hash] }}</span>
                                                                 {% endif %}
                                                             </a>
                                                         </div>
                                                     {% endif %}
                                                     
                                                     <!-- IMPORTANT INPUT HIDDEN FIELDS FOR REACTIONS -->
-                                                    <input type="hidden" id="comment_post_{{ message.hash }}" name="comment_post" value="{{ message.hash }}">
-                                                    <input type="hidden" name="comment_reaction" id="comment_reaction_{{ message.hash }}" value="">
+                                                    <input type="hidden" id="comment_post_{{ post.hash }}" name="comment_post" value="{{ post.hash }}">
+                                                    <input type="hidden" name="comment_reaction" id="comment_reaction_{{ post.hash }}" value="">
                                                 </div>
                                             </div>
                                         </form>
