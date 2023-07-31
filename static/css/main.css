@@ -1,6 +1,10 @@
 html {
     background-color: #000;
 }
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
 
 .title_emphasize {
     color: blueviolet;
@@ -194,7 +198,8 @@ html {
 
     display: flex;
     align-items: center;
-    justify-content: left;
+    /* justify-content: left; */
+    justify-content: space-between;
 }
 #navbarResponsive {
     flex-grow: 5;
@@ -1042,4 +1047,55 @@ html {
 .question_answer_active {
     height: auto !important;
     padding: 0.5rem 1.5rem 1rem;
+}
+.post_link_sm_text {
+    margin-left: 5px;
+}
+
+@media screen and (min-width: 992px) {
+    .post_link_sm {
+        display: none;
+    }
+}
+@media screen and (max-width: 991px) {
+    .post_link_lg {
+        display: none;
+    }
+    .explorer_search_ul {
+        margin: 0.7rem 0 0 0 !important;
+        max-width: 100%;
+    }
+    .masthead {
+        padding-top: 13rem;
+    }
+}
+@media screen and (max-width: 767px){
+    .post_link_sm_text {
+        display: none;
+    }
+}
+@media screen and (max-width: 468px){
+    #network_select {
+        width: 0;
+        overflow-x: hidden;
+    }
+}
+@media screen and (max-width: 383px){
+    .search_field label[for="search_bar"] {
+        display: none;
+    }
+    #search_bar {
+        padding-left: 1.5rem;
+    }
+    .explorer-header-link-text {
+        display: none;
+    }
+    .explorer_search_link i {
+        margin: 0 0.75rem;
+    }
+}
+@media screen and (min-width: 384px){
+    .explorer-header-link-icon {
+        display: none;
+    }
 }

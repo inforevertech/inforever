@@ -31,9 +31,17 @@
                         {% endfor %}
                     </select>
                 </label>
+
+                <a href="{{ url_for('create') }}" class="nav-link post_link_sm">
+                    <button class="btn btn-primary bg-gradient-primary-to-secondary rounded-pill mb-lg-0" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                        <span class="d-flex align-items-center">
+                            Post <span class="post_link_sm_text">message</span>
+                        </span>
+                    </button>
+                </a>
             </div>
 
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <div class="navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0 explorer_search_ul">
                     <li class="nav-item explorer_search_link">
                         <div class="search_field">
@@ -43,10 +51,14 @@
                             </label>
                             <input type="search" id="search_bar" placeholder="Search" value="{{ search }}">
                         </div>
-                        <a class="nav-link me-lg-3 explorer-header-link" id="explorer-header-link" href="{{ url_for('explorer') }}">Explore</a>
+                        <a class="nav-link me-lg-3 explorer-header-link" id="explorer-header-link" href="{{ url_for('explorer') }}">
+                            <span class="explorer-header-link-text">Explore</span>
+                            <span class="explorer-header-link-icon"><i class="bi bi-binoculars" id="binoculars_search"></i></span>
+                        </a>
                     </li>
                 </ul>
-                <a href="{{ url_for('create') }}" class="nav-link">
+
+                <a href="{{ url_for('create') }}" class="nav-link post_link_lg">
                     <button class="btn btn-primary bg-gradient-primary-to-secondary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal" data-bs-target="#feedbackModal">
                         <span class="d-flex align-items-center">
                             Post message
@@ -54,6 +66,7 @@
                     </button>
                 </a>
             </div>
+
         </div>
     </nav>
 

@@ -24,10 +24,10 @@
                                 </linearGradient>
                             </defs>
                             <circle cx="50" cy="50" r="50"></circle></svg
-                        ><svg class="shape-1 d-none d-sm-block" viewBox="0 0 240.83 240.83" xmlns="http://www.w3.org/2000/svg">
+                        ><svg class="shape-1 d-block d-sm-block" viewBox="0 0 240.83 240.83" xmlns="http://www.w3.org/2000/svg">
                             <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(120.42 -49.88) rotate(45)"></rect>
                             <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(-49.88 120.42) rotate(-45)"></rect></svg
-                        ><svg class="shape-2 d-none d-sm-block" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"></circle></svg>
+                        ><svg class="shape-2 d-block d-sm-block" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"></circle></svg>
                         <div class="device-wrapper">
                             <div class="device" data-device="iPhoneX" data-orientation="portrait" data-color="black">
                                 <div class="screen bg-black">
@@ -64,7 +64,7 @@
             <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
                 <div class="col-12 col-lg-5">
                     <h2 class="display-4 lh-1 mb-4">Post a message on the blockchain</h2>
-                    <p class="lead fw-normal text-muted mb-5 mb-lg-0">Use Bitcoin {% if g.net == "btc-test" %} testnet{% endif %} address with some balance to post a message that will be visible for everyone forever.</p>
+                    <p class="lead fw-normal text-muted mb-0 mb-lg-0">Use Bitcoin {% if g.net == "btc-test" %} testnet{% endif %} address with some balance to post a message that will be visible for everyone forever.</p>
                     <br>
                     {% if g.net == "btc-test" %}
                         <p class="lead fw-normal text-muted mb-5 mb-lg-0">We recommended to use <a href="https://testnet-faucet.com/btc-testnet/" class="faucet_link" target="_blank">this faucet</a> to collect some testnet satoshis.</p>
@@ -72,7 +72,7 @@
                         <p class="lead fw-normal text-muted mb-5 mb-lg-0">You will be able to access your message with blockchain explorer right after.</p>
                     {% endif %}
                 </div>
-                <div class="col-sm-8 col-md-6">
+                <div class="col-sm-12 col-md-12 col-lg-6">
                     <form class="px-5 px-sm-0" action="{{ url_for('create') }}"  method="post">
                         <label for="msgInput" class="msgInput_label">Message:
                             <textarea name="message" id="msgInput" class="quick_post_input" cols="30" rows="10" placeholder=""></textarea>
@@ -119,13 +119,13 @@
     <section id="features" class="bg-light">
         <div class="container px-5">
             <div class="row gx-5 align-items-center">
-                <div class="col-lg-5 order-lg-0">
+                <div class="col-lg-5 order-lg-0 d-none d-lg-block d-xl-block">
                     <!-- Features section device mockup-->
                     <div class="features-device-mockup circle-img-wrapper">
                         <img class="img-fluid rounded-circle" src="https://source.unsplash.com/u8Jn2rzYIps/900x900" alt="...">
                     </div>
                 </div>
-                <div class="col-lg-7 order-lg-1 mb-5 mb-lg-0">
+                <div class="col-lg-7 order-lg-1 mb-0">
                     <div class="container-fluid px-5">
                         <div class="row gx-5">
                             <div class="col-md-6 mb-5 feature_icon_wrapper">

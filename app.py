@@ -104,15 +104,20 @@ def create(net=None):
 
 
         # Create a key object from the private key.
+        # TODO: put these addresses into .env
         if g.net == 'btc':
             key = Key(private_key)
+            outputs = [('bc1qr2cytjzexpt0fvvldddxsaryfdu0u0nya807sm', 1, 'satoshi')]
+            fee -= 1
         elif g.net == 'btc-test':
             key = PrivateKeyTestnet(private_key)
+            outputs = [('mz53tFLDVHv1btvuVxtKZnr7KLRaQwXpGf', 1, 'satoshi')]
+            fee -= 1
 
         try:
             if btc_donation_reply is None:
                 # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-                post_hash = key.send([], fee=fee, absolute_fee=True, message=message)
+                post_hash = key.send(outputs, fee=fee, absolute_fee=True, message=message)
             else:
                 # Send a transaction with a donation to the address of the replied post author
                 replied_post = asyncio.run(db_find_post(replyToHash))

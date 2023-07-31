@@ -104,9 +104,9 @@ class Collector:
 # starting point
 if __name__ == '__main__':
     # set logging level to debug
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
 
     # launch collector of recent posts
     collector = Collector(network='btc')
-    collector.set_height(height=799634)  # start from the block of this hight in the blockchain
-    collector.collection_service(past_posts=False, wait_time=0.01)
+    collector.set_height()  # start from the block of this hight in the blockchain
+    collector.collection_service(past_posts=True, wait_time=0.01)
