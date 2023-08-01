@@ -17,7 +17,8 @@
                     {% else %}
                         <p class="mb-2">Sample Network Post</p>
                     {% endif %}
-                    <p class="transaction_id_title mb-lg-0">{{ post_hash }}</p>
+                    
+                    <p class="transaction_id_title mb-lg-0">{{ format_date(post.timestamp) }}</p>
                 </div>
             </div>
         </div>
@@ -67,9 +68,9 @@
                         </div>
 
                         <h5 class="lh-1 mb-2">
-                            <span class="post_date">{{ format_date(post.timestamp) }}</span>
+                            <span class="profile_name_link">Post #{{ format_shorten_address(post.hash) }}</span>
                             {% if post.isReply %}
-                                <span class="separator">&#9900;</span>
+                                <!-- <span class="separator">&#9900;</span> -->
                                 <span class="post_replying_to">
                                     replying to <a href="{{ url_for('post', hash=post.replyToHash) }}" class="reply_post_link">#{{ format_shorten_post_hash(post.replyToHash) }}</a>
                                 </span>
@@ -77,46 +78,48 @@
                         </h5>
                         <br>
                         <!-- <h5 class="lh-1 mb-2">Content: </span></h5> -->
-                        <p class="lead fw-normal text-muted mb-5 mb-lg-0 post_text">{{ post.formatted_text }}</p>
+                        <p class="lead fw-normal text-muted mb-0 post_text">{{ post.formatted_text }}</p>
 
                         <br>
-                        <div class="post_media post_page_media">
-                            <!-- videos -->
-                            {% for media in post.media %}
-                                {% if media.type == "video/mp4" %}
-                                    <div class="media_pic">
-                                        <!-- <a href="{{ url_for('media', id=media.id) }}" target="_blank"> -->
-                                            <video alt="media" class="media_image" controls>
-                                                <source src="{{ url_for('media', id=media.id) }}" type="video/mp4">
-                                            </video>
-                                        <!-- </a> -->
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                        {% if post.media %}
+                            <div class="post_media post_page_media">
+                                <!-- videos -->
+                                {% for media in post.media %}
+                                    {% if media.type == "video/mp4" %}
+                                        <div class="media_pic">
+                                            <!-- <a href="{{ url_for('media', id=media.id) }}" target="_blank"> -->
+                                                <video alt="media" class="media_image" controls>
+                                                    <source src="{{ url_for('media', id=media.id) }}" type="video/mp4">
+                                                </video>
+                                            <!-- </a> -->
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
 
-                            <!-- images -->
-                            {% for media in post.media %}
-                                {% if media.type == "image/jpeg" %}
-                                    <div class="media_pic {% if post.media|length > 1 %}multiple_post_pics{% endif %}">
-                                        <a href="{{ url_for('media', id=media.id) }}" target="_blank">
-                                            <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                                <!-- images -->
+                                {% for media in post.media %}
+                                    {% if media.type == "image/jpeg" %}
+                                        <div class="media_pic {% if post.media|length > 1 %}multiple_post_pics{% endif %}">
+                                            <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                                <img src="{{ url_for('media', id=media.id) }}" alt="media" class="media_image">
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
 
-                            <!-- other files -->
-                            {% for media in post.media %}
-                                {% if media.type != "image/jpeg" and media.type != "video/mp4" %}
-                                    <div class="media">
-                                        <a href="{{ url_for('media', id=media.id) }}" target="_blank">
-                                            <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
-                                            <span class="media_filename">{{ media.filename }}</span>
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                                <!-- other files -->
+                                {% for media in post.media %}
+                                    {% if media.type != "image/jpeg" and media.type != "video/mp4" %}
+                                        <div class="media">
+                                            <a href="{{ url_for('media', id=media.id) }}" target="_blank">
+                                                <span class="media_icon"><i class="bi bi-file-earmark-text"></i></span>
+                                                <span class="media_filename">{{ media.filename }}</span>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         <div class="post_reactions post_page_reactions">
                             {% for reaction in g.reactions %}
                                 <button class="reaction reaction_{{ reaction }}" data-reaction="{{ reaction }}" data-post="{{ post.hash }}" type="submit">{{ g.reactions[reaction]|safe }}
@@ -152,7 +155,7 @@
                         <br>
                     {% endif %}
                 </div>
-                <div class="col-sm-8 col-md-6">
+                <div class="col-12 col-lg-6">
                     {% if post.repliers %}
 
                         {% if full_post_replies(post.repliers) %}

@@ -7752,10 +7752,11 @@ textarea.form-control-lg {
   padding-left: 1.5rem !important;
 }
 
-/* .px-5 {
-  padding-right: 3rem !important;
-  padding-left: 3rem !important;
-} */
+.px-5 {
+  /* changed from default 3rem */
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+}
 
 .py-0 {
   padding-top: 0 !important;
@@ -11067,13 +11068,17 @@ section.cta:before {
     max-width: 17rem;
   }
 }
+
 footer a {
-  color: rgba(255, 255, 255, 0.5);
+  /* color: rgba(255, 255, 255, 0.5); */
+  color: #333;
   text-decoration: none;
 }
 footer a:hover, footer a:active, footer a:focus {
-  color: rgba(255, 255, 255, 0.75);
-  text-decoration: underline;
+  /* color: rgba(255, 255, 255, 0.75); */
+  /* font-weight: bold; */
+  color: #000;
+  text-decoration: none;
 }
 
 .masthead {

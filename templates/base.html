@@ -72,7 +72,9 @@
 
 
     <!-- PAGE CONTENT -->
-    {% block page_content %}{% endblock %}
+    <div class="bg-light">
+        {% block page_content %}{% endblock %}
+    </div>
 
 
     <script>
@@ -144,9 +146,9 @@
 
 
     <!-- Footer-->
-    <footer class="bg-black text-center py-5">
+    <footer class="text-center py-5">
         <div class="container px-5">
-            <div class="text-white-50 small">
+            <div class="small">
                 <div class="mb-2">&copy; Inforever 2023</div>
                 <a href="{{ url_for('mission') }}">Our mission</a>
                 <span class="mx-1">&middot;</span>

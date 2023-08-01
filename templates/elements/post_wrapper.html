@@ -11,7 +11,7 @@
                             <div value="W" class="recent_option {% if g.recent == 'W' %}recent_selected{% endif %}">1W</div>
                             <div value="M" class="recent_option {% if g.recent == 'M' %}recent_selected{% endif %}">1M</div>
                             <div value="Y" class="recent_option {% if g.recent == 'Y' %}recent_selected{% endif %}">1Y</div>
-                            <div value="A" class="anytime_recent recent_option {% if g.recent == 'A' %}recent_selected{% endif %}">Anytime</div>
+                            <div value="A" class="anytime_recent recent_option {% if g.recent == 'A' %}recent_selected{% endif %}">Any<span class="recent_option_anytime_full">time</span></div>
                         </div>
                     </div>
                     <div class="filter">
@@ -31,7 +31,7 @@
                         {% for post in posts %}
                             <div class="post_wrapper">
                                 <div class="post row">
-                                    <div class="{% if post.media %}col-7{% else %}col-12{% endif %}">
+                                    <div class="{% if post.media %}col-12{% else %}col-12{% endif %}">
                                         <div class="post-info">
                                             <div class="post_profile_image">
                                                 <!-- Sent from -->
@@ -61,7 +61,7 @@
                                                     <a href="{{ url_for('post', hash=post.hash) }}" class="profile_name_link">Post #{{ format_shorten_address(post.hash) }}</a>
                                                     <span class="separator">&#9900;</span>
                                                     <span class="post_date">{{ format_date(post.timestamp) }}</span>
-                                                    <span class="separator">&#9900;</span>
+                                                    <span class="separator separator_network">&#9900;</span>
                                                     {% if post.network == 'btc' %}
                                                         <span class="post_network"><i class="bi bi-currency-bitcoin"></i></span>
                                                     {% elif post.network == 'btc-test' %}
@@ -83,7 +83,7 @@
                                         </div>
                                     </div>
                                     {% if post.media %}
-                                        <div class="col-5">
+                                        <div class="col-12">
                                             <div class="post_media">
                                                 <!-- videos -->
                                                 {% for media in post.media %}
