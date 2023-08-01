@@ -1109,9 +1109,9 @@ footer {
     .post_link_lg {
         display: none;
     }
-    /* .masthead {
-        padding-top: 13rem;
-    } */
+    .mobile_create_btn {
+        display: flex !important;
+    }
 
     #mission_text {
         padding-top: 3rem;
@@ -1249,7 +1249,7 @@ footer {
     width: 50px;
     height: 50px;
 
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 

@@ -5,7 +5,10 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <title>Inforever - post sharing platform</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Google fonts-->
@@ -53,7 +56,7 @@
                         </div>
                         <a class="nav-link me-lg-3 explorer-header-link" id="explorer-header-link" href="{{ url_for('explorer') }}">
                             <span class="explorer-header-link-text">Explore</span>
-                            <span class="explorer-header-link-icon"><i class="bi bi-binoculars" id="binoculars_search"></i></span>
+                            <span class="explorer-header-link-icon"><i class="bi bi-binoculars" id="binoculars_search_icon"></i></span>
                         </a>
                     </li>
                 </ul>
@@ -122,6 +125,11 @@
 
 
     <script>
+        let search_bar = document.getElementById("search_bar");
+        let explore_btn = document.getElementById('explorer-header-link');
+        let clear_search = document.getElementById('clear_search')
+        let binoculars_search = document.getElementById('binoculars_search')
+
         // this function redirects to correct url for search
         function search(event) {
             event.preventDefault();
@@ -143,7 +151,6 @@
         }
 
         // imitate click on explorer link when hit enter
-        let search_bar = document.getElementById("search_bar");
         search_bar.addEventListener("keydown", (event) => {
             if (event.code == "Enter")
                 search(event)
@@ -155,19 +162,22 @@
         });
 
         // explorer search redirect
-        let explore_btn = document.getElementById('explorer-header-link');
         explore_btn.addEventListener('click',  search);
 
         // clear search button
-        let clear_search = document.getElementById('clear_search')
-        let binoculars_search = document.getElementById('binoculars_search')
-
         clear_search.addEventListener('click', () => {
             search_bar.value = ''  // clear search bar
 
             // toggle bi-search-hidden class
             clear_search.classList.add('bi-search-hidden')
             binoculars_search.classList.remove('bi-search-hidden')
+        })
+
+        // redirect to main page when #binoculars_search clicked
+        binoculars_search.addEventListener('click', (event) => {
+            event.preventDefault();  // don't focus on search bar
+
+            window.location.href = "{{ url_for('index') }}"  // redirect to main page
         })
 
 
