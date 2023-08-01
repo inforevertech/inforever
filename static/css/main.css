@@ -210,10 +210,14 @@ html, body {
     /* justify-content: left; */
     justify-content: space-between;
 }
+.network_select_wrapper_footer {
+    display: block;
+    margin-bottom: 2rem;
+}
 #navbarResponsive {
     flex-grow: 5;
 }
-#network_select_label {
+#network_select_label, #network_select_label_footer {
     display: inline;
     /* font-weight: bold; */
 
@@ -223,12 +227,13 @@ html, body {
     padding: 10px 20px;
     border-radius: 800px;
 }
-#network_select {
+#network_select, #mobile_network_select {
     margin-left: 15px;
     padding-left: 10px;
     padding-right: 20px;
 
     border: none;
+    outline: none;
     border-radius: 20px;
     background-color: inherit;
     color: inherit;
@@ -1073,6 +1078,8 @@ html, body {
 }
 footer {
     margin-bottom: 0;
+    padding-top: 3rem;
+    padding-bottom: 5rem !important;
     /* background-color: #fff; */
     color: #333;
 }
@@ -1102,14 +1109,9 @@ footer {
     .post_link_lg {
         display: none;
     }
-    .explorer_search_ul {
-        /* margin: 0.7rem 0 0 0 !important; */
-        margin: 0 0 0.7rem 0 !important;
-        max-width: 100%;
-    }
-    .masthead {
+    /* .masthead {
         padding-top: 13rem;
-    }
+    } */
 
     #mission_text {
         padding-top: 3rem;
@@ -1129,6 +1131,16 @@ footer {
     .post_reaction_comment {
         width: 100%;
     }
+
+    .explorer_search_ul {
+        /* margin: 0.7rem 0 0 0 !important; */
+        /* margin: 0 0 0.7rem 0 !important; */
+        margin: 0 !important;
+        max-width: 100%;
+    }
+    .network_select_wrapper {
+        display: none;
+    }
 }
 @media screen and (max-width: 767px){
     .post_link_sm_text {
@@ -1146,12 +1158,7 @@ footer {
         margin-bottom: 0;
     }
 }
-@media screen and (max-width: 485px) {
-    #network_select {
-        width: 0 !important;
-        max-width: 0;
-        overflow-x: hidden;
-    }
+@media screen and (max-width: 493px) {
     #search_bar {
         margin: 0 5px;
     }
@@ -1231,4 +1238,29 @@ footer {
 }
 .btn-primary {
     margin-left: 1rem;
+}
+
+.mobile_create_btn {
+    cursor: pointer;
+    color: #fff;
+    font-size: 1.7rem;
+
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    bottom: 15px;
+    right: 10px;
+
+    background: linear-gradient(45deg, #9f1ae2, #2937f0) !important;
+}
+.mobile_create_btn a {
+    color: #fff;
+    text-decoration: none;
+    outline: none;
 }

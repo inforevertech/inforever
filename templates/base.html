@@ -76,6 +76,50 @@
         {% block page_content %}{% endblock %}
     </div>
 
+    {% if request.endpoint != "create" %}
+    <!-- mobile fixed create post button -->
+        <div class="mobile_create_btn d-lg-none d-xl-none d-md-block d-sm-block">
+            <div>
+                <a href="{{ url_for('create') }}"><i class="bi bi-plus-circle-dotted"></i></a>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Footer-->
+    <footer class="text-center">
+        <div class="container px-5">
+            <div class="small">
+                <div class="mb-3 d-none d-lg-block d-xl-block">&copy; Inforever 2023</div>
+
+                <div class="network_select_wrapper_footer d-lg-none d-xl-none d-md-block d-sm-block">
+                    <label for="network_select" id="network_select_label_footer"><a class="navbar-brand fw-bold network_brand" href="{{ url_for('index') }}">Inforever</a>
+                        <select id="mobile_network_select">
+                            {% for net in g.nets %}
+                                <option value="{{ net['tag'] }}" {% if g.net == net['tag'] %}selected hidden{% endif %}>{{ net['name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+    
+                    <!-- <a href="{{ url_for('create') }}" class="nav-link post_link_sm">
+                        <button class="btn btn-primary bg-gradient-primary-to-secondary rounded-pill mb-lg-0" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                            <span class="d-flex align-items-center">
+                                Post <span class="post_link_sm_text">message</span>
+                            </span>
+                        </button>
+                    </a> -->
+                </div>
+
+                <a href="{{ url_for('mission') }}">Our mission</a>
+                <span class="mx-1">&middot;</span>
+                <a target="_blank" href="https://github.com/inforevertech/inforever">Source Code</a>
+                <span class="mx-1">&middot;</span>
+                <a href="{{ url_for('contact') }}">Contact us</a>
+                <span class="mx-1">&middot;</span>
+                <a href="{{ url_for('donate') }}">Donate</a>
+            </div>
+        </div>
+    </footer>
+
 
     <script>
         // this function redirects to correct url for search
@@ -129,8 +173,10 @@
 
         // network selection switch
         let network_select = document.getElementById('network_select');
+        let mobile_network_select = document.getElementById('mobile_network_select');
         let index_url = "{{ url_for('index') }}";
 
+        // fill size network select
         network_select.addEventListener('change', (option) => {
             // form a correct path
             let path = window.location.pathname;
@@ -142,24 +188,20 @@
            
             window.location.href = index_url + network_select.value + '/' + path + window.location.search;
         });
+
+        // mobile network select
+        mobile_network_select.addEventListener('change', (option) => {
+            // form a correct path
+            let path = window.location.pathname;
+            while (path.substring(0, 3) == 'btc' || path.substring(1, 4) == 'btc') 
+                if (path.substring(0, 3) == 'btc')
+                    path = path.split('/').slice(1).join('/')
+                else
+                    path = path.split('/').slice(2).join('/')
+           
+            window.location.href = index_url + mobile_network_select.value + '/' + path + window.location.search;
+        });
     </script>
-
-
-    <!-- Footer-->
-    <footer class="text-center py-5">
-        <div class="container px-5">
-            <div class="small">
-                <div class="mb-2">&copy; Inforever 2023</div>
-                <a href="{{ url_for('mission') }}">Our mission</a>
-                <span class="mx-1">&middot;</span>
-                <a target="_blank" href="https://github.com/inforevertech/inforever">Source Code</a>
-                <span class="mx-1">&middot;</span>
-                <a href="{{ url_for('contact') }}">Contact us</a>
-                <span class="mx-1">&middot;</span>
-                <a href="{{ url_for('donate') }}">Donate</a>
-            </div>
-        </div>
-    </footer>
 
 </body>
 </html>
