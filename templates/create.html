@@ -51,6 +51,9 @@
                     <label class="media_upload_caution">
                         Attached media will only be visible on Inforever and not in the blockchain.<br>
                         Accepted formats: jpg, png, mp4, mov, docx, xslsx, pptx, csv, json.
+                        {% if g.net == "btc" %}
+                            Use only legacy addresses to create posts.
+                        {% endif %}
                     </label>
 
                     <label for="fee" class="fee_label">Transaction fee (recommended <span id="fee_calculator">0</span> satoshis):

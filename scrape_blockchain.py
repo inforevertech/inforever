@@ -1,18 +1,12 @@
 import requests
 import time
 import asyncio
-import sys, os
 import logging
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from db import *
 from avatar_generator import generate_avatar_by_address
 
 
-# 1. Go through all blocks in the TESTNET blockchain and find all transactions within it.
-# 2. Put only OP_RETURN statements and related information into the database.
-
-class Collector:
+class BlockchainScraper:
     def __init__(self, height=0, network='btc'):
         self.height = height
         self.network = network
@@ -24,17 +18,16 @@ class Collector:
         else:
             self.height = height
         
-    def collection_service(self, past_posts=True, wait_time=100):
+    def collection_service(self, past_posts=False, wait_time=100):
         # go through all block starting from the highest
         while self.height >= 0:
             try:
                 self.collect_block(past_posts=past_posts)
-                self.height += -1 if past_posts else 1
             except Exception as e:
                 logging.info(str(self.height) + ': ' + str(e))
             time.sleep(wait_time)
         
-    def collect_block(self, past_posts=True):
+    def collect_block(self, past_posts=False):
         # find current block hash
         current_block = requests.get(self.explorer_url + 'api/block-height/' + str(self.height)).text
 
@@ -99,6 +92,13 @@ class Collector:
                     logging.info(str(post_date) + ': ' + message)
                 else:  # no message found, then just go futher
                     continue
+
+        if past_posts:
+            self.height -= 1
+        else:
+            self.height += 1
+
+        return current_block
             
 
 # starting point
@@ -107,6 +107,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
 
     # launch collector of recent posts
-    collector = Collector(network='btc')
+    collector = BlockchainScraper(network='btc')
     collector.set_height()  # start from the block of this hight in the blockchain
-    collector.collection_service(past_posts=True, wait_time=0.01)
+    collector.collection_service(past_posts=True, wait_time=0.001)
