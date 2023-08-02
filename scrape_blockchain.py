@@ -1,5 +1,6 @@
 import requests
 import time
+import sys
 import asyncio
 import logging
 from db import *
@@ -14,7 +15,7 @@ class BlockchainScraper:
 
     def set_height(self, height=-1):
         if height == -1:
-            self.height = int(requests.get(self.explorer_url + 'api/blocks/tip/height').text) - 1
+            self.height = int(requests.get(self.explorer_url + 'api/blocks/tip/height').text) - 10
         else:
             self.height = height
         
@@ -107,6 +108,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
 
     # launch collector of recent posts
-    collector = BlockchainScraper(network='btc')
+    collector = BlockchainScraper(network=sys.argv[1] if len(sys.argv) > 1 else 'btc')
     collector.set_height()  # start from the block of this hight in the blockchain
     collector.collection_service(past_posts=True, wait_time=0.001)
