@@ -10,6 +10,7 @@ from bit.network import get_fee_cached
 from dotenv import load_dotenv, find_dotenv
 import logging
 import datetime
+import pytz
 import asyncio
 import os.path
 import re
@@ -445,13 +446,17 @@ def utility_processor():
     
     # Return timestamp in user-friendly date format
     def format_date(post_datetime):
+        # TODO: select timezone depending on user's location
+        post_datetime = post_datetime.astimezone(pytz.timezone('America/New_York'))
+
         if post_datetime.date() == datetime.datetime.now().date():  # post_datetime is today
-            return post_datetime.strftime("%-I:%M %p Today")
+            post_datetime = post_datetime.strftime("%-I:%M %p Today")
         elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).date():  # post_datetime is yesterday
-            return post_datetime.strftime("%-I:%M %p Yesterday")
+            post_datetime = post_datetime.strftime("%-I:%M %p Yesterday")
         else:  # post_datetime is any other day
-            # return post_datetime.strftime("%-I:%M %p on %A, %B %-d, %Y")
-            return post_datetime.strftime("%-I:%M %p on %B %-d, %Y")
+            post_datetime =  post_datetime.strftime("%-I:%M %p on %B %-d, %Y")
+
+        return post_datetime
     
     # Return url for transaction avatar
     def find_address_avatar(address):

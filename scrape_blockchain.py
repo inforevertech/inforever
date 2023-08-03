@@ -32,6 +32,10 @@ class BlockchainScraper:
         # find current block hash
         current_block = requests.get(self.explorer_url + 'api/block-height/' + str(self.height)).text
 
+        if current_block == 'None':
+            logging.info('Block of height ' + str(self.height) + ' is not available yet.')
+            return
+
         # find total number of transactions in the block
         num_of_transactions = requests.get(self.explorer_url + 'api/block/' + str(current_block)).json().get('tx_count')
         observed_trans_counter = 0
@@ -78,7 +82,7 @@ class BlockchainScraper:
                             # just ignore op_returns in alternative formats
                             continue
                 
-                if message: 
+                if message.strip():  # if message is not empty
                     # put data into the database
                     asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date, self.network))
 
