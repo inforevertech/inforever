@@ -449,9 +449,9 @@ def utility_processor():
         # TODO: select timezone depending on user's location
         post_datetime = post_datetime.astimezone(pytz.timezone('America/New_York'))
 
-        if post_datetime.date() == datetime.datetime.now().date():  # post_datetime is today
+        if post_datetime.date() == datetime.datetime.now().astimezone(pytz.timezone('America/New_York')).date():  # post_datetime is today
             post_datetime = post_datetime.strftime("%-I:%M %p Today")
-        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).date():  # post_datetime is yesterday
+        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone(pytz.timezone('America/New_York')).date():  # post_datetime is yesterday
             post_datetime = post_datetime.strftime("%-I:%M %p Yesterday")
         else:  # post_datetime is any other day
             post_datetime =  post_datetime.strftime("%-I:%M %p on %B %-d, %Y")

@@ -32,8 +32,8 @@ class BlockchainScraper:
         # find current block hash
         current_block = requests.get(self.explorer_url + 'api/block-height/' + str(self.height)).text
 
-        if current_block == 'None':
-            logging.info('Block of height ' + str(self.height) + ' is not available yet.')
+        if current_block == 'Block not found':
+            logging.info('Block of height ' + str(self.height) + ' was not found.')
             return
 
         # find total number of transactions in the block
