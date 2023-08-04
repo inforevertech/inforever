@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
-<body id="page-top">
+<body id="page-top" class="dark">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
         <div class="container px-5">
@@ -111,6 +111,9 @@
                         </button>
                     </a> -->
                 </div>
+
+                <!-- Switch dark/light themes -->
+                <div id="switch_theme">Switch theme (in development)</div>
 
                 <a href="{{ url_for('mission') }}">Our mission</a>
                 <span class="mx-1">&middot;</span>
@@ -210,6 +213,13 @@
                     path = path.split('/').slice(2).join('/')
            
             window.location.href = index_url + mobile_network_select.value + '/' + path + window.location.search;
+        });
+
+        // switch dark/light themes
+        let switch_theme = document.getElementById('switch_theme');
+        switch_theme.addEventListener('click', () => {
+            console.log("switch theme")
+            document.querySelector('body').classList.toggle('dark');
         });
     </script>
 

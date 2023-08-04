@@ -10,7 +10,7 @@ Inforever works as a client-oriented user-friendly interface to display and shar
 3. When the transaction is sent and the fee is paid, the message is recorded.
 4. Use Inforever Explorer to see and share your messages in a friendly format.
 
-## To launch
+## To launch locally
 ```shell
 # Launch MySQL server on your local machine and create a database
 # Don't forget to configure ./.env and ./build-database/.env files
@@ -32,9 +32,10 @@ pip install -r requirements.txt
 # 5. Generate database structure
 prisma generate --schema=./build-database/schema.prisma
 
-# 6. Scrape some data from blockchain for database
-python3 ./build-database/collect_info.py
+# If you want to collect past OP_RETURN statements from the blockchain,
+# you can run the following command (replace btc wiht btc-test to scrape from the testnet)
+python3 scrape_blockchain.py btc
 
-# 7. Launch the website
+# 6. Launch the website
 python3 app.py
 ```

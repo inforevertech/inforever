@@ -1,15 +1,67 @@
 html, body {
-    /* background-color: #000; */
-
     width: 100%;
     max-width: 100%;
+    min-height: 100vh;
     overflow-x: hidden;
+
+    --accent-color: rgb(138, 43, 226);
+    --background-color: #f8f9fa;
+    --top-bar-background-color: #fff;
+    --clear-background-color: #fff;
+    --text-color: rgb(33, 37, 41);
+    --clear-text-color: #fff;
+    --muted-text-color: rgb(108, 117, 125);
+    --bright-text-color: #000;
+    --border-color: #333;
+    --btn-text-color: #fff;
+    --start-exploring-color: #fff;
+    --network-select-bg-color: #333;
+    --network-select-color: #fff;
+    --interaction-row-bg: rgba(2, 76, 181, 0.03);
+    --post-bg: #FDFDFC;
+    --background-color-hover: #fafafa;
+
+    color: var(--text-color);
+    transition: 1s;
+    background-color: var(--background-color);
 }
 
+body.dark {
+    --background-color: #0c0c0c;
+    --top-bar-background-color: #0c0c0c;
+    --clear-background-color: #000;
+    --text-color: #6c757d;
+    --clear-text-color: #c7c7c7;
+    --bright-text-color: #fff;
+    --border-color: #7f7f7f;
+    --btn-text-color: #000000;
+    --start-exploring-color: #bbb;
+    --network-select-bg-color: #161616;
+    --network-select-color: #b1b1b1;
+    --interaction-row-bg: rgba(0, 10, 23, 0.4);
+    --post-bg: #595959;
+    --background-color-hover: #000;
+}
+.bg-light {
+    background-color: var(--background-color) !important;
+}
+input, textarea {
+    background-color: var(--clear-background-color);
+    color: var(--bright-text-color);
+}
+#media_files {
+    background-color: var(--background-color);
+}
+
+#mainNav {
+    background-color: var(--top-bar-background-color);
+}
 #mainNav > .container {
     flex-wrap: wrap-reverse;
 }
-
+.text-white {
+    color: var(--clear-text-color) !important;
+}
 .title_emphasize {
     color: blueviolet;
 }
@@ -18,7 +70,7 @@ html, body {
     overflow: hidden;
 }
 .screen.bg-black {
-    background-color: #fff !important;
+    background-color: #000 !important;
 }
 .feed_screenshot {
     width: 125%;
@@ -71,6 +123,7 @@ html, body {
     margin-top: 25px;
     margin-left: 0;
     padding: 10px 30px !important;
+    color: var(--btn-text-color);
 }
 .email_link {
     color: #fff !important;
@@ -79,6 +132,16 @@ html, body {
     width: 120px;
     display: block;
 }
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 #copy_link_btn.post_empty_copy {
     margin-top: 50px;
 }
@@ -98,6 +161,9 @@ html, body {
     font-family: var(--bs-body-font-family);
     font-size: 1.05em;
 }
+.start-exploring {
+    color: var(--start-exploring-color);
+}
 
 .explorer_list_title {
     margin-top: 4rem;
@@ -111,12 +177,12 @@ html, body {
     
     /* border: 1px solid #ccc; */
     /* background-color: rgba(2, 76, 181, 0.1); */
-    border: 5px solid rgba(2, 76, 181, 0.06);
+    border: 5px solid var(--post-bg);
     border-radius: 10px;
     overflow: hidden;
 
-    background-color: #FDFDFC;
-    display: block;#FDFDFC
+    background-color: var(--post-bg);
+    display: block;
     /* cursor: pointer; */
 }
 .post_profile_image a {
@@ -200,6 +266,7 @@ html, body {
 
     position: relative;
     top: 4px;
+    color: var(--bright-text-color);
 }
 .network_select_wrapper {
     flex-basis: auto;
@@ -221,8 +288,8 @@ html, body {
     display: inline;
     /* font-weight: bold; */
 
-    color: #fff;
-    background-color: #333;
+    color: var(--network-select-color);
+    background-color: var(--network-select-bg-color);
 
     padding: 10px 20px;
     border-radius: 800px;
@@ -249,7 +316,7 @@ html, body {
     padding: 10px 25px !important;
 }
 .network_brand {
-    color: #fff !important;
+    color: var(--network-select-color);
     display: inline-block;
     padding: 0 20px 0 10px;
     margin: 0;
@@ -278,6 +345,7 @@ html, body {
 .masthead {
     padding-top: 10rem;
     padding-bottom: 6rem;
+    background-color: var(--background-color);
 }
 .fee_warning_wrapper {
     line-height: 3.2rem;
@@ -314,8 +382,8 @@ html, body {
     display: inline-block;
 }
 .post-info {
-    background-color: #fff;
-    border-bottom-left-radius: 15px;
+    background-color: var(--clear-background-color);
+    /* border-bottom-left-radius: 15px; */
 }
 .quick_post_input:focus {
     outline: 1px solid rgb(35, 47, 204);
@@ -349,6 +417,8 @@ html, body {
     height: 18rem;
     resize: none;
 }
+
+
 #contact_message_submit {
     border: none;
     border-radius: 10px;
@@ -443,7 +513,7 @@ html, body {
     height: 100%;
     width: 100%;
 
-    border: 1px solid #333;
+    border: 1px solid var(--border-color);
     border-radius: 800px;
     overflow: hidden;
 }
@@ -486,7 +556,7 @@ html, body {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-left: 1px solid #333;
+    border-left: 1px solid var(--border-color);
 }
 .explorer-header-link:hover {
     background-color: #000;
@@ -667,8 +737,12 @@ html, body {
     color: rgb(2, 76, 181);
 }
 
+
+#mainNav .navbar-nav .nav-item .nav-link {
+    color: var(--text-color);
+}
 #search_bar, .explorer_search_link {
-    background-color: #f8f9fa;
+    background-color: var(--clear-background-color);
 }
 #search_bar {
     margin: 10px 0;
@@ -712,7 +786,7 @@ html, body {
 .reaction {
     /* border: 1px solid rgba(225, 225, 225, 1); */
     /* background-color: rgba(248, 248, 248, 0.4); */
-    background-color: #fff;
+    background-color: var(--top-bar-background-color);
     padding: 3px 14px 6px;
     margin-right: 0.6rem;
     margin-bottom: 0.8rem;
@@ -729,7 +803,7 @@ html, body {
 }
 .reaction_comment i {
     /* color: rgb(2, 76, 181); */
-    color: #000;
+    color: var(--bright-text-color);
     display: inline-block;
     margin: 0 6px;
     transform: translateY(2px);
@@ -739,7 +813,7 @@ html, body {
     display: inline-block;
     margin-left: 8px;
     margin-right: 4px;
-    color: #333;
+    color: var(--bright-text-color);
     margin-bottom: 2px;
 }
 .reaction_comment .reaction_number {
@@ -749,20 +823,19 @@ html, body {
     margin-top: 1rem;
     width: 90%;
     text-align: center;
-    background-color: #fff;
+    background-color: var(--clear-background-color);
 }
 
 .interaction_row {
-    background-color: rgba(2, 76, 181, 0.03);
+    background-color: var(--interaction-row-bg);
     padding-top: 15px;
     padding-bottom: 0px;
 }
 .comment_textarea {
     width: 90%;
     border: none;
-    background-color: inherit;
+    background-color: var(--clear-background-color);
     outline: none;
-    background: #fff;
 
     height: 30px;
     min-height: 30px !important;
@@ -773,7 +846,7 @@ html, body {
     display: flex;
     justify-content: start;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--clear-background-color);
 }
 .reaction_comment {
     border-radius: 5px;
@@ -854,7 +927,7 @@ html, body {
     justify-content: start !important;
  }
  .post_page_reactions .reaction {
-    background-color: rgba(2, 76, 181, 0.03);
+    background-color: var(--interaction-row-bg);
  }
  .post_published_replies .reply {
     border: 1px solid #ccc;
@@ -866,7 +939,7 @@ html, body {
     margin-bottom: 0;
  }
  .post_reaction_comment {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     padding: 0 3px;
     overflow: hidden;
     margin-bottom: 0px;
@@ -905,7 +978,7 @@ html, body {
     padding-left: 30px;
     padding-right: 30px;
     background-color: rgba(2, 76, 181, 0.1);
-    color: #333;
+    color: var(--bright-text-color);
 
     display: inline-flex !important;
     flex-wrap: nowrap;
@@ -1061,7 +1134,7 @@ html, body {
     font-size: 1.5rem;
 }
 .mission_question:hover {
-    background-color: #fafafa;
+    background-color: var(--background-color-hover);
 }
 .preface_expand {
     /* font-size: 1.5rem; */
@@ -1081,7 +1154,15 @@ footer {
     padding-top: 3rem;
     padding-bottom: 5rem !important;
     /* background-color: #fff; */
-    color: #333;
+    color: var(--text-color);
+
+    background-color: var(--top-bar-background-color);
+}
+footer a {
+    color: var(--text-color);
+}
+#switch_theme {
+    margin-bottom: 1rem;
 }
 
 .question_answer {

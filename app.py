@@ -13,6 +13,7 @@ import datetime
 import pytz
 import asyncio
 import os.path
+import sys
 import re
 from db import *
 from scrape_blockchain import BlockchainScraper
@@ -405,6 +406,12 @@ def response(template, cookies=None, **parameters):
 def set_global_variables():
     g.nets = NET_LIST
 
+    # dark/light theme mode
+    # if correct_cookie('theme', request.args.get('theme')):
+    #     g.theme = request.args.get('theme')
+    # elif correct_cookie('theme', request.cookies.get('theme')):
+    #     g.theme = request.cookies.get('theme')
+
     # recent filter
     if correct_cookie('recent', request.args.get('recent')):
         g.recent = request.args.get('recent')
@@ -509,6 +516,8 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     # launch app
-    scheduler.start()
-    app.run(debug=False, host="0.0.0.0")
+    if not(len(sys.argv) > 1 and sys.argv[1] == 'chill'):
+        scheduler.start()
+
+    app.run(debug=True, host="0.0.0.0")
 
