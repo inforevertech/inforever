@@ -17,7 +17,7 @@ html, body {
     --start-exploring-color: #fff;
     --network-select-bg-color: #333;
     --network-select-color: #fff;
-    --interaction-row-bg: rgba(2, 76, 181, 0.03);
+    --interaction-row-bg: rgba(2, 76, 181, 0.045);
     --post-bg: #FDFDFC;
     --background-color-hover: #fafafa;
 
@@ -1212,7 +1212,7 @@ footer a {
         content: "";
     }
     #post_msg {
-        padding-top: 3rem;
+        padding-top: 5rem;
     }
     .post_reaction_comment {
         width: 100%;
