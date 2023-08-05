@@ -23,7 +23,7 @@ html, body {
 
     color: var(--text-color);
     transition: 1s;
-    background-color: var(--background-color);
+    background-color: var(--top-bar-background-color);
 }
 
 body.dark {
@@ -39,7 +39,7 @@ body.dark {
     --network-select-bg-color: #161616;
     --network-select-color: #b1b1b1;
     --interaction-row-bg: rgba(0, 10, 23, 0.4);
-    --post-bg: #595959;
+    --post-bg: var(--network-select-bg-color);
     --background-color-hover: #000;
 }
 .bg-light {
@@ -177,7 +177,7 @@ input[type=number] {
     
     /* border: 1px solid #ccc; */
     /* background-color: rgba(2, 76, 181, 0.1); */
-    border: 5px solid var(--post-bg);
+    /* border: 5px solid var(--post-bg); */
     border-radius: 10px;
     overflow: hidden;
 
@@ -382,7 +382,7 @@ input[type=number] {
     display: inline-block;
 }
 .post-info {
-    background-color: var(--clear-background-color);
+    background-color: var(--post-bg);
     /* border-bottom-left-radius: 15px; */
 }
 .quick_post_input:focus {
@@ -1152,7 +1152,7 @@ input[type=number] {
 footer {
     margin-bottom: 0;
     padding-top: 3rem;
-    padding-bottom: 5rem !important;
+    padding-bottom: 3rem !important;
     /* background-color: #fff; */
     color: var(--text-color);
 
@@ -1162,7 +1162,12 @@ footer a {
     color: var(--text-color);
 }
 #switch_theme {
-    margin-bottom: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 0;
+    cursor: pointer;
+
+    font-size: 2rem;
+    color: var(--text-color);
 }
 
 .question_answer {

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
-<body id="page-top" class="dark">
+<body id="page-top" {% if g.theme == 'dark' %}class="dark"{% endif %}>
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
         <div class="container px-5">
@@ -112,9 +112,6 @@
                     </a> -->
                 </div>
 
-                <!-- Switch dark/light themes -->
-                <div id="switch_theme">Switch theme (in development)</div>
-
                 <a href="{{ url_for('mission') }}">Our mission</a>
                 <span class="mx-1">&middot;</span>
                 <a target="_blank" href="https://github.com/inforevertech/inforever">Source Code</a>
@@ -122,6 +119,13 @@
                 <a href="{{ url_for('contact') }}">Contact us</a>
                 <span class="mx-1">&middot;</span>
                 <a href="{{ url_for('donate') }}">Donate</a>
+
+                <!-- Switch dark/light themes -->
+                {% if g.theme == 'light' %}
+                    <div id="switch_theme" data-theme="dark"><i class="bi bi-moon-stars"></i></div>
+                {% elif g.theme == 'dark' %}
+                    <div id="switch_theme" data-theme="light"><i class="bi bi-sun"></i></div>
+                {% endif %}
             </div>
         </div>
     </footer>
@@ -180,7 +184,7 @@
         binoculars_search.addEventListener('click', (event) => {
             event.preventDefault();  // don't focus on search bar
 
-            window.location.href = "{{ url_for('index') }}"  // redirect to main page
+            window.location.href = index_url;  // redirect to main page
         })
 
 
@@ -218,8 +222,22 @@
         // switch dark/light themes
         let switch_theme = document.getElementById('switch_theme');
         switch_theme.addEventListener('click', () => {
-            console.log("switch theme")
-            document.querySelector('body').classList.toggle('dark');
+            event.preventDefault();
+
+            let path = window.location.pathname;
+            while (path.substring(0, 3) == 'btc' || path.substring(1, 4) == 'btc') 
+                if (path.substring(0, 3) == 'btc')
+                    path = path.split('/').slice(1).join('/')
+                else
+                    path = path.split('/').slice(2).join('/')
+
+            let url = new URL(window.location.href)
+            let params = new URLSearchParams(url.search)
+
+            params.set('theme', switch_theme.getAttribute('data-theme'))
+            console.log(path + '?' + params.toString())
+        
+            window.location.href = path + '?' + params.toString();
         });
     </script>
 

@@ -384,6 +384,9 @@ def correct_cookie(name, value):
     elif name == 'human':
         if value in ['0', '1']:
             return True
+    elif name == 'theme':
+        if value in ['light', 'dark']:
+            return True
    
     return False
 
@@ -397,6 +400,7 @@ def response(template, cookies=None, **parameters):
     resp.set_cookie('net', g.net)
     resp.set_cookie('recent', g.recent)
     resp.set_cookie('human', '1' if g.human else '0')
+    resp.set_cookie('theme', g.theme)
         
     return resp
 
@@ -407,10 +411,12 @@ def set_global_variables():
     g.nets = NET_LIST
 
     # dark/light theme mode
-    # if correct_cookie('theme', request.args.get('theme')):
-    #     g.theme = request.args.get('theme')
-    # elif correct_cookie('theme', request.cookies.get('theme')):
-    #     g.theme = request.cookies.get('theme')
+    if correct_cookie('theme', request.args.get('theme')):
+        g.theme = request.args.get('theme')
+    elif correct_cookie('theme', request.cookies.get('theme')):
+        g.theme = request.cookies.get('theme')
+    else:
+        g.theme = "light"  # default
 
     # recent filter
     if correct_cookie('recent', request.args.get('recent')):
