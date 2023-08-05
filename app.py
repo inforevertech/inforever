@@ -11,6 +11,7 @@ from dotenv import load_dotenv, find_dotenv
 import logging
 import datetime
 import pytz
+from tzlocal import get_localzone
 import asyncio
 import os.path
 import sys
@@ -116,7 +117,7 @@ def create(net=None):
         for file in files:
             # if file is in not acceptable format
             if not allowed_file(file.filename):
-                # TODO: cause exception and return error page
+                abort(500)
                 continue
             # insert info about the file into the database
             media_record = asyncio.run(db_insert_media(secure_filename(file.filename), str(file.content_type)))
@@ -128,20 +129,20 @@ def create(net=None):
 
 
         # Create a key object from the private key.
-        # TODO: put these addresses into .env
+        # TODO: put intermediary addresses into .env
         if g.net == 'btc':
             key = Key(private_key)
-            outputs = [('bc1qr2cytjzexpt0fvvldddxsaryfdu0u0nya807sm', 1, 'satoshi')]
-            fee -= 1
+            # outputs = [('bc1qr2cytjzexpt0fvvldddxsaryfdu0u0nya807sm', 1, 'satoshi')]
+            # fee -= 1
         elif g.net == 'btc-test':
             key = PrivateKeyTestnet(private_key)
-            outputs = [('mz53tFLDVHv1btvuVxtKZnr7KLRaQwXpGf', 1, 'satoshi')]
-            fee -= 1
+            # outputs = [('mz53tFLDVHv1btvuVxtKZnr7KLRaQwXpGf', 1, 'satoshi')]
+            # fee -= 1
 
         try:
             if btc_donation_reply is None:
                 # Send a transaction to the bitcoin network with the message as the data. Using op_return.
-                post_hash = key.send(outputs, fee=fee, absolute_fee=True, message=message)
+                post_hash = key.send([], fee=fee, absolute_fee=True, message=message)
             else:
                 # Send a transaction with a donation to the address of the replied post author
                 replied_post = asyncio.run(db_find_post(replyToHash))
@@ -311,7 +312,6 @@ def media(id):
     # return static file
     media = asyncio.run(db_read_media(int(id.strip())))
 
-    # TODO: catch file not found exception
     try:
         return send_file(os.path.join(app.config['UPLOAD_FOLDER'], str(media.id), media.filename))
     except FileNotFoundError as e:
@@ -459,12 +459,11 @@ def utility_processor():
     
     # Return timestamp in user-friendly date format
     def format_date(post_datetime):
-        # TODO: select timezone depending on user's location
-        post_datetime = post_datetime.astimezone(pytz.timezone('America/New_York'))
+        post_datetime = post_datetime.replace(tzinfo=pytz.utc).astimezone(get_localzone())
 
-        if post_datetime.date() == datetime.datetime.now().astimezone(pytz.timezone('America/New_York')).date():  # post_datetime is today
+        if post_datetime.date() == datetime.datetime.now().astimezone(get_localzone()).date():  # post_datetime is today
             post_datetime = post_datetime.strftime("%-I:%M %p Today")
-        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone(pytz.timezone('America/New_York')).date():  # post_datetime is yesterday
+        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone(get_localzone()).date():  # post_datetime is yesterday
             post_datetime = post_datetime.strftime("%-I:%M %p Yesterday")
         else:  # post_datetime is any other day
             post_datetime =  post_datetime.strftime("%-I:%M %p on %B %-d, %Y")
