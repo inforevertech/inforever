@@ -13,9 +13,10 @@ generator client {
 
 // data models
 model Post {
-  id    Int     @id @unique @default(autoincrement())
-  hash  String  @unique
-  block String?
+  id           Int     @id @unique @default(autoincrement())
+  hash         String  @unique
+  block        String?
+  block_height Int?
 
   text           String  @db.LongText
   formatted_text String? @db.LongText

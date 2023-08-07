@@ -84,7 +84,7 @@ class BlockchainScraper:
                 
                 if message.strip():  # if message is not empty
                     # put data into the database
-                    asyncio.run(db_insert_transaction(tr_hash, block_hash, message, post_date, self.network))
+                    asyncio.run(db_insert_transaction(tr_hash, block_hash, self.height, message, post_date, self.network))
 
                     addresses = list(addresses)
                     # generate address avatars

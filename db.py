@@ -68,7 +68,7 @@ async def db_search(input, limit=None, where=None, include_addresses=True):
 
 
 # Add a new transaction into the database
-async def db_insert_transaction(tr_hash, block_hash, message, post_date, network,
+async def db_insert_transaction(tr_hash, block_hash, block_height, message, post_date, network,
                                 replyToHash=None, postedLocally=False, author=None, donation=None, fee=None):
     post_date = datetime.datetime.fromtimestamp(int(post_date))
 
@@ -87,6 +87,7 @@ async def db_insert_transaction(tr_hash, block_hash, message, post_date, network
             'create': {
                 'hash': tr_hash,
                 'block': block_hash,
+                'block_height': block_height,
                 'text': message,
                 'formatted_text': formatted,
                 'timestamp': post_date,
