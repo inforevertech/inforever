@@ -33,7 +33,7 @@ body.dark {
     --text-color: #6c757d;
     --clear-text-color: #c7c7c7;
     --bright-text-color: #fff;
-    --border-color: #7f7f7f;
+    --border-color: #262626;
     --btn-text-color: #000000;
     --start-exploring-color: #bbb;
     --network-select-bg-color: #161616;
@@ -517,6 +517,9 @@ input[type=number] {
     border-radius: 800px;
     overflow: hidden;
 }
+body.dark .explorer_search_link {
+    border: 2px solid var(--border-color);
+}
 .explorer_search_link i {
     font-size: 1.3rem;
     margin-left: 1.2rem;
@@ -557,6 +560,9 @@ input[type=number] {
     justify-content: center;
     align-items: center;
     border-left: 1px solid var(--border-color);
+}
+body.dark .explorer-header-link {
+    border-left: 2px solid var(--border-color);
 }
 .explorer-header-link:hover {
     background-color: #000;
@@ -1160,6 +1166,9 @@ footer {
 }
 footer a {
     color: var(--text-color);
+}
+footer a:hover {
+    color: var(--bright-text-color);
 }
 #switch_theme {
     margin-top: 2rem;
