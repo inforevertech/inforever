@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, make_response, abort, g, url_for, send_file
 from flask_optional_routes import OptionalRoutes
 from flask_mail import Mail, Message
-from flask_apscheduler import APScheduler
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from bit import Key, PrivateKeyTestnet
@@ -67,27 +66,6 @@ REACTIONS = {
 app = Flask(__name__)
 optional = OptionalRoutes(app)
 mail = Mail(app)  # TODO: configure email server
-
-# initialize scheduler
-scheduler = APScheduler()
-scheduler.init_app(app)
-
-# init btc blockchain scraper
-collectorBTC = BlockchainScraper(network='btc')
-collectorBTC.set_height()  # start from the block of this hight in the blockchain
-# init btc-test blockchain scraper
-collectorBTCTest = BlockchainScraper(network='btc-test')
-collectorBTCTest.set_height()  # start from the block of this hight in the blockchain
-
-# launch interval scraping
-@scheduler.task('interval', id='do_blockchain_scraping', seconds=60)
-def blockchain_scraping():
-    # run one latest block collector for each network
-    logging.info('START: Collecting OP_RETURN statements from latest blocks...')
-    collectorBTC.collect_block()
-    collectorBTCTest.collect_block()
-    logging.info('DONE: Collecting OP_RETURN statements from latest blocks...')
-
 
 # file upload configuration
 app.config['MAX_CONTENT_LENGTH'] = 128 * 1024 * 1024
@@ -547,9 +525,6 @@ if __name__ == '__main__':
     # set logging level to info
     logging.basicConfig(level=logging.INFO)
 
-    # launch app
-    if not(len(sys.argv) > 1 and sys.argv[1] == 'chill'):
-        scheduler.start()
-
+    # run the app
     app.run(debug=True, host="0.0.0.0")
 
