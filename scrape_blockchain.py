@@ -113,5 +113,9 @@ if __name__ == '__main__':
 
     # launch collector of recent posts
     collector = BlockchainScraper(network=sys.argv[1] if len(sys.argv) > 1 else 'btc')
-    collector.set_height()  # start from the block of this hight in the blockchain
-    collector.collection_service(past_posts=True, wait_time=0.001)
+    collector.set_height(height=int(sys.argv[2]) if len(sys.argv) > 2 else -1)  # start from the block of this hight in the blockchain
+
+    if len(sys.argv) > 3 and sys.argv[3] == 'past':
+        collector.collection_service(past_posts=True, wait_time=0.01)
+    else:
+        collector.collection_service(past_posts=False, wait_time=0.01)
