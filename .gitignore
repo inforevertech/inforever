@@ -152,3 +152,6 @@ static/media/*
 
 # custom env
 inforever_env/
+
+# app logs
+inforever.log

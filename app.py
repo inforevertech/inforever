@@ -9,6 +9,7 @@ from bit import exceptions as bitExceptions
 from bit.network import get_fee_cached
 from dotenv import load_dotenv, find_dotenv
 import logging
+from logging.config import dictConfig
 import datetime
 import pytz
 from tzlocal import get_localzone
@@ -19,6 +20,32 @@ import re
 from db import *
 from scrape_blockchain import BlockchainScraper
 from avatar_generator import generate_avatar_by_address
+
+
+# configure logging to a file
+dictConfig(
+    {
+        "version": 1,
+        "formatters": {
+            "default": {
+                "format": "[%(asctime)s] %(levelname)s in %(module)s: %(message)s",
+            }
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "stream": "ext://sys.stdout",
+                "formatter": "default",
+            },
+            "file": {
+                "class": "logging.FileHandler",
+                "filename": "inforever.log",
+                "formatter": "default",
+            },
+        },
+        "root": {"level": "INFO", "handlers": ["console", "file"]},
+    }
+)
 
 
 NET_LIST = [
