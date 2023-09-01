@@ -41,11 +41,10 @@ collectorBTCTest = BlockchainScraper(network='btc-test')
 # interval scraping
 def blockchain_scraping():
     # run one latest block collector for each network
-    logging.info('PROCESS: Collecting OP_RETURN statements from BTC block ' + str(collectorBTC.get_height()) + '...')
+    logging.info('PROCESS: Collecting OP_RETURN statements from BTC block ' + str(collectorBTC.get_height()) + ' out of ' + str(collectorBTC.get_max_height()))
     collectorBTC.collect_block()
 
-    logging.info('PROCESS: Collecting OP_RETURN statements from BTC-test block ' + str(collectorBTCTest.get_height()) + '...')
-    collectorBTCTest.collect_block()
+    logging.info('PROCESS: Collecting OP_RETURN statements from BTC-test block ' + str(collectorBTCTest.get_height()) + ' out of ' + str(collectorBTCTest.get_max_height()))
 
 
 schedule.every().seconds.do(blockchain_scraping)
