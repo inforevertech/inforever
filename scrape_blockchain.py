@@ -9,15 +9,21 @@ from avatar_generator import generate_avatar_by_address
 
 class BlockchainScraper:
     def __init__(self, height=0, network='btc'):
-        self.height = height
         self.network = network
         self.explorer_url = 'https://blockstream.info/' + ('testnet/' if self.network == 'btc-test' else '')
+        self.height = self.set_height()
 
     def set_height(self, height=-1):
         if height == -1:
             self.height = int(requests.get(self.explorer_url + 'api/blocks/tip/height').text) - 10
         else:
             self.height = height
+
+    def get_height(self):
+        return self.height
+    
+    def get_max_height(self):
+        return int(requests.get(self.explorer_url + 'api/blocks/tip/height').text)
         
     def collection_service(self, past_posts=False, wait_time=100):
         # go through all block starting from the highest
