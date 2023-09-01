@@ -255,6 +255,34 @@ async def db_count_nested_replies(posts):
     return replies_counter
 
 
+# Receive height of the latest block in the database
+async def db_latest_block_height():
+    prisma = Prisma()
+    await prisma.connect()
+
+    # latest btc block
+    latest_btc_block = await prisma.post.find_first(
+        where={
+            'network': 'btc',
+        },
+        order={
+            'block_height': 'desc',
+        },
+    )
+
+    # latest btc-test block
+    latest_btc_test_block = await prisma.post.find_first(
+        where={
+            'network': 'btc-test',
+        },
+        order={
+            'block_height': 'desc',
+        },
+    )
+
+    return (latest_btc_block.block_height, latest_btc_test_block.block_height)
+
+
 # Return the number of full post replies
 async def db_count_full_post_replies(posts):
     prisma = Prisma()

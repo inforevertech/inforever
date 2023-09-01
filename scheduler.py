@@ -4,6 +4,8 @@ import sys
 import logging
 from logging.config import dictConfig
 from scrape_blockchain import BlockchainScraper
+import asyncio
+from db import db_latest_block_height
 
 
 # configure logging to a file
@@ -51,9 +53,11 @@ schedule.every().seconds.do(blockchain_scraping)
 
 
 if __name__ == '__main__':
-     # start scraping from specified block height
-    collectorBTC.set_height(int(sys.argv[1]) if len(sys.argv) > 1 else -1)  # start from the block of this height in the blockchain
-    collectorBTCTest.set_height(int(sys.argv[2]) if len(sys.argv) > 2 else -1)  # start from the block of this height in the blockchain
+    # start scraping from specified block height
+    latest_btc_height, latest_btc_test_height = asyncio.run(db_latest_block_height())
+    
+    collectorBTC.set_height(latest_btc_height)  # start from the block of this height in the blockchain
+    collectorBTCTest.set_height(latest_btc_test_height)  # start from the block of this height in the blockchain
 
     # start scheduled work
     while True:
