@@ -464,14 +464,16 @@ def utility_processor():
     
     # Return timestamp in user-friendly date format
     def format_date(post_datetime):
-        post_datetime = post_datetime.replace(tzinfo=pytz.utc).astimezone(get_localzone())
+        # convert to local timezone
+        # TODO: insted of using 'Asia/Dubai' timezone, convert all datetime objects to UTC in the db
+        post_datetime = post_datetime.replace(tzinfo=pytz.timezone('Asia/Dubai')).astimezone()
 
-        if post_datetime.date() == datetime.datetime.now().astimezone(get_localzone()).date():  # post_datetime is today
-            post_datetime = post_datetime.strftime("%-I:%M %p Today")
-        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone(get_localzone()).date():  # post_datetime is yesterday
-            post_datetime = post_datetime.strftime("%-I:%M %p Yesterday")
+        if post_datetime.date() == datetime.datetime.now().astimezone().date():  # post_datetime is today
+            post_datetime = post_datetime.astimezone(tz=None).strftime("%-I:%M %p Today")
+        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone().date():  # post_datetime is yesterday
+            post_datetime = post_datetime.astimezone(tz=None).strftime("%-I:%M %p Yesterday")
         else:  # post_datetime is any other day
-            post_datetime =  post_datetime.strftime("%-I:%M %p on %B %-d, %Y")
+            post_datetime =  post_datetime.astimezone(tz=None).strftime("%-I:%M %p on %B %-d, %Y")
 
         return post_datetime
     
