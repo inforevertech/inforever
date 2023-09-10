@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, make_response, abort, g, url_for, send_file
+from flask import Flask, render_template, request, redirect, make_response, abort, g, url_for, send_file, session
 from flask_optional_routes import OptionalRoutes
 from flask_mail import Mail, Message
 from werkzeug.exceptions import HTTPException
@@ -363,6 +363,15 @@ def donate(net=None):
                                     address=os.environ.get("BTC_ADDRESS")))
 
 
+# receive user's local timezone from browser's API
+@app.route('/set_timezone', methods=['POST'])
+def set_timezone():
+    '''Get timezone from the browser and store it in the session object.'''
+    timezone = request.data.decode('utf-8')
+    session['timezone'] = timezone
+    return ""
+
+
 # filter files
 def allowed_file(filename):
     return '.' in filename and \
@@ -466,7 +475,10 @@ def utility_processor():
     def format_date(post_datetime):
         # convert to local timezone
         # TODO: insted of using 'Asia/Dubai' timezone, convert all datetime objects to UTC in the db
-        post_datetime = post_datetime.replace(tzinfo=pytz.timezone('Asia/Dubai')).astimezone()
+        if 'timezone' in session:
+            post_datetime = post_datetime.replace(tzinfo=pytz.timezone('Asia/Dubai')).astimezone(pytz.timezone(session['timezone']))
+        else:
+            post_datetime = post_datetime.replace(tzinfo=pytz.timezone('Asia/Dubai')).astimezone(get_localzone())
 
         if post_datetime.date() == datetime.datetime.now().astimezone().date():  # post_datetime is today
             post_datetime = post_datetime.astimezone(tz=None).strftime("%-I:%M %p Today")
@@ -526,6 +538,9 @@ def page_error(e):
 if __name__ == '__main__':
     # set logging level to info
     logging.basicConfig(level=logging.INFO)
+
+    # set secret key for sessions
+    app.secret_key = os.environ.get("SESSION_SECRET_KEY")
 
     # run the app
     app.run(debug=True, host="0.0.0.0")
