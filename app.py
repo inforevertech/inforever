@@ -5,7 +5,6 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 from bit import Key, PrivateKeyTestnet
 from bit import exceptions as bitExceptions
-from bit.network import get_fee_cached
 from dotenv import load_dotenv, find_dotenv
 import logging
 from logging.config import dictConfig
@@ -98,7 +97,7 @@ def create(net=None):
                 abort(400, f"Post #{request.args.get('reply')} was not found.")
 
         return response(render_template('create.html',
-                                        recommende_fee=get_fee_cached(fast=False),
+                                        recommened_fee=20,
                                         replyToHash=request.args.get('reply')))
     
     elif request.method == 'POST':  # save a post
@@ -204,7 +203,7 @@ def index(net=None):
     network_switch(net)
 
     return response(render_template('index.html',
-                                    recommende_fee=get_fee_cached()))
+                                    recommened_fee=20))
 
 
 # post explorer page

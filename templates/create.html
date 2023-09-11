@@ -77,7 +77,7 @@
 <script>
     let textarea = document.getElementById('msgInput');
     let feeCalculator = document.getElementById('fee_calculator');
-    let feePerChar = {{ recommende_fee }};
+    let feePerChar = {{ recommened_fee }};
 
     function updateFee() {
         feeCalculator.textContent = (new Blob([textarea.value]).size + 200) * feePerChar;
