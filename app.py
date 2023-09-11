@@ -67,14 +67,19 @@ app = Flask(__name__)
 optional = OptionalRoutes(app)
 mail = Mail(app)  # TODO: configure email server
 
-# file upload configuration
-app.config['MAX_CONTENT_LENGTH'] = 128 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
-app.config['UPLOAD_FORMATS'] = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov', 'mp4', 'json', 'xslsx', 'pptx']
 
 # local env variables
 load_dotenv(find_dotenv())
 
+# set secret key for sessions
+app.secret_key = os.environ.get("SESSION_SECRET_KEY")
+app.config["SECRET_KEY"] = os.environ.get("SESSION_SECRET_KEY")
+app.config['SESSION_TYPE'] = "filesystem"
+
+# file upload configuration
+app.config['MAX_CONTENT_LENGTH'] = 128 * 1024 * 1024
+app.config['UPLOAD_FOLDER'] = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/media/'))
+app.config['UPLOAD_FORMATS'] = ['jpg', 'jpeg', 'png', 'csv', 'pdf', 'docx', 'doc', 'mp3', 'mov', 'mp4', 'json', 'xslsx', 'pptx']
 
 # post creation page
 @optional.routes('/<net>?/create',  methods=['GET', 'POST'])
@@ -474,15 +479,12 @@ def utility_processor():
     # Return timestamp in user-friendly date format
     def format_date(post_datetime):
         # convert to local timezone
-        # TODO: insted of using 'Asia/Dubai' timezone, convert all datetime objects to UTC in the db
-        if 'timezone' in session:
-            post_datetime = post_datetime.replace(tzinfo=pytz.timezone('Asia/Dubai')).astimezone(pytz.timezone(session['timezone']))
-        else:
-            post_datetime = post_datetime.replace(tzinfo=pytz.timezone('Asia/Dubai')).astimezone(get_localzone())
+        local_timezone = pytz.timezone(session['timezone']) if 'timezone' in session else get_localzone()
+        post_datetime = post_datetime.astimezone(local_timezone)
 
-        if post_datetime.date() == datetime.datetime.now().astimezone().date():  # post_datetime is today
+        if post_datetime.date() == datetime.datetime.now().astimezone(local_timezone).date():  # post_datetime is today
             post_datetime = post_datetime.strftime("%-I:%M %p Today")
-        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone().date():  # post_datetime is yesterday
+        elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone(local_timezone).date():  # post_datetime is yesterday
             post_datetime = post_datetime.strftime("%-I:%M %p Yesterday")
         else:  # post_datetime is any other day
             post_datetime =  post_datetime.strftime("%-I:%M %p on %B %-d, %Y")
@@ -538,9 +540,6 @@ def page_error(e):
 if __name__ == '__main__':
     # set logging level to info
     logging.basicConfig(level=logging.INFO)
-
-    # set secret key for sessions
-    app.secret_key = os.environ.get("SESSION_SECRET_KEY")
 
     # run the app
     app.run(debug=True, host="0.0.0.0")
