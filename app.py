@@ -481,11 +481,11 @@ def utility_processor():
             post_datetime = post_datetime.replace(tzinfo=pytz.timezone('Asia/Dubai')).astimezone(get_localzone())
 
         if post_datetime.date() == datetime.datetime.now().astimezone().date():  # post_datetime is today
-            post_datetime = post_datetime.astimezone(tz=None).strftime("%-I:%M %p Today")
+            post_datetime = post_datetime.strftime("%-I:%M %p Today")
         elif post_datetime.date() == (datetime.datetime.now() - datetime.timedelta(days=1)).astimezone().date():  # post_datetime is yesterday
-            post_datetime = post_datetime.astimezone(tz=None).strftime("%-I:%M %p Yesterday")
+            post_datetime = post_datetime.strftime("%-I:%M %p Yesterday")
         else:  # post_datetime is any other day
-            post_datetime =  post_datetime.astimezone(tz=None).strftime("%-I:%M %p on %B %-d, %Y")
+            post_datetime =  post_datetime.strftime("%-I:%M %p on %B %-d, %Y")
 
         return post_datetime
     
