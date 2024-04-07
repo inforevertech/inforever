@@ -70,8 +70,8 @@ if __name__ == '__main__':
     while True:
         schedule.run_pending()
 
-        if collectorBTC.get_height() == collectorBTC.get_max_height():
+        if collectorBTC.get_height() >= collectorBTC.get_max_height():
             logging.info('PROCESS: Waiting for new blocks in BTC blockchain...')
-            time.sleep(10)
+            time.sleep(20)
         else:
-            time.sleep(0.1)
+            time.sleep(1)

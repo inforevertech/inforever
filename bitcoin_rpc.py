@@ -5,7 +5,7 @@ from bitcoin.rpc import RawProxy, InvalidParameterError
 p = RawProxy()
 
 # Request latest block height from the database
-block_height = int(p.getblockcount())
+block_height = int(p.getblockcount()) - 10
 print("Latest block height: %d" % block_height)
 
 while True:
@@ -23,6 +23,19 @@ while True:
             raw_tx = p.getrawtransaction(txid, False, latest_block_hash)
             decoded_tx = p.decoderawtransaction(raw_tx)
 
+            addresses_from = []
+            for line in decoded_tx['vin']:
+                if 'txid' in line:
+                    addresses_from.append(line['txid'])
+
+            addresses_to = []
+            for line in decoded_tx['vout']:
+                if 'scriptPubKey' in line and 'address' in line['scriptPubKey']:
+                    addresses_to.append((line['scriptPubKey']['address'], line['value']))
+
+            print(addresses_from, "=>", addresses_to, ", BTC value:", sum([item[1] for item in addresses_to]))
+
+
             message = ''
             for line in decoded_tx['vout']:
                 if 'scriptPubKey' in line and 'asm' in line['scriptPubKey'] and line['scriptPubKey']['asm'][:10] == 'OP_RETURN ':
@@ -38,6 +51,7 @@ while True:
             message = message.strip()
             if message:
                 print(message)
+                print(decoded_tx)
 
     except InvalidParameterError as e:
         print(block_height, "InvalidParameterError: %s" % e)
